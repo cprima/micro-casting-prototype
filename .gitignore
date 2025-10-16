@@ -1,0 +1,53 @@
+# Byte-compiled / optimized Python files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python packaging artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Coverage and test artifacts
+.coverage
+coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+pytest-debug.log
+.hypothesis/
+
+# Virtual environments and uv state
+.env
+.env.*
+.venv/
+.venv*/
+env/
+venv/
+.uv/
+.uv-cache/
+.cache/uv/
+
+# Crawl4AI and Playwright caches
+crawl4ai/cache/
+crawl4ai/logs/
+ms-playwright/
+playwright/
+
+# Tooling and build outputs
+.DS_Store
+Thumbs.db
+node_modules/
+logs/
+*.log
+
+# IDE/editor settings
+.idea/
+.vscode/
+*.swp
+*~
+.claude/settings.local.json
