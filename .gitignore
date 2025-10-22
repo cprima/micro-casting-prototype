@@ -51,3 +51,5 @@ logs/
 *.swp
 *~
 .claude/settings.local.json
+docs/modelcontextprotocol.io/**
+tmp/
