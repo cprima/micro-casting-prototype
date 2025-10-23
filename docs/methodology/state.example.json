@@ -8,7 +8,7 @@
     "updated_at": "2025-10-23T16:45:00Z",
     "export_context": {
       "hostname": "localhost",
-      "app_version": "0.4.0",
+      "app_version": "0.4.2",
       "user_agent": "Mozilla/5.0..."
     }
   },

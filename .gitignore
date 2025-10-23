@@ -53,3 +53,6 @@ logs/
 .claude/settings.local.json
 docs/modelcontextprotocol.io/**
 tmp/
+
+docs/docs.crawl4ai.com/
+docs/semgrep.dev/

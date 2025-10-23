@@ -1,6 +1,6 @@
 # MCP Server Development Methodology
 
-**Version:** v0.4.1
+**Version:** v0.4.2
 **Framework:** Decision-Driven Delivery with Portable State Management
 
 A decision-driven delivery framework for building Model Context Protocol (MCP) servers with evidence-based validation, transparent decision accountability, and team collaboration through portable state files.
@@ -16,13 +16,13 @@ This methodology shifts from static checklists to a decision-driven approach:
 ## 📂 Files
 
 ### Core Application
-- **`index.html`** - Interactive web interface (v0.4.1) with state management
+- **`index.html`** - Interactive web interface (v0.4.2) with state management
 - **`data.json`** - Catalog (immutable): phases, decision nodes, gates, evidence requirements
 - **`state.json`** - State (mutable): your progress, decisions, evidence (git-ignored by default)
 - **`state.example.json`** - Example state file showing all features
 
 ### Documentation
-- **`development.html`** - Visual timeline of methodology evolution (v0.1.0 → v0.4.1)
+- **`development.html`** - Visual timeline of methodology evolution (v0.1.0 → v0.4.2)
 - **`schema-v0.3.0-proposal.yaml`** - Schema documentation and transformation guide
 - **`schema-gate-predicates.yaml`** - Structured gate predicate types
 - **`tag-canonicalization.yaml`** - Canonical tag set and mapping rules
@@ -32,6 +32,22 @@ The methodology now separates **immutable catalog** (data.json) from **mutable s
 - **Catalog** defines the structure: what decisions exist, what evidence is needed
 - **State** tracks your progress: which nodes are done, decisions made, evidence collected
 - **Portable** state files enable team collaboration and version control
+
+## 🔢 Version Strategy
+
+This methodology uses **three independent versions** that evolve separately:
+
+| Version | Current | What | When to Bump |
+|---------|---------|------|--------------|
+| **Frontend** | v0.4.2 | UI/UX features (HTML/JS/CSS) | New UI features, styling, UX improvements |
+| **Catalog Schema** | 0.3.0 | data.json structure | Changes to catalog JSON schema |
+| **State Schema** | 0.4.0 | state.json structure | Changes to state JSON schema |
+
+**Current Compatibility:** Frontend v0.4.2 works with Catalog 0.3.0 and State 0.4.0
+
+This allows the frontend to evolve independently of data schemas. For example, v0.4.1 added decision input fields (frontend change) without requiring catalog or state schema changes.
+
+For detailed version update guidelines, see `VERSION` file.
 
 ## 🚪 Decision Door Types
 
@@ -227,6 +243,7 @@ Uses **Solarized Light** color scheme for comfortable reading:
 
 ## 🔄 Version History
 
+- **v0.4.2** - Checkbox repositioned to right side, version harmonization drill test
 - **v0.4.1** - Decision input fields with metadata-driven architecture, scalable input system
 - **v0.4.0** - State management revolution: portable state files, export/import, reconciliation, smart filename generation
 - **v0.3.2** - Solarized Light theme, comprehensive footer with reference documentation

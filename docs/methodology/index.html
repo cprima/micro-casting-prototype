@@ -30,6 +30,7 @@
             margin-bottom: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: auto;
         }
 
         h1 {
@@ -46,33 +47,40 @@
 
         .framework-badge {
             display: inline-block;
+            float: right;
             padding: 6px 12px;
             background: #268bd2;
             color: #fdf6e3;
             border-radius: 6px;
             font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-left: 15px;
         }
 
         .progress-bar-container {
             margin-top: 20px;
-            background: #93a1a1;
+            background: #cb4b16;
             border-radius: 10px;
             height: 20px;
-            overflow: hidden;
+            overflow: visible;
+            position: relative;
         }
 
         .progress-bar {
             height: 100%;
             background: #859900;
             transition: width 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-radius: 10px;
             color: #fdf6e3;
             font-size: 0.75rem;
             font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            white-space: nowrap;
         }
 
         .controls {
@@ -171,9 +179,10 @@
         .tabs {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-top: 30px;
+            margin-bottom: 0;
+            padding-left: 24px;
             overflow-x: auto;
-            padding-bottom: 10px;
         }
 
         .tab {
@@ -498,7 +507,6 @@
         .artifact-links {
             display: flex;
             gap: 10px;
-            margin-top: 8px;
         }
 
         .artifact-link {
@@ -626,6 +634,13 @@
         }
 
         @media (max-width: 768px) {
+            .framework-badge {
+                float: none;
+                display: block;
+                margin-bottom: 15px;
+                margin-left: 0;
+            }
+
             .controls {
                 flex-direction: column;
                 align-items: stretch;
@@ -743,7 +758,7 @@
 <body>
     <div class="container">
         <header>
-            <div class="framework-badge">v0.4.0 Decision-Driven Delivery</div>
+            <div class="framework-badge">v0.4.2 Decision-Driven Delivery</div>
             <h1 id="pageTitle">MCP Server Development Methodology</h1>
             <p class="subtitle" id="pageDescription">Loading...</p>
             <div class="progress-bar-container">
@@ -897,7 +912,7 @@
 
             <div class="footer-attribution">
                 <div style="margin-bottom: 8px;">
-                    MCP Server Development Methodology v0.4.0 | Decision-Driven Delivery Framework
+                    MCP Server Development Methodology v0.4.2 | Decision-Driven Delivery Framework
                 </div>
                 <div style="font-size: 0.8rem; color: #93a1a1;">
                     Author: Christian Prior-Mamulyan
@@ -915,7 +930,7 @@
     </div>
 
     <script>
-        // State management (v0.4.0)
+        // State management (v0.4.2)
         const state = {
             data: null,  // Catalog (immutable)
             progress: {},  // Node progress (mutable) - keyed by node ID
@@ -1069,6 +1084,28 @@
         function getBlockReasons(node) {
             if (!node.blocks || node.blocks.length === 0) return [];
             return node.blocks.filter(block => !isNodeCompleted(block.on));
+        }
+
+        // Get nodes that are blocked by this node (reverse dependencies)
+        function getBlockingNodes(nodeId) {
+            const blocking = [];
+
+            // Iterate through all nodes in all phases
+            state.data.phases.forEach(phase => {
+                phase.nodes.forEach(node => {
+                    // Check if this node has the target in its blocks array
+                    if (node.blocks && node.blocks.some(b => b.on === nodeId)) {
+                        const blockInfo = node.blocks.find(b => b.on === nodeId);
+                        blocking.push({
+                            id: node.id,
+                            title: node.title,
+                            reason: blockInfo.reason
+                        });
+                    }
+                });
+            });
+
+            return blocking;
         }
 
         function getNodeById(nodeId) {
@@ -1353,6 +1390,22 @@
                 `;
             }
 
+            // Blocking (reverse dependencies)
+            const blockingNodes = getBlockingNodes(node.id);
+            if (blockingNodes.length > 0) {
+                html += `
+                    <div class="node-dependencies">
+                        <strong>Blocking:</strong>
+                        <div class="dependency-list">
+                            ${blockingNodes.map(blocking => {
+                                const isCompleted = isNodeCompleted(node.id);
+                                return `<span class="dependency-badge ${isCompleted ? 'met' : ''}" title="${blocking.reason}">${blocking.id}: ${blocking.reason}</span>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
             // Evidence Policy (requirements, not stubs)
             if (node.evidence_policy && node.evidence_policy.length > 0) {
                 html += `
@@ -1381,21 +1434,6 @@
                                 </span>
                             `).join('')}
                         </div>
-                    </div>
-                `;
-            }
-
-            // Artifacts
-            const hasArtifacts = node.adr_ref || node.contract_ref;
-            if (hasArtifacts || node.door === 'one_way') {
-                html += `
-                    <div class="artifact-links">
-                        ${node.adr_ref
-                            ? `<a href="${node.adr_ref}" class="artifact-link">📄 ADR</a>`
-                            : (node.door === 'one_way' ? '<span class="artifact-link missing">📄 ADR needed</span>' : '')}
-                        ${node.contract_ref
-                            ? `<a href="${node.contract_ref}" class="artifact-link">📋 Contract</a>`
-                            : ''}
                     </div>
                 `;
             }
@@ -1429,8 +1467,25 @@
                 `~${effortMin}h` :
                 `~${effortMin}-${effortMax}h (${node.effort.confidence} confidence)`;
 
+            // Artifacts section (moved into meta)
+            const hasArtifacts = node.adr_ref || node.contract_ref;
+            const artifactsSection = (hasArtifacts || node.door === 'one_way') ? `
+                <div class="meta-section">
+                    <div class="meta-label">Artifacts</div>
+                    <div class="artifact-links">
+                        ${node.adr_ref
+                            ? `<a href="${node.adr_ref}" class="artifact-link">📄 ADR</a>`
+                            : (node.door === 'one_way' ? '<span class="artifact-link missing">📄 ADR needed</span>' : '')}
+                        ${node.contract_ref
+                            ? `<a href="${node.contract_ref}" class="artifact-link">📋 Contract</a>`
+                            : ''}
+                    </div>
+                </div>
+            ` : '';
+
             html += `
                 <div class="node-meta">
+                    ${artifactsSection}
                     <div class="meta-section">
                         <div class="meta-label">Estimated Effort</div>
                         <div class="meta-value">${effortDisplay}</div>
@@ -1625,7 +1680,7 @@
                     updated_at: now,
                     export_context: {
                         hostname: window.location.hostname,
-                        app_version: '0.4.0',
+                        app_version: '0.4.2',
                         user_agent: navigator.userAgent
                     }
                 },

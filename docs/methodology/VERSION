@@ -1,0 +1,314 @@
+# MCP Methodology Version Harmonization
+
+## Three Independent Versions
+
+This methodology uses **three independent versions** that can evolve separately:
+
+### 1. Frontend Version: **v0.4.1**
+**What:** Application UI/UX features (HTML/JS/CSS)
+**Where:** `index.html`, `development.html`
+**When to bump:** New UI features, styling changes, UX improvements
+**Example:** v0.4.1 added decision input fields with metadata-driven architecture
+
+### 2. Catalog Schema: **0.3.0**
+**What:** Structure of `data.json` (decision nodes, phases, gates, evidence policies)
+**Where:** `data.json`
+**When to bump:** Changes to catalog JSON schema, new node properties, structural changes
+**Example:** v0.3.0 introduced sparse encoding and semantic IDs
+
+### 3. State Schema: **0.4.0**
+**What:** Structure of `state.json` (progress tracking, decision values, evidence collected)
+**Where:** State files, `state.example.json`
+**When to bump:** Changes to state JSON schema, new progress tracking fields
+**Example:** v0.4.0 introduced portable state with export/import
+
+---
+
+## Current Compatibility
+
+**Frontend v0.4.1** works with **Catalog 0.3.0** and **State 0.4.0**
+
+Assumption: Latest versions are always compatible. No explicit compatibility matrix needed.
+
+---
+
+## Version Locations by File
+
+### README.md
+
+**Line 3:** Main version header
+```
+**Version:** v0.4.1
+```
+
+**Line 19:** index.html description
+```
+- **`index.html`** - Interactive web interface (v0.4.1) with state management
+```
+
+**Line 25:** development.html description
+```
+- **`development.html`** - Visual timeline of methodology evolution (v0.1.0 → v0.4.1)
+```
+
+**Line 26:** Schema file reference
+```
+- **`schema-v0.3.0-proposal.yaml`** - Schema documentation and transformation guide
+```
+
+**Line 30:** Architecture section header
+```
+### Architecture (v0.4.0+)
+```
+
+**Line 125:** State Management Workflow header
+```
+### State Management Workflow (v0.4.0+)
+```
+
+**Line 168:** Catalog data structure header
+```
+### Catalog (data.json) - v0.3.0
+```
+
+**Line 178:** Decision inputs feature note
+```
+- **Decision inputs** (v0.4.1) - Metadata-driven input fields for capturing decisions
+```
+
+**Line 180:** State data structure header
+```
+### State (state.json) - v0.4.0
+```
+
+**Lines 230-235:** Version History section
+```
+- **v0.4.1** - Decision input fields with metadata-driven architecture, scalable input system
+- **v0.4.0** - State management revolution: portable state files, export/import, reconciliation, smart filename generation
+- **v0.3.2** - Solarized Light theme, comprehensive footer with reference documentation
+- **v0.3.0** - Schema v0.3.0 with semantic IDs, sparse encoding, evidence policy
+- **v0.2.1** - Initial transformation-based schema
+- **v0.2.0** - Original checklist-based model
+```
+
+---
+
+### data.json
+
+**Line 5:** Catalog version (JSON)
+```json
+"version": "0.3.0"
+```
+
+**Line 1074:** Transformation version (JSON)
+```json
+"transformation_version": "0.3.0"
+```
+
+**Line 1076:** From version (JSON)
+```json
+"from_version": "0.2.1"
+```
+
+---
+
+### index.html
+
+**Line 746:** Framework badge (HTML)
+```html
+<div class="framework-badge">v0.4.0 Decision-Driven Delivery</div>
+```
+
+**Line 900:** Page title (HTML)
+```html
+MCP Server Development Methodology v0.4.0 | Decision-Driven Delivery Framework
+```
+
+**Line 918:** State management comment (JavaScript)
+```javascript
+// State management (v0.4.0)
+```
+
+**Lines 946-950:** State loading logic (JavaScript)
+```javascript
+// Try v0.4.0 state first
+const v040State = localStorage.getItem('mcp:mcp-server-delivery:state@0.4.0');
+if (v040State) {
+    console.log('[INIT] Found v0.4.0 state in localStorage');
+```
+
+**Lines 956-957:** Legacy state keys (JavaScript)
+```javascript
+const v033Completed = localStorage.getItem('mcp-methodology-completed-v0.3.3');
+const v032Completed = localStorage.getItem('mcp-methodology-completed-v0.3.2');
+```
+
+**Line 1021:** localStorage save key (JavaScript)
+```javascript
+'mcp:mcp-server-delivery:state@0.4.0',
+```
+
+**Line 961:** Migration log (JavaScript)
+```javascript
+console.log('[INIT] Found v0.3.x state, migrating to v0.4.0');
+```
+
+**Line 994:** Migration tracking (JavaScript)
+```javascript
+migrationsApplied: ['v0.3.x -> v0.4.0']
+```
+
+**Line 1618:** State export version (JavaScript)
+```javascript
+state_version: '0.4.0',
+```
+
+**Line 1620:** Catalog version reference (JavaScript)
+```javascript
+catalog_version: state.data.program.version,
+```
+
+**Line 1628:** Export metadata app version (JavaScript)
+```javascript
+app_version: '0.4.0',
+```
+
+**Lines 1815-1816:** State validation (JavaScript)
+```javascript
+if (!importedState.state_version) {
+    errors.push('Missing state_version field');
+```
+
+---
+
+### state.example.json
+
+**Line 2:** State version (JSON)
+```json
+"state_version": "0.4.0"
+```
+
+**Line 4:** Catalog version (JSON)
+```json
+"catalog_version": "0.3.0"
+```
+
+**Line 11:** Export metadata app version (JSON)
+```json
+"app_version": "0.4.0"
+```
+
+---
+
+### development.html
+
+**Timeline phases with versions:**
+
+**Lines 318-343:** Phase 1: v0.1.0
+- Line 321: Version badge
+- Line 342: Screenshot reference `methodology-v0.1.0-20251023.png`
+- Line 343: Caption "v0.1.0 - Checklist-Based Approach"
+
+**Lines 347-376:** Phase 2: v0.2.0
+- Line 350: Version badge
+- Line 375: Screenshot reference `methodology-v0.2.0-20251023.png`
+- Line 376: Caption "v0.2.0 - Decision-Driven Framework Emerges"
+
+**Lines 380-423:** Phase 3: v0.3.0
+- Line 383: Version badge
+- Line 422: Screenshot reference `methodology-v0.3.0-20251023.png`
+- Line 423: Caption "v0.3.0 - Clean, Sparse Schema"
+
+**Lines 427-458:** Phase 4: v0.3.2
+- Line 430: Version badge
+- Line 457: Screenshot reference `methodology-v0.3.2-20251023.png`
+- Line 458: Caption "v0.3.2 - Production-Ready with Solarized Light Theme"
+
+**Lines 462-509:** Phase 5: v0.4.0
+- Line 465: Version badge
+- Line 508: Screenshot reference `methodology-v0.4.0-20251023.png`
+- Line 509: Caption "v0.4.0 - State Management Revolution with Import/Export Functionality"
+
+---
+
+## Version Update Guidelines
+
+### Frontend Version (v0.4.1)
+**When to update:** New UI features, styling changes, UX improvements
+**Files to update:**
+- `index.html`: Lines 746 (framework badge), 900 (footer), 918 (comment), 1628 (app_version export)
+- `state.example.json`: Line 11 (app_version in export_context)
+- `README.md`: Line 3 (main version header), Line 19 (index.html description), Line 25 (timeline range), Line 230 (version history)
+- `development.html`: Add new phase section with screenshot if major/minor release
+
+### Catalog Schema (0.3.0)
+**When to update:** Changes to data.json structure (new node properties, schema changes)
+**Files to update:**
+- `data.json`: Lines 5 (version), 1074 (transformation_version), 1076 (from_version)
+- `state.example.json`: Line 4 (catalog_version reference)
+- `README.md`: Lines 168 (catalog header), 187 (JSON example), 233 (version history)
+- Referenced filenames: `schema-v0.3.0-proposal.yaml` (rename if needed)
+
+### State Schema (0.4.0)
+**When to update:** Changes to state.json structure (new progress fields, schema changes)
+**Files to update:**
+- `index.html`: Lines 947 (localStorage key), 1618 (state_version export)
+- `state.example.json`: Line 2 (state_version)
+- `README.md`: Lines 180 (state header), 185 (JSON example version field)
+- **Note:** Also update migration logic in index.html (lines 946-994) if schema is incompatible with previous version
+
+---
+
+## Version Update Checklist
+
+### For Frontend Version Updates
+
+**Minor/Major Release (v0.5.0):**
+1. Update frontend version in all files (see guidelines above)
+2. Add new entry to README.md version history (line 230)
+3. Add timeline phase in development.html with screenshot
+4. Update framework badge, footer, and comments in index.html
+5. Update app_version in export metadata
+
+**Patch Release (v0.4.2):**
+1. Update frontend version in all files (see guidelines above)
+2. Update version history in README.md
+3. No development.html changes needed for patches
+
+### For Catalog Schema Updates
+
+1. **Increment catalog version** in data.json (line 5)
+2. **Update transformation metadata** in data.json:
+   - Line 1074: transformation_version → new version
+   - Line 1076: from_version → previous version
+3. **Update references** in state.example.json (line 4) and README.md (lines 168, 187, 233)
+4. **Update schema documentation** files and rename if needed (schema-vX.Y.Z-proposal.yaml)
+5. **Consider compatibility**: Does frontend need updates to handle new catalog schema?
+
+### For State Schema Updates
+
+1. **Increment state_version** in index.html (line 1618) and state.example.json (line 2)
+2. **Update references** in README.md (lines 180, 185)
+3. **Update migration logic** in index.html (lines 946-994) if breaking change
+4. **Update localStorage key** format in index.html if needed (line 947)
+5. **Consider compatibility**: Does frontend need updates to handle new state schema?
+
+### Combined Updates (Multiple Versions)
+
+When updating multiple versions simultaneously:
+1. Update each version independently following its checklist
+2. Verify frontend compatibility with new schema versions
+3. Test export/import round-trip with new state schema
+4. Update README version history with all changes
+
+---
+
+## Current Version Status
+
+- **Frontend Version:** v0.4.2 (Checkbox repositioned, framework badge alignment fixed)
+- **Catalog Schema:** 0.3.0 (Sparse encoding with semantic IDs)
+- **State Schema:** 0.4.0 (Portable state with export/import)
+
+**Compatibility:** Frontend v0.4.2 works with Catalog 0.3.0 and State 0.4.0
+
+**Last Updated:** 2025-10-23
