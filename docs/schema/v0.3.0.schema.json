@@ -1,0 +1,533 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "file:///docs/schema/v0.3.0.schema.json",
+  "title": "MCP Server Development Methodology v0.3.0",
+  "description": "Schema for frozen v0.3.0 catalog (no advisory blocks)",
+  "type": "object",
+  "required": [
+    "program",
+    "phases",
+    "global_gates",
+    "levels",
+    "tags",
+    "_source"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "file:///docs/schema/v0.3.0.schema.json"
+    },
+    "program": {
+      "$ref": "#/$defs/Program"
+    },
+    "phases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Phase"
+      }
+    },
+    "global_gates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/GlobalGate"
+      }
+    },
+    "levels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Level"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "_source": {
+      "$ref": "#/$defs/Source"
+    }
+  },
+  "$defs": {
+    "Program": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "version",
+        "description",
+        "last_updated",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "const": "0.3.0"
+        },
+        "description": {
+          "type": "string"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "frozen",
+            "active",
+            "previous"
+          ]
+        },
+        "fingerprint": {
+          "type": "string",
+          "description": "SHA-256(program.id + \":\" + version)",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "supersedes": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Version this catalog supersedes"
+        }
+      }
+    },
+    "Phase": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "color",
+        "nodes",
+        "gate"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Node"
+          }
+        },
+        "gate": {
+          "$ref": "#/$defs/Gate"
+        }
+      }
+    },
+    "Node": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "summary",
+        "why",
+        "door",
+        "level",
+        "tags",
+        "effort",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "why": {
+          "type": "string"
+        },
+        "door": {
+          "type": "string",
+          "enum": [
+            "one_way",
+            "two_way",
+            "guardrail",
+            "operational"
+          ]
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "required",
+            "recommended",
+            "optional"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "effort": {
+          "$ref": "#/$defs/Effort"
+        },
+        "evidence_policy": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidencePolicy"
+          }
+        },
+        "decision_input": {
+          "$ref": "#/$defs/DecisionInput"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Block"
+          }
+        },
+        "status": {
+          "$ref": "#/$defs/NodeStatus"
+        },
+        "_search_stemmed": {
+          "type": "string",
+          "description": "Derived field: stemmed search index"
+        }
+      }
+    },
+    "Effort": {
+      "type": "object",
+      "required": [
+        "min",
+        "max",
+        "confidence"
+      ],
+      "properties": {
+        "min": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      }
+    },
+    "EvidencePolicy": {
+      "type": "object",
+      "required": [
+        "type",
+        "required_at",
+        "criteria"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "spike",
+            "test_report",
+            "security",
+            "perf",
+            "ops_runbook"
+          ]
+        },
+        "required_at": {
+          "type": "string",
+          "enum": [
+            "gate",
+            "completion"
+          ]
+        },
+        "criteria": {
+          "type": "string"
+        }
+      }
+    },
+    "DecisionInput": {
+      "type": "object",
+      "required": [
+        "label",
+        "placeholder"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "help": {
+          "type": "string"
+        }
+      }
+    },
+    "Block": {
+      "type": "object",
+      "required": [
+        "on",
+        "reason"
+      ],
+      "properties": {
+        "on": {
+          "type": "string",
+          "description": "Node ID this depends on"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "NodeStatus": {
+      "type": "object",
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "todo",
+            "in_progress",
+            "done"
+          ]
+        },
+        "cause": {
+          "type": "string"
+        }
+      }
+    },
+    "Gate": {
+      "type": "object",
+      "required": [
+        "id",
+        "purpose",
+        "applies_to",
+        "checks",
+        "approvers",
+        "outcomes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "applies_to": {
+          "type": "string"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GateCheck"
+          }
+        },
+        "approvers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outcomes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fix_forward",
+              "rollback"
+            ]
+          }
+        }
+      }
+    },
+    "GateCheck": {
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "predicate"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "predicate": {
+          "$ref": "#/$defs/Predicate"
+        }
+      }
+    },
+    "Predicate": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "node-field-present",
+            "evidence-meets",
+            "all-of",
+            "adr-has-section",
+            "artifact-exists"
+          ]
+        },
+        "target": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "field": {
+          "type": "string"
+        },
+        "expected": {
+          "type": "string"
+        },
+        "evidence_type": {
+          "type": "string"
+        },
+        "result": {
+          "type": "string"
+        },
+        "query": {
+          "type": "object"
+        },
+        "condition": {
+          "type": "string"
+        },
+        "section": {
+          "type": "string"
+        },
+        "artifact_type": {
+          "type": "string"
+        }
+      }
+    },
+    "GlobalGate": {
+      "type": "object",
+      "required": [
+        "id",
+        "purpose",
+        "applies_to",
+        "checks",
+        "approvers",
+        "outcomes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "applies_to": {
+          "type": "string"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GateCheck"
+          }
+        },
+        "approvers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outcomes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fix_forward",
+              "rollback"
+            ]
+          }
+        }
+      }
+    },
+    "Level": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "Source": {
+      "type": "object",
+      "required": [
+        "transformation_version",
+        "transformation_date",
+        "from_version",
+        "changes"
+      ],
+      "properties": {
+        "transformation_version": {
+          "type": "string"
+        },
+        "transformation_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "from_version": {
+          "type": "string"
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

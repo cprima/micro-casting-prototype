@@ -6,7 +6,9 @@
       "version": "0.3.0",
       "description": "Decision-driven delivery framework for two-person teams (architect + developer) building Model Context Protocol servers",
       "last_updated": "2025-01-23",
-      "status": "frozen"
+      "status": "frozen",
+      "fingerprint": "00432378056df2da0d46ade26c18f6c90104c5908290d941a7759015619367a9",
+      "supersedes": "0.2.1"
     },
     "phases": [
       {
@@ -1087,7 +1089,8 @@
         "Sparse encoding (omit nulls)",
         "Structured gate predicates"
       ]
-    }
+    },
+    "$schema": "file:///docs/schema/v0.3.0.schema.json"
   },
   {
     "program": {
@@ -1096,7 +1099,9 @@
       "version": "0.4.0-alpha",
       "description": "Decision-driven delivery framework for two-person teams (architect + developer) building Model Context Protocol servers",
       "last_updated": "2025-10-23",
-      "status": "prerelease"
+      "status": "prerelease",
+      "fingerprint": "4813d14478eac5169c699b6e3c67600ae261bd3fe600522107fafae5077b6bd7",
+      "supersedes": "0.3.0"
     },
     "phases": [
       {
@@ -1137,7 +1142,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "choos server name pattern decid on name convent python use servic _mcp node use servic mcp server consist discover across ecosystem avoid featur version coupl name architectur"
+            "_search_stemmed": "choos server name pattern decid on name convent python use servic _mcp node use servic mcp server consist discover across ecosystem avoid featur version coupl name architectur",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "transport-selection",
@@ -1165,7 +1176,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "select transport mechan choos stdio local cli http remot multi client or sse real time updat transport choic affect deploy complex and scalabl architectur transport"
+            "_search_stemmed": "select transport mechan choos stdio local cli http remot multi client or sse real time updat transport choic affect deploy complex and scalabl architectur transport",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "tool-naming",
@@ -1199,7 +1216,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "defin tool name convent use snake_cas with servic prefix start with verb get list creat avoid cross server collis and provid predict intent name tool"
+            "_search_stemmed": "defin tool name convent use snake_cas with servic prefix start with verb get list creat avoid cross server collis and provid predict intent name tool",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           }
         ],
         "gate": {
@@ -1316,7 +1339,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "design atom tool keep tool focus on singl oper for compos enabl safer side effect and better llm reason tool"
+            "_search_stemmed": "design atom tool keep tool focus on singl oper for compos enabl safer side effect and better llm reason tool",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "input-validation",
@@ -1363,7 +1392,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "implement input valid with json schema use pydant python or zod typescript for type safe input input safeti and predict secur integr"
+            "_search_stemmed": "implement input valid with json schema use pydant python or zod typescript for type safe input input safeti and predict secur integr",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "response-formats",
@@ -1404,7 +1439,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "support dual respons format json markdown default to markdown for human offer json for programmat use balanc human readabl with machin parsabl format"
+            "_search_stemmed": "support dual respons format json markdown default to markdown for human offer json for programmat use balanc human readabl with machin parsabl format",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "tool-annotations",
@@ -1431,7 +1472,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "add tool annot hint provid readonlyhint destructivehint idempotenthint openworldhint improv client ux and govern tool ux"
+            "_search_stemmed": "add tool annot hint provid readonlyhint destructivehint idempotenthint openworldhint improv client ux and govern tool ux",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           }
         ],
         "gate": {
@@ -1560,7 +1607,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "implement pagin with offset cursor never load all result into memori default to 20 50 item per page protect system resourc and handl larg dataset perform"
+            "_search_stemmed": "implement pagin with offset cursor never load all result into memori default to 20 50 item per page protect system resourc and handl larg dataset perform",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "limits-character-cap",
@@ -1601,7 +1654,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "add character_limit constant 25k truncat larg respons grace with filter guidanc manag output size and avoid context window overflow perform"
+            "_search_stemmed": "add character_limit constant 25k truncat larg respons grace with filter guidanc manag output size and avoid context window overflow perform",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "auth-oauth21",
@@ -1647,7 +1706,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "implement authent oauth 2 1 add audienc valid and token check for secur endpoint authent integr and user author secur"
+            "_search_stemmed": "implement authent oauth 2 1 add audienc valid and token check for secur endpoint authent integr and user author secur",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "input-security",
@@ -1685,7 +1750,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "valid all input path url command prevent inject attack and path travers prevent secur vulner secur"
+            "_search_stemmed": "valid all input path url command prevent inject attack and path travers prevent secur vulner secur",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "transport-https",
@@ -1724,7 +1795,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "use http and valid certif enforc transport secur for all network commun protect data in transit secur transport"
+            "_search_stemmed": "use http and valid certif enforc transport secur for all network commun protect data in transit secur transport",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "testing-comprehensive",
@@ -1770,7 +1847,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "implement comprehens test test function integr secur under load and for error handl comprehens qualiti assur test"
+            "_search_stemmed": "implement comprehens test test function integr secur under load and for error handl comprehens qualiti assur test",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           }
         ],
         "gate": {
@@ -1892,7 +1975,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "support dynam tool discoveri enabl runtim tool registr and chang notif runtim adapt for evolv servic architectur integr"
+            "_search_stemmed": "support dynam tool discoveri enabl runtim tool registr and chang notif runtim adapt for evolv servic architectur integr",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "ops-rate-limiting",
@@ -1934,7 +2023,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "implement rate limit rate limit resourc heavi tool at transport and tool level fair use and system stabil op perform"
+            "_search_stemmed": "implement rate limit rate limit resourc heavi tool at transport and tool level fair use and system stabil op perform",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "ops-observability",
@@ -1975,7 +2070,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "add log monitor and audit trail comprehens observ for product oper oper visibl and complianc observ"
+            "_search_stemmed": "add log monitor and audit trail comprehens observ for product oper oper visibl and complianc observ",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           },
           {
             "id": "ops-timeouts",
@@ -2017,7 +2118,13 @@
             "status": {
               "state": "todo"
             },
-            "_search_stemmed": "implement timeout and progress report add timeout at multipl level and report progress for long oper respons and user control op ux"
+            "_search_stemmed": "implement timeout and progress report add timeout at multipl level and report progress for long oper respons and user control op ux",
+            "advisory": {
+              "examples": [],
+              "templates": [],
+              "anti_patterns": [],
+              "success_criteria": []
+            }
           }
         ],
         "gate": {
@@ -2203,20 +2310,16 @@
       "ux"
     ],
     "_source": {
-      "transformation_version": "0.3.0",
-      "transformation_date": "2025-01-23",
-      "from_version": "0.2.1",
+      "transformation_version": "0.4.0-alpha",
+      "transformation_date": "2025-10-23",
+      "from_version": "0.3.0",
       "changes": [
-        "Semantic IDs (auth-oauth21 vs pr-3)",
-        "Effort as ranges with confidence",
-        "Tag canonicalization (20→12 tags)",
-        "Removed type field (computed from tags)",
-        "Evidence policy instead of pre-filled stubs",
-        "Blocks with reasons vs depends_on lists",
-        "Status with cause",
-        "Sparse encoding (omit nulls)",
-        "Structured gate predicates"
+        "Phase-level advisory scaffolding",
+        "Node-level advisory blocks (optional)",
+        "Standardized predicate envelopes",
+        "Per-entry version metadata"
       ]
-    }
+    },
+    "$schema": "file:///docs/schema/v0.4.0-alpha.schema.json"
   }
 ]
