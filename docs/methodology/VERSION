@@ -1,20 +1,64 @@
 # MCP Methodology Version Harmonization
 
+## Multi-Version Catalog (v0.5.0+)
+
+Starting with v0.5.0, `data.json` is an **array of versioned catalogs**:
+- Each entry is a complete, self-contained catalog
+- All entries share the same `program.id` (e.g., "mcp-server-delivery")
+- Each entry has a unique `program.version` (e.g., "0.3.0", "0.4.0-alpha")
+
+### Semantic Versioning Rules
+Catalog versions follow **semver** (Semantic Versioning 2.0.0):
+
+1. **Format:** `major.minor.patch[-prerelease][+build]`
+2. **Precedence:**
+   - Major > Minor > Patch (e.g., `1.0.0 > 0.9.9`)
+   - Release > Prerelease (e.g., `1.0.0 > 1.0.0-alpha`)
+   - Within prerelease: `rc > beta > alpha` (lexicographic)
+   - Numeric suffixes: `rc.2 > rc.1`
+
+3. **Examples (sorted highest to lowest):**
+   - `1.0.0` (latest stable)
+   - `1.0.0-rc.2` (release candidate 2)
+   - `1.0.0-rc.1` (release candidate 1)
+   - `1.0.0-beta` (beta release)
+   - `1.0.0-alpha` (alpha release)
+   - `0.5.0` (older stable)
+
+### Version Selection
+- **On page load:** Highest version is automatically selected
+- **Manual switch:** Use the version selector dropdown (always visible)
+- **After reset:** Version selector remains active (does not revert to highest)
+
+### Adding New Catalog Versions
+1. Add new catalog object to `data.json` array
+2. Set `program.version` to new version (e.g., "0.5.0")
+3. Add phase-level enrichments (`advisory` metadata) as needed
+4. Test semver sorting and version switching
+5. Update this VERSION file with new version entry
+
+### Frozen Versions
+- Older versions can be marked with `"status": "frozen"` in `program` object
+- Frozen versions are preserved for reference but not actively updated
+- Example: v0.3.0 remains frozen as the "baseline" catalog
+
+---
+
 ## Three Independent Versions
 
 This methodology uses **three independent versions** that can evolve separately:
 
-### 1. Frontend Version: **v0.4.1**
+### 1. Frontend Version: **v0.5.0**
 **What:** Application UI/UX features (HTML/JS/CSS)
 **Where:** `index.html`, `development.html`
 **When to bump:** New UI features, styling changes, UX improvements
-**Example:** v0.4.1 added decision input fields with metadata-driven architecture
+**Example:** v0.5.0 added multi-version catalog support with semver
 
-### 2. Catalog Schema: **0.3.0**
+### 2. Catalog Schema: **0.3.0 / 0.4.0-alpha**
 **What:** Structure of `data.json` (decision nodes, phases, gates, evidence policies)
-**Where:** `data.json`
+**Where:** `data.json` (array of catalogs)
 **When to bump:** Changes to catalog JSON schema, new node properties, structural changes
-**Example:** v0.3.0 introduced sparse encoding and semantic IDs
+**Example:** v0.4.0-alpha adds phase-level advisory metadata
 
 ### 3. State Schema: **0.4.0**
 **What:** Structure of `state.json` (progress tracking, decision values, evidence collected)
@@ -26,9 +70,9 @@ This methodology uses **three independent versions** that can evolve separately:
 
 ## Current Compatibility
 
-**Frontend v0.4.1** works with **Catalog 0.3.0** and **State 0.4.0**
+**Frontend v0.5.0** works with **Catalogs 0.3.0 & 0.4.0-alpha** and **State 0.4.0**
 
-Assumption: Latest versions are always compatible. No explicit compatibility matrix needed.
+Assumption: Latest frontend version supports all available catalog versions.
 
 ---
 
@@ -305,10 +349,10 @@ When updating multiple versions simultaneously:
 
 ## Current Version Status
 
-- **Frontend Version:** v0.4.2 (Checkbox repositioned, framework badge alignment fixed)
+- **Frontend Version:** v0.4.3 (Multi-version catalog support with semantic versioning)
 - **Catalog Schema:** 0.3.0 (Sparse encoding with semantic IDs)
 - **State Schema:** 0.4.0 (Portable state with export/import)
 
-**Compatibility:** Frontend v0.4.2 works with Catalog 0.3.0 and State 0.4.0
+**Compatibility:** Frontend v0.4.3 works with Catalog 0.3.0 and State 0.4.0
 
 **Last Updated:** 2025-10-23

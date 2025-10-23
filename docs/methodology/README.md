@@ -1,6 +1,6 @@
 # MCP Server Development Methodology
 
-**Version:** v0.4.2
+**Version:** v0.4.3
 **Framework:** Decision-Driven Delivery with Portable State Management
 
 A decision-driven delivery framework for building Model Context Protocol (MCP) servers with evidence-based validation, transparent decision accountability, and team collaboration through portable state files.
@@ -16,13 +16,13 @@ This methodology shifts from static checklists to a decision-driven approach:
 ## 📂 Files
 
 ### Core Application
-- **`index.html`** - Interactive web interface (v0.4.2) with state management
+- **`index.html`** - Interactive web interface (v0.4.3) with state management
 - **`data.json`** - Catalog (immutable): phases, decision nodes, gates, evidence requirements
 - **`state.json`** - State (mutable): your progress, decisions, evidence (git-ignored by default)
 - **`state.example.json`** - Example state file showing all features
 
 ### Documentation
-- **`development.html`** - Visual timeline of methodology evolution (v0.1.0 → v0.4.2)
+- **`development.html`** - Visual timeline of methodology evolution (v0.1.0 → v0.4.3)
 - **`schema-v0.3.0-proposal.yaml`** - Schema documentation and transformation guide
 - **`schema-gate-predicates.yaml`** - Structured gate predicate types
 - **`tag-canonicalization.yaml`** - Canonical tag set and mapping rules
@@ -33,17 +33,58 @@ The methodology now separates **immutable catalog** (data.json) from **mutable s
 - **State** tracks your progress: which nodes are done, decisions made, evidence collected
 - **Portable** state files enable team collaboration and version control
 
+## 🔢 Multi-Version Catalog Architecture (v0.5.0+)
+
+### Overview
+Starting with v0.5.0, the methodology uses a **multi-version catalog container**:
+
+- **`data.json`** is now an **array** of catalog objects (not a single object)
+- Each catalog has its own `program.version` (e.g., "0.3.0", "0.4.0-alpha")
+- The UI automatically selects the **highest version** using semantic versioning (semver)
+- Users can switch between versions using the **always-visible version selector**
+
+Example structure:
+```json
+[
+  { "program": { "version": "0.3.0", "status": "frozen", ... }, "phases": [...] },
+  { "program": { "version": "0.4.0-alpha", "status": "prerelease", ... }, "phases": [...] }
+]
+```
+
+### Semantic Versioning
+The methodology follows **semver** for catalog versions:
+- Format: `major.minor.patch[-prerelease][+build]`
+- Examples: `0.4.0`, `1.0.0-alpha`, `2.1.3-rc.1+build.123`
+- Precedence: `1.0.0 > 1.0.0-rc.1 > 1.0.0-beta > 1.0.0-alpha`
+
+### Version Selection
+- **Automatic:** Highest version is selected on page load
+- **Manual:** Use the version selector dropdown (always visible in the UI)
+- **State Isolation:** Each version has its own progress state
+- **Import/Export:** State files include `catalog_version` for validation
+
+### Version Status Tags
+- **Latest:** Highest stable version (green badge)
+- **Prerelease:** Alpha/beta/rc versions (orange badge)
+- **Frozen:** No longer updated (gray badge with 🔒)
+
+### Version Switching
+- Click version dropdown at the top of the page
+- Progress is auto-saved before switching
+- UI fully re-renders with selected catalog
+- **Version switcher remains active even after "Reset Progress"**
+
 ## 🔢 Version Strategy
 
 This methodology uses **three independent versions** that evolve separately:
 
 | Version | Current | What | When to Bump |
 |---------|---------|------|--------------|
-| **Frontend** | v0.4.2 | UI/UX features (HTML/JS/CSS) | New UI features, styling, UX improvements |
+| **Frontend** | v0.4.3 | UI/UX features (HTML/JS/CSS) | New UI features, styling, UX improvements |
 | **Catalog Schema** | 0.3.0 | data.json structure | Changes to catalog JSON schema |
 | **State Schema** | 0.4.0 | state.json structure | Changes to state JSON schema |
 
-**Current Compatibility:** Frontend v0.4.2 works with Catalog 0.3.0 and State 0.4.0
+**Current Compatibility:** Frontend v0.4.3 works with Catalog 0.3.0 and State 0.4.0
 
 This allows the frontend to evolve independently of data schemas. For example, v0.4.1 added decision input fields (frontend change) without requiring catalog or state schema changes.
 
@@ -243,6 +284,7 @@ Uses **Solarized Light** color scheme for comfortable reading:
 
 ## 🔄 Version History
 
+- **v0.4.3** - Multi-version catalog support with semantic versioning, always-visible version switcher, version-specific state isolation
 - **v0.4.2** - Checkbox repositioned to right side, version harmonization drill test
 - **v0.4.1** - Decision input fields with metadata-driven architecture, scalable input system
 - **v0.4.0** - State management revolution: portable state files, export/import, reconciliation, smart filename generation

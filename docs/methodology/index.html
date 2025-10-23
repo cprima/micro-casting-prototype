@@ -934,18 +934,100 @@
                 transform: none;
             }
         }
+
+        /* Version Selector Styles (v0.5.0) */
+        .version-selector-group {
+            float: right;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .version-selector {
+            padding: 8px 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 2px solid #268bd2;
+            border-radius: 6px;
+            background: #fdf6e3;
+            color: #073642;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Courier New', monospace;
+            min-width: 200px;
+        }
+
+        .version-selector:hover {
+            background: #eee8d5;
+            border-color: #2075b8;
+        }
+
+        .version-selector:focus {
+            outline: none;
+            border-color: #268bd2;
+            box-shadow: 0 0 0 3px rgba(38, 139, 210, 0.2);
+        }
+
+        .version-selector option {
+            padding: 8px;
+            font-weight: 600;
+        }
+
+        .version-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #268bd2;
+            color: #fdf6e3;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .version-badge.latest {
+            background: #859900;
+        }
+
+        .version-badge.prerelease {
+            background: #cb4b16;
+        }
+
+        .version-badge.frozen {
+            background: #93a1a1;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="framework-badge">v0.4.2 Decision-Driven Delivery</div>
+            <div class="framework-badge">v0.4.3 Decision-Driven Delivery</div>
             <h1 id="pageTitle">MCP Server Development Methodology</h1>
             <p class="subtitle" id="pageDescription">Loading...</p>
             <div class="progress-bar-container">
                 <div class="progress-bar" id="progressBar" style="width: 0%;">0%</div>
             </div>
         </header>
+
+        <!-- Controls: Export/Import/State (left) + Version Selector (right) -->
+        <div class="controls">
+            <!-- Left side: Export/Import/State -->
+            <button class="state-export-btn" id="exportStateBtn">
+                <span class="icon">⬇</span> Export State
+            </button>
+            <button class="state-import-btn" id="importStateBtn">
+                <span class="icon">⬆</span> Import State
+            </button>
+            <input type="file" id="importFileInput" accept=".json" style="display:none">
+            <div class="state-badge" id="stateBadge">State: None</div>
+
+            <!-- Right side: Version Selector (floated) -->
+            <div class="version-selector-group">
+                <span class="filter-label" style="font-size: 0.9rem; font-weight: 700; color: #073642; margin-right: 8px;">Version:</span>
+                <select id="catalogVersionSelector" class="version-selector">
+                    <!-- Dynamically populated -->
+                </select>
+                <span id="versionBadge" class="version-badge">Loading...</span>
+            </div>
+        </div>
 
         <div class="controls">
             <div class="search-container">
@@ -968,17 +1050,6 @@
                 <button class="filter-btn" data-filter="operational">Ops</button>
             </div>
             <button class="reset-btn" id="resetBtn">Reset Progress</button>
-        </div>
-
-        <div class="controls" style="margin-top: 10px;">
-            <button class="state-export-btn" id="exportStateBtn">
-                <span class="icon">⬇</span> Export State
-            </button>
-            <button class="state-import-btn" id="importStateBtn">
-                <span class="icon">⬆</span> Import State
-            </button>
-            <input type="file" id="importFileInput" accept=".json" style="display:none">
-            <div class="state-badge" id="stateBadge">State: None</div>
         </div>
 
         <div class="tabs" id="tabs"></div>
@@ -1106,7 +1177,7 @@
 
             <div class="footer-attribution">
                 <div style="margin-bottom: 8px;">
-                    MCP Server Development Methodology v0.4.2 | Decision-Driven Delivery Framework
+                    MCP Server Development Methodology v0.4.3 | Decision-Driven Delivery Framework
                 </div>
                 <div style="font-size: 0.8rem; color: #93a1a1;">
                     Author: Christian Prior-Mamulyan
@@ -1124,59 +1195,195 @@
     </div>
 
     <script>
-        // State management (v0.4.2)
+        // ============================================================
+        // Semver Parsing and Comparison (v0.5.0)
+        // ============================================================
+
+        /**
+         * Parse a semantic version string into components
+         * Supports: "major.minor.patch-prerelease+build"
+         * Examples: "0.4.0", "1.0.0-alpha", "2.1.3-rc.1+build.123"
+         */
+        function parseSemver(versionString) {
+            const semverRegex = /^(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z0-9.-]+))?(?:\+([a-zA-Z0-9.-]+))?$/;
+            const match = versionString.match(semverRegex);
+
+            if (!match) {
+                console.warn(`[SEMVER] Invalid version string: "${versionString}"`);
+                return null;
+            }
+
+            const [, major, minor, patch, prerelease, build] = match;
+
+            return {
+                major: parseInt(major, 10),
+                minor: parseInt(minor, 10),
+                patch: parseInt(patch, 10),
+                prerelease: prerelease || null,  // null = stable release
+                build: build || null,
+                original: versionString
+            };
+        }
+
+        /**
+         * Compare two semver objects
+         * Returns: -1 if v1 < v2, 0 if equal, 1 if v1 > v2
+         * Precedence: major.minor.patch, then prerelease (release > prerelease)
+         * Prerelease order: rc > beta > alpha (or numeric comparison)
+         */
+        function compareSemver(v1Str, v2Str) {
+            const v1 = parseSemver(v1Str);
+            const v2 = parseSemver(v2Str);
+
+            if (!v1 || !v2) {
+                console.error('[SEMVER] Cannot compare invalid versions');
+                return 0;
+            }
+
+            // Compare major.minor.patch
+            if (v1.major !== v2.major) return v1.major > v2.major ? 1 : -1;
+            if (v1.minor !== v2.minor) return v1.minor > v2.minor ? 1 : -1;
+            if (v1.patch !== v2.patch) return v1.patch > v2.patch ? 1 : -1;
+
+            // If major.minor.patch are equal, compare prerelease
+            // Rule: Release version > Prerelease version
+            if (v1.prerelease === null && v2.prerelease === null) return 0;  // Both stable
+            if (v1.prerelease === null) return 1;   // v1 stable, v2 prerelease → v1 > v2
+            if (v2.prerelease === null) return -1;  // v1 prerelease, v2 stable → v1 < v2
+
+            // Both are prereleases, compare prerelease identifiers
+            return comparePrereleaseIdentifiers(v1.prerelease, v2.prerelease);
+        }
+
+        /**
+         * Compare prerelease identifiers
+         * Order: rc > beta > alpha (or lexicographic/numeric comparison)
+         */
+        function comparePrereleaseIdentifiers(pre1, pre2) {
+            // Split by dots for structured comparison (e.g., "rc.1" vs "rc.2")
+            const parts1 = pre1.split('.');
+            const parts2 = pre2.split('.');
+
+            const maxLen = Math.max(parts1.length, parts2.length);
+
+            for (let i = 0; i < maxLen; i++) {
+                const p1 = parts1[i] || '';
+                const p2 = parts2[i] || '';
+
+                // If both are numeric, compare numerically
+                const num1 = parseInt(p1, 10);
+                const num2 = parseInt(p2, 10);
+
+                if (!isNaN(num1) && !isNaN(num2)) {
+                    if (num1 !== num2) return num1 > num2 ? 1 : -1;
+                } else {
+                    // Lexicographic comparison
+                    if (p1 < p2) return -1;
+                    if (p1 > p2) return 1;
+                }
+            }
+
+            return 0;  // Equal
+        }
+
+        /**
+         * Find the highest version from an array of version strings
+         * Returns the highest version string (or null if empty)
+         */
+        function findHighestVersion(versions) {
+            if (!versions || versions.length === 0) return null;
+
+            return versions.reduce((highest, current) => {
+                return compareSemver(current, highest) > 0 ? current : highest;
+            });
+        }
+
+        /**
+         * Sort versions in descending order (highest first)
+         */
+        function sortVersionsDescending(versions) {
+            return [...versions].sort((a, b) => compareSemver(b, a));
+        }
+
+        // ============================================================
+        // State management (v0.5.0 - Multi-version support)
+        // ============================================================
         const state = {
-            data: null,  // Catalog (immutable)
-            progress: {},  // Node progress (mutable) - keyed by node ID
-            metadata: {},  // State metadata
+            // Multi-version catalog container
+            catalogRegistry: {},           // Map: version → catalog object
+            availableVersions: [],         // Sorted array (highest first)
+            selectedCatalogVersion: null,  // Currently selected version string
+            currentCatalog: null,          // Active catalog reference
+
+            // User progress (mutable)
+            progress: {},                  // Node progress keyed by node ID
+            metadata: {},                  // State metadata
+            migrationsApplied: [],
+
+            // UI state
             currentPhase: null,
             searchQuery: '',
             levelFilter: 'all',
-            doorFilter: 'all',
-            migrationsApplied: []
+            doorFilter: 'all'
         };
 
-        // Load data from JSON
+        // Load data from JSON (multi-version catalog)
         async function loadData() {
             try {
+                // 1. Fetch catalog array
                 const response = await fetch('data.json');
-                state.data = await response.json();
+                const catalogArray = await response.json();
+
+                // 2. Validate structure
+                if (!Array.isArray(catalogArray) || catalogArray.length === 0) {
+                    throw new Error('data.json must be a non-empty array of catalog objects');
+                }
+
+                // 3. Build catalog registry
+                state.catalogRegistry = {};
+                const versions = [];
+
+                for (const catalog of catalogArray) {
+                    if (!catalog.program?.version) {
+                        console.warn('[LOAD] Skipping catalog without program.version', catalog);
+                        continue;
+                    }
+
+                    const version = catalog.program.version;
+
+                    // Check for duplicate versions
+                    if (state.catalogRegistry[version]) {
+                        console.warn(`[LOAD] Duplicate catalog version: ${version} (overwriting)`);
+                    }
+
+                    state.catalogRegistry[version] = catalog;
+                    versions.push(version);
+                }
+
+                // 4. Sort versions (highest first)
+                state.availableVersions = sortVersionsDescending(versions);
+
+                // 5. Automatically select highest version
+                state.selectedCatalogVersion = findHighestVersion(versions);
+                state.currentCatalog = state.catalogRegistry[state.selectedCatalogVersion];
+
+                console.log(`[LOAD] Loaded ${versions.length} catalog versions:`, state.availableVersions);
+                console.log(`[LOAD] Auto-selected highest version: ${state.selectedCatalogVersion}`);
+
+                // 6. Initialize state and UI
                 initializeState();
                 init();
             } catch (error) {
-                console.error('Error loading data:', error);
+                console.error('[LOAD] Error loading data:', error);
                 document.getElementById('tabContent').innerHTML =
-                    '<div class="no-nodes">Error loading methodology data. Please check data.json file.</div>';
+                    `<div class="no-nodes">Error loading methodology data: ${error.message}<br>Please check data.json file.</div>`;
             }
         }
 
-        // Initialize state on page load
+        // Initialize state on page load (v0.5.0 - version-aware)
         function initializeState() {
-            // Try v0.4.0 state first
-            const v040State = localStorage.getItem('mcp:mcp-server-delivery:state@0.4.0');
-
-            if (v040State) {
-                console.log('[INIT] Found v0.4.0 state in localStorage');
-                restoreStateFromLocalStorage(JSON.parse(v040State));
-                return;
-            }
-
-            // Try v0.3.x migration
-            const v033Completed = localStorage.getItem('mcp-methodology-completed-v0.3.3');
-            const v032Completed = localStorage.getItem('mcp-methodology-completed-v0.3.2');
-            const v03xCompleted = v033Completed || v032Completed;
-
-            if (v03xCompleted) {
-                console.log('[INIT] Found v0.3.x state, migrating to v0.4.0');
-                const migratedState = migrateFromV03x(JSON.parse(v03xCompleted));
-                restoreStateFromLocalStorage(migratedState);
-                saveStateToLocalStorage();  // Persist migrated state
-                return;
-            }
-
-            // Initialize fresh state
-            console.log('[INIT] No previous state found, initializing fresh');
-            initializeFreshState();
+            // Load state for the currently selected catalog version
+            loadStateForCurrentVersion();
         }
 
         // Migrate from v0.3.x (array of completed node IDs)
@@ -1212,7 +1419,7 @@
             updateStateBadge('local');
         }
 
-        // Save state to localStorage
+        // Save state to localStorage (v0.5.0 - version-specific keys)
         function saveStateToLocalStorage() {
             const now = new Date().toISOString();
             if (!state.metadata.created_at) {
@@ -1226,10 +1433,14 @@
                 migrationsApplied: state.migrationsApplied
             };
 
-            localStorage.setItem(
-                'mcp:mcp-server-delivery:state@0.4.0',
-                JSON.stringify(stateToSave)
-            );
+            // Version-specific storage key
+            const version = state.selectedCatalogVersion;
+            const programId = state.currentCatalog.program.id;
+            const storageKey = `mcp:${programId}:state@${version}`;
+
+            localStorage.setItem(storageKey, JSON.stringify(stateToSave));
+
+            console.log(`[SAVE] State saved for version ${version}`);
         }
 
         // Initialize fresh state
@@ -1256,12 +1467,23 @@
 
         function resetProgress() {
             if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                // Clear progress for current version
                 initializeFreshState();
-                saveStateToLocalStorage();
-                updateProgress();
+
+                // Remove localStorage key for current version
+                const version = state.selectedCatalogVersion;
+                const programId = state.currentCatalog.program.id;
+                const storageKey = `mcp:${programId}:state@${version}`;
+                localStorage.removeItem(storageKey);
+
+                // Re-render UI (version switcher remains visible and functional)
                 renderTabs();
                 renderCurrentPhase();
                 renderPhaseFlowDiagram();
+                updateProgress();
+                updateStateBadge('none');
+
+                console.log(`[RESET] Progress cleared for version ${version}`);
             }
         }
 
@@ -1286,7 +1508,7 @@
             const blocking = [];
 
             // Iterate through all nodes in all phases
-            state.data.phases.forEach(phase => {
+            state.currentCatalog.phases.forEach(phase => {
                 phase.nodes.forEach(node => {
                     // Check if this node has the target in its blocks array
                     if (node.blocks && node.blocks.some(b => b.on === nodeId)) {
@@ -1304,7 +1526,7 @@
         }
 
         function getNodeById(nodeId) {
-            for (const phase of state.data.phases) {
+            for (const phase of state.currentCatalog.phases) {
                 const node = phase.nodes.find(n => n.id === nodeId);
                 if (node) return node;
             }
@@ -1337,14 +1559,14 @@
 
         // Initialize app
         function init() {
-            if (!state.data) return;
+            if (!state.currentCatalog) return;
 
             // Set page title and description
-            document.getElementById('pageTitle').textContent = state.data.program.title;
-            document.getElementById('pageDescription').textContent = state.data.program.description;
+            document.getElementById('pageTitle').textContent = state.currentCatalog.program.title;
+            document.getElementById('pageDescription').textContent = state.currentCatalog.program.description;
 
             // Set initial phase BEFORE rendering tabs (so first tab is marked active)
-            state.currentPhase = state.data.phases[0].id;
+            state.currentPhase = state.currentCatalog.phases[0].id;
 
             // Render tabs (will mark first tab as active)
             renderTabs();
@@ -1352,6 +1574,9 @@
 
             // Render phase flow diagram in footer
             renderPhaseFlowDiagram();
+
+            // Render version selector (always visible)
+            renderVersionSelector();
 
             // Update progress
             updateProgress();
@@ -1373,6 +1598,168 @@
             document.querySelectorAll('#doorFilters .filter-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => handleFilterClick(e, 'door'));
             });
+
+            // Version selector
+            document.getElementById('catalogVersionSelector').addEventListener('change', handleVersionSwitch);
+        }
+
+        // ============================================================
+        // Version Switcher Logic (v0.5.0)
+        // ============================================================
+
+        /**
+         * Render the version selector dropdown
+         * Populates with all available versions (sorted highest first)
+         */
+        function renderVersionSelector() {
+            const selector = document.getElementById('catalogVersionSelector');
+            if (!selector) return;
+
+            selector.innerHTML = '';
+
+            const highestVersion = state.availableVersions[0];
+
+            state.availableVersions.forEach(version => {
+                const option = document.createElement('option');
+                option.value = version;
+
+                // Parse version to check for prerelease
+                const parsed = parseSemver(version);
+                const isPrerelease = parsed?.prerelease !== null;
+                const isHighest = version === highestVersion;
+
+                // Label: "v0.4.0 (Latest)" or "v0.4.1-alpha (Prerelease)"
+                let label = `v${version}`;
+                if (isHighest && !isPrerelease) {
+                    label += ' (Latest)';
+                } else if (isPrerelease) {
+                    label += ' (Prerelease)';
+                }
+
+                // Check for frozen status
+                const catalog = state.catalogRegistry[version];
+                if (catalog?.program?.status === 'frozen') {
+                    label += ' 🔒';
+                }
+
+                option.textContent = label;
+
+                // Pre-select current version
+                if (version === state.selectedCatalogVersion) {
+                    option.selected = true;
+                }
+
+                selector.appendChild(option);
+            });
+
+            updateVersionBadge();
+        }
+
+        /**
+         * Update version badge to reflect current selection
+         */
+        function updateVersionBadge() {
+            const badge = document.getElementById('versionBadge');
+            const description = document.getElementById('versionDescription');
+            if (!badge || !state.selectedCatalogVersion) return;
+
+            const version = state.selectedCatalogVersion;
+            const parsed = parseSemver(version);
+            const isPrerelease = parsed?.prerelease !== null;
+            const isHighest = version === state.availableVersions[0];
+            const catalog = state.currentCatalog;
+
+            // Badge text
+            let badgeText = `v${version}`;
+            if (isHighest && !isPrerelease) {
+                badgeText += ' (Latest)';
+                badge.className = 'version-badge latest';
+            } else if (isPrerelease) {
+                badgeText += ' (Prerelease)';
+                badge.className = 'version-badge prerelease';
+            } else {
+                badge.className = 'version-badge';
+            }
+
+            // Check for frozen status
+            if (catalog?.program?.status === 'frozen') {
+                badgeText += ' 🔒';
+                badge.className = 'version-badge frozen';
+            }
+
+            badge.textContent = badgeText;
+
+            // Description
+            if (description && catalog?.program?.description) {
+                description.textContent = catalog.program.description;
+            }
+        }
+
+        /**
+         * Handle version switch (triggered by dropdown change)
+         */
+        function handleVersionSwitch(event) {
+            const newVersion = event.target.value;
+
+            if (newVersion === state.selectedCatalogVersion) {
+                return;  // No change
+            }
+
+            // Warn if there's unsaved progress (paranoid check - we auto-save)
+            const hasProgress = Object.keys(state.progress).length > 0;
+            if (hasProgress) {
+                const confirmed = confirm(
+                    `Switch to version ${newVersion}?\n\n` +
+                    `Your current progress will be auto-saved for version ${state.selectedCatalogVersion}.\n` +
+                    `Progress for version ${newVersion} will be loaded (if available).`
+                );
+
+                if (!confirmed) {
+                    // Reset dropdown to current version
+                    event.target.value = state.selectedCatalogVersion;
+                    return;
+                }
+            }
+
+            // Save current state before switching
+            saveStateToLocalStorage();
+            console.log(`[VERSION] Saved state for version ${state.selectedCatalogVersion}`);
+
+            // Switch to new version
+            state.selectedCatalogVersion = newVersion;
+            state.currentCatalog = state.catalogRegistry[newVersion];
+
+            // Load state for new version
+            loadStateForCurrentVersion();
+
+            // Re-render entire UI
+            renderTabs();
+            renderCurrentPhase();
+            renderPhaseFlowDiagram();
+            updateProgress();
+            updateVersionBadge();
+
+            console.log(`[VERSION] Switched to version ${newVersion}`);
+        }
+
+        /**
+         * Load state for the currently selected catalog version
+         * Called after version switch or initial load
+         */
+        function loadStateForCurrentVersion() {
+            const version = state.selectedCatalogVersion;
+            const programId = state.currentCatalog.program.id;
+            const storageKey = `mcp:${programId}:state@${version}`;
+
+            const savedState = localStorage.getItem(storageKey);
+
+            if (savedState) {
+                console.log(`[STATE] Found saved state for version ${version}`);
+                restoreStateFromLocalStorage(JSON.parse(savedState));
+            } else {
+                console.log(`[STATE] No saved state for version ${version}, initializing fresh`);
+                initializeFreshState();
+            }
         }
 
         // Update state badge
@@ -1407,7 +1794,7 @@
             const tabsContainer = document.getElementById('tabs');
             tabsContainer.innerHTML = '';
 
-            state.data.phases.forEach(phase => {
+            state.currentCatalog.phases.forEach(phase => {
                 const tab = document.createElement('button');
                 tab.className = 'tab';
 
@@ -1459,7 +1846,7 @@
             }
 
             // Single phase rendering
-            const phase = state.data.phases.find(p => p.id === state.currentPhase);
+            const phase = state.currentCatalog.phases.find(p => p.id === state.currentPhase);
             if (!phase) return;
 
             // Apply filters
@@ -1489,7 +1876,7 @@
             let html = '<div class="phase-header"><h2 class="phase-title">All Phases</h2><p class="phase-description">Viewing all decision nodes across all phases</p></div>';
 
             let totalFiltered = 0;
-            state.data.phases.forEach(phase => {
+            state.currentCatalog.phases.forEach(phase => {
                 const filteredNodes = filterNodes(phase.nodes);
                 if (filteredNodes.length > 0) {
                     html += `<h3 style="color: ${phase.color}; margin: 30px 0 15px 0;">${phase.title}</h3>`;
@@ -1527,9 +1914,9 @@
         function renderPhaseFlowDiagram() {
             const svg = document.getElementById('phase-flow-diagram');
             const lane = document.getElementById('phase-lane');
-            if (!svg || !lane || !state.data) return;
+            if (!svg || !lane || !state.currentCatalog) return;
 
-            const phases = state.data.phases;
+            const phases = state.currentCatalog.phases;
             const W = 1200 - 32;
             const colWidth = phases.length ? W / phases.length : W;
 
@@ -1959,7 +2346,7 @@
             let totalImportant = 0;
             let completedImportant = 0;
 
-            state.data.phases.forEach(phase => {
+            state.currentCatalog.phases.forEach(phase => {
                 phase.nodes.forEach(node => {
                     if (node.level === 'required' || node.level === 'recommended') {
                         totalImportant++;
@@ -2057,13 +2444,13 @@
             const now = new Date().toISOString();
 
             // Compute catalog fingerprint
-            const catalogJSON = JSON.stringify(state.data);
+            const catalogJSON = JSON.stringify(state.currentCatalog);
             const catalogFingerprint = await computeSHA256(catalogJSON);
 
             const stateObj = {
                 state_version: '0.4.0',
-                program_id: state.data.program.id,
-                catalog_version: state.data.program.version,
+                program_id: state.currentCatalog.program.id,
+                catalog_version: state.currentCatalog.program.version,
                 catalog_fingerprint: `sha256:${catalogFingerprint}`,
 
                 metadata: {
@@ -2071,7 +2458,7 @@
                     updated_at: now,
                     export_context: {
                         hostname: window.location.hostname,
-                        app_version: '0.4.2',
+                        app_version: '0.4.3',
                         user_agent: navigator.userAgent
                     }
                 },
@@ -2206,13 +2593,48 @@
                     return;
                 }
 
-                // 2. Check program ID match
-                if (importedState.program_id !== state.data.program.id) {
-                    alert(`Program ID mismatch:\nState file is for "${importedState.program_id}" but catalog is "${state.data.program.id}"`);
+                // 2. Validate catalog version
+                const importedVersion = importedState.catalog_version;
+                if (!importedVersion) {
+                    alert(`Invalid state file:\nMissing catalog_version field`);
                     return;
                 }
 
-                // 3. Reconciliation (if catalog changed)
+                if (!state.catalogRegistry[importedVersion]) {
+                    alert(`Catalog version mismatch:\nState file requires version ${importedVersion}\nAvailable versions: ${state.availableVersions.join(', ')}`);
+                    return;
+                }
+
+                // 3. Check if version switch is needed
+                const needsVersionSwitch = importedVersion !== state.selectedCatalogVersion;
+                if (needsVersionSwitch) {
+                    const switchConfirmed = confirm(
+                        `The imported state is for catalog version ${importedVersion}.\n` +
+                        `You are currently using version ${state.selectedCatalogVersion}.\n\n` +
+                        `Switch to version ${importedVersion} to import this state?`
+                    );
+
+                    if (!switchConfirmed) {
+                        console.log('[IMPORT] User declined version switch');
+                        return;
+                    }
+
+                    // Switch version before import
+                    state.selectedCatalogVersion = importedVersion;
+                    state.currentCatalog = state.catalogRegistry[importedVersion];
+
+                    // Update UI immediately
+                    document.getElementById('catalogVersionSelector').value = importedVersion;
+                    updateVersionBadge();
+                }
+
+                // 4. Check program ID match (use current catalog after potential switch)
+                if (importedState.program_id !== state.currentCatalog.program.id) {
+                    alert(`Program ID mismatch:\nState file is for "${importedState.program_id}" but catalog is "${state.currentCatalog.program.id}"`);
+                    return;
+                }
+
+                // 5. Reconciliation (if catalog changed)
                 const reconcileResult = reconcileState(importedState);
 
                 // 4. Show import summary and confirm
@@ -2288,7 +2710,7 @@
             const progress = {};
 
             // 1. Iterate through current catalog nodes
-            for (const phase of state.data.phases) {
+            for (const phase of state.currentCatalog.phases) {
                 for (const node of phase.nodes) {
                     const nodeId = node.id;
                     const importedNode = importedState.nodes[nodeId];
@@ -2319,7 +2741,7 @@
 
             // 2. Detect orphan nodes (in state but not in catalog)
             for (const nodeId of Object.keys(importedState.nodes)) {
-                const existsInCatalog = state.data.phases.some(phase =>
+                const existsInCatalog = state.currentCatalog.phases.some(phase =>
                     phase.nodes.some(node => node.id === nodeId)
                 );
 

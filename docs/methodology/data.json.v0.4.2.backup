@@ -1,0 +1,1089 @@
+{
+  "program": {
+    "id": "mcp-server-delivery",
+    "title": "MCP Server Development Methodology",
+    "version": "0.3.0",
+    "description": "Decision-driven delivery framework for two-person teams (architect + developer) building Model Context Protocol servers",
+    "last_updated": "2025-01-23"
+  },
+  "phases": [
+    {
+      "id": "getting-started",
+      "title": "Getting Started",
+      "description": "Initial setup and foundational decisions for your MCP server project",
+      "color": "#3B82F6",
+      "nodes": [
+        {
+          "id": "server-naming",
+          "title": "Choose server naming pattern",
+          "summary": "Decide on naming convention: Python uses {service}_mcp, Node uses {service}-mcp-server",
+          "why": "Consistent discoverability across ecosystem; avoid feature/version coupling",
+          "door": "one_way",
+          "level": "required",
+          "tags": [
+            "naming",
+            "architecture"
+          ],
+          "effort": {
+            "min": 15,
+            "max": 20,
+            "confidence": "high"
+          },
+          "evidence_policy": [
+            {
+              "type": "spike",
+              "required_at": "gate",
+              "criteria": "Validate naming pattern across ecosystem examples"
+            }
+          ],
+          "decision_input": {
+            "label": "Server Name",
+            "placeholder": "analytics_mcp",
+            "pattern": "^[a-z0-9_-]+$",
+            "help": "Python: {service}_mcp, Node: {service}-mcp-server"
+          },
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "choos server name pattern decid on name convent python use servic _mcp node use servic mcp server consist discover across ecosystem avoid featur version coupl name architectur"
+        },
+        {
+          "id": "transport-selection",
+          "title": "Select transport mechanism",
+          "summary": "Choose stdio (local/CLI), HTTP (remote/multi-client), or SSE (real-time updates)",
+          "why": "Transport choice affects deployment complexity and scalability",
+          "door": "one_way",
+          "level": "required",
+          "tags": [
+            "architecture",
+            "transport"
+          ],
+          "effort": {
+            "min": 25,
+            "max": 45,
+            "confidence": "medium"
+          },
+          "evidence_policy": [
+            {
+              "type": "spike",
+              "required_at": "gate",
+              "criteria": "Prototype transport mechanism with MCP SDK"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "select transport mechan choos stdio local cli http remot multi client or sse real time updat transport choic affect deploy complex and scalabl architectur transport"
+        },
+        {
+          "id": "tool-naming",
+          "title": "Define tool naming conventions",
+          "summary": "Use snake_case with service prefix, start with verbs (get/list/create)",
+          "why": "Avoid cross-server collisions and provide predictable intent",
+          "door": "one_way",
+          "level": "required",
+          "tags": [
+            "naming",
+            "tooling"
+          ],
+          "effort": {
+            "min": 10,
+            "max": 20,
+            "confidence": "high"
+          },
+          "evidence_policy": [
+            {
+              "type": "spike",
+              "required_at": "gate",
+              "criteria": "Define naming pattern with examples"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "server-naming",
+              "reason": "Server name must be chosen first to derive tool prefix"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "defin tool name convent use snake_cas with servic prefix start with verb get list creat avoid cross server collis and provid predict intent name tool"
+        }
+      ],
+      "gate": {
+        "id": "getting-started-gate",
+        "purpose": "Foundational architecture decisions validated",
+        "applies_to": "phase",
+        "checks": [
+          {
+            "id": "gs-gate-1",
+            "description": "ADR present for naming pattern decision",
+            "predicate": {
+              "kind": "node-field-present",
+              "target": "server-naming",
+              "field": "adr_ref",
+              "expected": "non-null"
+            }
+          },
+          {
+            "id": "gs-gate-2",
+            "description": "ADR present for transport mechanism",
+            "predicate": {
+              "kind": "node-field-present",
+              "target": "transport-selection",
+              "field": "adr_ref",
+              "expected": "non-null"
+            }
+          },
+          {
+            "id": "gs-gate-3",
+            "description": "Transport spike validates choice",
+            "predicate": {
+              "kind": "evidence-meets",
+              "target": "transport-selection",
+              "evidence_type": "spike",
+              "result": "meets"
+            }
+          },
+          {
+            "id": "gs-gate-4",
+            "description": "All required nodes completed",
+            "predicate": {
+              "kind": "all-of",
+              "query": {
+                "phase": "getting-started",
+                "level": "required"
+              },
+              "condition": "status.state == done"
+            }
+          }
+        ],
+        "approvers": [
+          "SA",
+          "DEV"
+        ],
+        "outcomes": [
+          "pass",
+          "fix_forward",
+          "rollback"
+        ]
+      }
+    },
+    {
+      "id": "core-features",
+      "title": "Core Features",
+      "description": "Essential functionality and tool implementation",
+      "color": "#10B981",
+      "nodes": [
+        {
+          "id": "tool-atomicity",
+          "title": "Design atomic tools",
+          "summary": "Keep tools focused on single operations for composability",
+          "why": "Enable safer side effects and better LLM reasoning",
+          "door": "two_way",
+          "level": "required",
+          "tags": [
+            "tooling"
+          ],
+          "effort": {
+            "min": 60,
+            "max": 120,
+            "confidence": "medium"
+          },
+          "evidence_policy": [
+            {
+              "type": "test_report",
+              "required_at": "completion",
+              "criteria": "Unit tests demonstrate single responsibility"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "server-naming",
+              "reason": "Need naming pattern established"
+            },
+            {
+              "on": "transport-selection",
+              "reason": "Transport affects tool interface design"
+            },
+            {
+              "on": "tool-naming",
+              "reason": "Tool naming must be consistent"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "design atom tool keep tool focus on singl oper for compos enabl safer side effect and better llm reason tool"
+        },
+        {
+          "id": "input-validation",
+          "title": "Implement input validation with JSON Schema",
+          "summary": "Use Pydantic (Python) or Zod (TypeScript) for type-safe inputs",
+          "why": "Input safety and predictability",
+          "door": "guardrail",
+          "level": "required",
+          "tags": [
+            "security",
+            "integration"
+          ],
+          "effort": {
+            "min": 25,
+            "max": 40,
+            "confidence": "high"
+          },
+          "evidence_policy": [
+            {
+              "type": "test_report",
+              "required_at": "completion",
+              "criteria": "Tests cover invalid input rejection"
+            },
+            {
+              "type": "security",
+              "required_at": "gate",
+              "criteria": "Security review confirms injection prevention"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "server-naming",
+              "reason": "Schema namespace depends on server name"
+            },
+            {
+              "on": "transport-selection",
+              "reason": "Transport protocol defines validation points"
+            },
+            {
+              "on": "tool-naming",
+              "reason": "Tool schemas must match naming conventions"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "implement input valid with json schema use pydant python or zod typescript for type safe input input safeti and predict secur integr"
+        },
+        {
+          "id": "response-formats",
+          "title": "Support dual response formats (JSON + Markdown)",
+          "summary": "Default to Markdown for humans, offer JSON for programmatic use",
+          "why": "Balance human readability with machine parsability",
+          "door": "two_way",
+          "level": "required",
+          "tags": [
+            "formats"
+          ],
+          "effort": {
+            "min": 45,
+            "max": 75,
+            "confidence": "medium"
+          },
+          "evidence_policy": [
+            {
+              "type": "test_report",
+              "required_at": "completion",
+              "criteria": "Tests verify both format outputs are equivalent"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "server-naming",
+              "reason": "Format selection applies to all tools"
+            },
+            {
+              "on": "transport-selection",
+              "reason": "Transport headers affect format negotiation"
+            },
+            {
+              "on": "tool-naming",
+              "reason": "Response format convention must be consistent"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "support dual respons format json markdown default to markdown for human offer json for programmat use balanc human readabl with machin parsabl format"
+        },
+        {
+          "id": "tool-annotations",
+          "title": "Add tool annotations (hints)",
+          "summary": "Provide readOnlyHint, destructiveHint, idempotentHint, openWorldHint",
+          "why": "Improve client UX and governance",
+          "door": "two_way",
+          "level": "recommended",
+          "tags": [
+            "tooling",
+            "ux"
+          ],
+          "effort": {
+            "min": 20,
+            "max": 40,
+            "confidence": "high"
+          },
+          "blocks": [
+            {
+              "on": "tool-atomicity",
+              "reason": "Annotations describe tool behavior characteristics"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "add tool annot hint provid readonlyhint destructivehint idempotenthint openworldhint improv client ux and govern tool ux"
+        }
+      ],
+      "gate": {
+        "id": "core-features-gate",
+        "purpose": "Essential functionality implemented and tested",
+        "applies_to": "phase",
+        "checks": [
+          {
+            "id": "cf-gate-1",
+            "description": "Contract defined for all design nodes",
+            "predicate": {
+              "kind": "all-of",
+              "query": {
+                "phase": "core-features",
+                "level": "required",
+                "tags": [
+                  "tooling"
+                ]
+              },
+              "condition": "has_contract"
+            }
+          },
+          {
+            "id": "cf-gate-2",
+            "description": "Input validation guardrail has passing security evidence",
+            "predicate": {
+              "kind": "evidence-meets",
+              "target": "input-validation",
+              "evidence_type": "security",
+              "result": "meets"
+            }
+          },
+          {
+            "id": "cf-gate-3",
+            "description": "All implementation nodes have passing tests",
+            "predicate": {
+              "kind": "all-of",
+              "query": {
+                "phase": "core-features",
+                "level": "required"
+              },
+              "condition": "has_evidence:test_report"
+            }
+          },
+          {
+            "id": "cf-gate-4",
+            "description": "All required nodes completed",
+            "predicate": {
+              "kind": "all-of",
+              "query": {
+                "phase": "core-features",
+                "level": "required"
+              },
+              "condition": "status.state == done"
+            }
+          }
+        ],
+        "approvers": [
+          "SA",
+          "DEV"
+        ],
+        "outcomes": [
+          "pass",
+          "fix_forward",
+          "rollback"
+        ]
+      }
+    },
+    {
+      "id": "production-ready",
+      "title": "Production Ready",
+      "description": "Security, performance, and reliability for production deployments",
+      "color": "#EF4444",
+      "nodes": [
+        {
+          "id": "pagination-strategy",
+          "title": "Implement pagination with offset/cursor",
+          "summary": "Never load all results into memory; default to 20-50 items per page",
+          "why": "Protect system resources and handle large datasets",
+          "door": "two_way",
+          "level": "required",
+          "tags": [
+            "performance"
+          ],
+          "effort": {
+            "min": 120,
+            "max": 180,
+            "confidence": "medium"
+          },
+          "evidence_policy": [
+            {
+              "type": "test_report",
+              "required_at": "completion",
+              "criteria": "Tests verify pagination with large datasets"
+            },
+            {
+              "type": "perf",
+              "required_at": "gate",
+              "criteria": "Memory usage stays under 100MB with 10K+ records"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "tool-atomicity",
+              "reason": "Pagination applies to list tools"
+            },
+            {
+              "on": "input-validation",
+              "reason": "Pagination parameters must be validated"
+            },
+            {
+              "on": "response-formats",
+              "reason": "Both JSON and Markdown must support pagination metadata"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "implement pagin with offset cursor never load all result into memori default to 20 50 item per page protect system resourc and handl larg dataset perform"
+        },
+        {
+          "id": "limits-character-cap",
+          "title": "Add CHARACTER_LIMIT constant (~25k)",
+          "summary": "Truncate large responses gracefully with filtering guidance",
+          "why": "Manage output size and avoid context window overflow",
+          "door": "two_way",
+          "level": "required",
+          "tags": [
+            "performance"
+          ],
+          "effort": {
+            "min": 45,
+            "max": 75,
+            "confidence": "high"
+          },
+          "evidence_policy": [
+            {
+              "type": "test_report",
+              "required_at": "completion",
+              "criteria": "Tests verify truncation with helpful guidance"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "tool-atomicity",
+              "reason": "Character limit applies to all tool responses"
+            },
+            {
+              "on": "input-validation",
+              "reason": "Limit must be configurable via parameters"
+            },
+            {
+              "on": "response-formats",
+              "reason": "Both formats must respect character limits"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "add character_limit constant 25k truncat larg respons grace with filter guidanc manag output size and avoid context window overflow perform"
+        },
+        {
+          "id": "auth-oauth21",
+          "title": "Implement authentication (OAuth 2.1)",
+          "summary": "Add audience validation and token checking for secured endpoints",
+          "why": "Authentication integrity and user authorization",
+          "door": "one_way",
+          "level": "required",
+          "tags": [
+            "security"
+          ],
+          "effort": {
+            "min": 240,
+            "max": 360,
+            "confidence": "medium"
+          },
+          "evidence_policy": [
+            {
+              "type": "spike",
+              "required_at": "gate",
+              "criteria": "Validate OAuth 2.1 library compatibility with MCP"
+            },
+            {
+              "type": "security",
+              "required_at": "completion",
+              "criteria": "Security audit confirms OWASP compliance"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "tool-atomicity",
+              "reason": "Auth applies to all protected tools"
+            },
+            {
+              "on": "input-validation",
+              "reason": "Token validation is input validation"
+            },
+            {
+              "on": "response-formats",
+              "reason": "Error responses must follow format conventions"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "implement authent oauth 2 1 add audienc valid and token check for secur endpoint authent integr and user author secur"
+        },
+        {
+          "id": "input-security",
+          "title": "Validate all inputs (paths, URLs, commands)",
+          "summary": "Prevent injection attacks and path traversal",
+          "why": "Prevent security vulnerabilities",
+          "door": "guardrail",
+          "level": "required",
+          "tags": [
+            "security"
+          ],
+          "effort": {
+            "min": 90,
+            "max": 150,
+            "confidence": "medium"
+          },
+          "evidence_policy": [
+            {
+              "type": "test_report",
+              "required_at": "completion",
+              "criteria": "Fuzzing tests demonstrate injection prevention"
+            },
+            {
+              "type": "security",
+              "required_at": "gate",
+              "criteria": "Security review covers all input vectors"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "input-validation",
+              "reason": "Extends base validation with security rules"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "valid all input path url command prevent inject attack and path travers prevent secur vulner secur"
+        },
+        {
+          "id": "transport-https",
+          "title": "Use HTTPS and validate certificates",
+          "summary": "Enforce transport security for all network communication",
+          "why": "Protect data in transit",
+          "door": "one_way",
+          "level": "required",
+          "tags": [
+            "security",
+            "transport"
+          ],
+          "effort": {
+            "min": 45,
+            "max": 75,
+            "confidence": "high"
+          },
+          "evidence_policy": [
+            {
+              "type": "spike",
+              "required_at": "gate",
+              "criteria": "Validate TLS configuration with MCP clients"
+            },
+            {
+              "type": "security",
+              "required_at": "completion",
+              "criteria": "SSL Labs A+ rating or equivalent"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "transport-selection",
+              "reason": "HTTPS applies to HTTP transport choice"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "use http and valid certif enforc transport secur for all network commun protect data in transit secur transport"
+        },
+        {
+          "id": "testing-comprehensive",
+          "title": "Implement comprehensive testing",
+          "summary": "Test functionally, integrationally, securely, under load, and for error handling",
+          "why": "Comprehensive quality assurance",
+          "door": "guardrail",
+          "level": "required",
+          "tags": [
+            "testing"
+          ],
+          "effort": {
+            "min": 480,
+            "max": 720,
+            "confidence": "low"
+          },
+          "evidence_policy": [
+            {
+              "type": "test_report",
+              "required_at": "completion",
+              "criteria": "Coverage >80%, all critical paths tested"
+            },
+            {
+              "type": "security",
+              "required_at": "gate",
+              "criteria": "Security test suite passes"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "tool-atomicity",
+              "reason": "All tools must be tested"
+            },
+            {
+              "on": "input-validation",
+              "reason": "Validation logic must be tested"
+            },
+            {
+              "on": "response-formats",
+              "reason": "Format conversion must be tested"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "implement comprehens test test function integr secur under load and for error handl comprehens qualiti assur test"
+        }
+      ],
+      "gate": {
+        "id": "production-ready-gate",
+        "purpose": "Production-grade security, performance, and reliability validated",
+        "applies_to": "phase",
+        "checks": [
+          {
+            "id": "pr-gate-1",
+            "description": "ADR with rollback plan for authentication decision",
+            "predicate": {
+              "kind": "adr-has-section",
+              "target": "auth-oauth21",
+              "section": "rollback-plan"
+            }
+          },
+          {
+            "id": "pr-gate-2",
+            "description": "ADR with rollback plan for HTTPS enforcement",
+            "predicate": {
+              "kind": "adr-has-section",
+              "target": "transport-https",
+              "section": "rollback-plan"
+            }
+          },
+          {
+            "id": "pr-gate-3",
+            "description": "All guardrail nodes have passing security evidence",
+            "predicate": {
+              "kind": "all-of",
+              "query": {
+                "phase": "production-ready",
+                "door": "guardrail",
+                "level": "required"
+              },
+              "condition": "has_evidence:security:meets"
+            }
+          },
+          {
+            "id": "pr-gate-4",
+            "description": "Performance validation for pagination",
+            "predicate": {
+              "kind": "evidence-meets",
+              "target": "pagination-strategy",
+              "evidence_type": "perf",
+              "result": "meets"
+            }
+          },
+          {
+            "id": "pr-gate-5",
+            "description": "All required nodes completed",
+            "predicate": {
+              "kind": "all-of",
+              "query": {
+                "phase": "production-ready",
+                "level": "required"
+              },
+              "condition": "status.state == done"
+            }
+          }
+        ],
+        "approvers": [
+          "SA",
+          "DEV"
+        ],
+        "outcomes": [
+          "pass",
+          "fix_forward",
+          "rollback"
+        ]
+      }
+    },
+    {
+      "id": "advanced",
+      "title": "Advanced",
+      "description": "Optimization and advanced patterns for mature servers",
+      "color": "#8B5CF6",
+      "nodes": [
+        {
+          "id": "tool-discovery",
+          "title": "Support dynamic tool discovery",
+          "summary": "Enable runtime tool registration and change notifications",
+          "why": "Runtime adaptability for evolving services",
+          "door": "two_way",
+          "level": "optional",
+          "tags": [
+            "architecture",
+            "integration"
+          ],
+          "effort": {
+            "min": 240,
+            "max": 360,
+            "confidence": "low"
+          },
+          "blocks": [
+            {
+              "on": "tool-atomicity",
+              "reason": "Dynamic tools must follow same design principles"
+            },
+            {
+              "on": "input-validation",
+              "reason": "Dynamic tools must validate inputs"
+            },
+            {
+              "on": "response-formats",
+              "reason": "Dynamic tools must support both formats"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "support dynam tool discoveri enabl runtim tool registr and chang notif runtim adapt for evolv servic architectur integr"
+        },
+        {
+          "id": "ops-rate-limiting",
+          "title": "Implement rate limiting",
+          "summary": "Rate-limit resource-heavy tools at transport and tool levels",
+          "why": "Fair use and system stability",
+          "door": "operational",
+          "level": "recommended",
+          "tags": [
+            "ops",
+            "performance"
+          ],
+          "effort": {
+            "min": 120,
+            "max": 180,
+            "confidence": "medium"
+          },
+          "evidence_policy": [
+            {
+              "type": "ops_runbook",
+              "required_at": "completion",
+              "criteria": "Runbook documents rate limit configuration and monitoring"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "pagination-strategy",
+              "reason": "Rate limiting complements pagination strategy"
+            },
+            {
+              "on": "limits-character-cap",
+              "reason": "Both are resource protection mechanisms"
+            },
+            {
+              "on": "auth-oauth21",
+              "reason": "Rate limits apply per authenticated user"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "implement rate limit rate limit resourc heavi tool at transport and tool level fair use and system stabil op perform"
+        },
+        {
+          "id": "ops-observability",
+          "title": "Add logging, monitoring, and audit trails",
+          "summary": "Comprehensive observability for production operations",
+          "why": "Operational visibility and compliance",
+          "door": "operational",
+          "level": "recommended",
+          "tags": [
+            "observability"
+          ],
+          "effort": {
+            "min": 180,
+            "max": 240,
+            "confidence": "medium"
+          },
+          "evidence_policy": [
+            {
+              "type": "ops_runbook",
+              "required_at": "completion",
+              "criteria": "Runbook documents logging strategy and alert setup"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "pagination-strategy",
+              "reason": "Monitor pagination usage patterns"
+            },
+            {
+              "on": "limits-character-cap",
+              "reason": "Track truncation frequency"
+            },
+            {
+              "on": "auth-oauth21",
+              "reason": "Audit authentication events"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "add log monitor and audit trail comprehens observ for product oper oper visibl and complianc observ"
+        },
+        {
+          "id": "ops-timeouts",
+          "title": "Implement timeouts and progress reporting",
+          "summary": "Add timeouts at multiple levels and report progress for long operations",
+          "why": "Responsiveness and user control",
+          "door": "operational",
+          "level": "recommended",
+          "tags": [
+            "ops",
+            "ux"
+          ],
+          "effort": {
+            "min": 90,
+            "max": 150,
+            "confidence": "high"
+          },
+          "evidence_policy": [
+            {
+              "type": "ops_runbook",
+              "required_at": "completion",
+              "criteria": "Runbook documents timeout configuration and tuning"
+            }
+          ],
+          "blocks": [
+            {
+              "on": "pagination-strategy",
+              "reason": "Timeouts prevent pagination from hanging"
+            },
+            {
+              "on": "limits-character-cap",
+              "reason": "Timeout before exceeding character limits"
+            },
+            {
+              "on": "auth-oauth21",
+              "reason": "Token refresh must respect timeouts"
+            }
+          ],
+          "status": {
+            "state": "todo"
+          },
+          "_search_stemmed": "implement timeout and progress report add timeout at multipl level and report progress for long oper respons and user control op ux"
+        }
+      ],
+      "gate": {
+        "id": "advanced-gate",
+        "purpose": "Advanced operational patterns validated",
+        "applies_to": "phase",
+        "checks": [
+          {
+            "id": "adv-gate-1",
+            "description": "Operational runbooks exist for all recommended ops nodes",
+            "predicate": {
+              "kind": "all-of",
+              "query": {
+                "phase": "advanced",
+                "door": "operational",
+                "level": "recommended"
+              },
+              "condition": "has_evidence:ops_runbook"
+            }
+          },
+          {
+            "id": "adv-gate-2",
+            "description": "SLOs defined for monitoring and rate limiting",
+            "predicate": {
+              "kind": "artifact-exists",
+              "artifact_type": "slo",
+              "targets": [
+                "ops-rate-limiting",
+                "ops-observability"
+              ]
+            }
+          },
+          {
+            "id": "adv-gate-3",
+            "description": "All recommended nodes completed",
+            "predicate": {
+              "kind": "all-of",
+              "query": {
+                "phase": "advanced",
+                "level": "recommended"
+              },
+              "condition": "status.state == done"
+            }
+          }
+        ],
+        "approvers": [
+          "SA",
+          "DEV"
+        ],
+        "outcomes": [
+          "pass",
+          "fix_forward"
+        ]
+      }
+    }
+  ],
+  "global_gates": [
+    {
+      "id": "G-Risk",
+      "purpose": "High-risk decision validation (applies to all one-way doors)",
+      "applies_to": "door:one_way",
+      "checks": [
+        {
+          "id": "risk-1",
+          "description": "ADR present with decision rationale",
+          "predicate": {
+            "kind": "node-field-present",
+            "target": "$node",
+            "field": "adr_ref",
+            "expected": "non-null"
+          }
+        },
+        {
+          "id": "risk-2",
+          "description": "Rollback plan documented in ADR",
+          "predicate": {
+            "kind": "adr-has-section",
+            "target": "$node",
+            "section": "rollback-plan"
+          }
+        },
+        {
+          "id": "risk-3",
+          "description": "Spike evidence validates decision",
+          "predicate": {
+            "kind": "evidence-meets",
+            "target": "$node",
+            "evidence_type": "spike",
+            "result": "meets"
+          }
+        }
+      ],
+      "approvers": [
+        "SA"
+      ],
+      "outcomes": [
+        "pass",
+        "rollback"
+      ]
+    },
+    {
+      "id": "G-Operate",
+      "purpose": "Operational readiness validation (applies to all operational decisions)",
+      "applies_to": "door:operational",
+      "checks": [
+        {
+          "id": "ops-1",
+          "description": "SLO/SLI defined",
+          "predicate": {
+            "kind": "artifact-exists",
+            "artifact_type": "slo",
+            "target": "$node"
+          }
+        },
+        {
+          "id": "ops-2",
+          "description": "Alert rules configured",
+          "predicate": {
+            "kind": "artifact-exists",
+            "artifact_type": "alert-rules",
+            "target": "$node"
+          }
+        },
+        {
+          "id": "ops-3",
+          "description": "Runbook documented",
+          "predicate": {
+            "kind": "evidence-meets",
+            "target": "$node",
+            "evidence_type": "ops_runbook",
+            "result": "meets"
+          }
+        }
+      ],
+      "approvers": [
+        "DEV"
+      ],
+      "outcomes": [
+        "pass",
+        "fix_forward"
+      ]
+    }
+  ],
+  "levels": [
+    {
+      "id": "required",
+      "label": "Required",
+      "description": "Essential for any MCP server"
+    },
+    {
+      "id": "recommended",
+      "label": "Recommended",
+      "description": "Important for production deployments"
+    },
+    {
+      "id": "optional",
+      "label": "Optional",
+      "description": "Nice to have for advanced use cases"
+    }
+  ],
+  "tags": [
+    "naming",
+    "architecture",
+    "security",
+    "performance",
+    "testing",
+    "observability",
+    "tooling",
+    "formats",
+    "transport",
+    "integration",
+    "ops",
+    "ux"
+  ],
+  "_source": {
+    "transformation_version": "0.3.0",
+    "transformation_date": "2025-01-23",
+    "from_version": "0.2.1",
+    "changes": [
+      "Semantic IDs (auth-oauth21 vs pr-3)",
+      "Effort as ranges with confidence",
+      "Tag canonicalization (20→12 tags)",
+      "Removed type field (computed from tags)",
+      "Evidence policy instead of pre-filled stubs",
+      "Blocks with reasons vs depends_on lists",
+      "Status with cause",
+      "Sparse encoding (omit nulls)",
+      "Structured gate predicates"
+    ]
+  }
+}
