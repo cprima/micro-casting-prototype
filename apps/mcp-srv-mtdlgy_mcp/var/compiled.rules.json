@@ -1,0 +1,646 @@
+{
+  "advisory": {
+    "node_advisory": {
+      "auth-oauth21": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "input-security": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "input-validation": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "limits-character-cap": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "ops-observability": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "ops-rate-limiting": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "ops-timeouts": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "pagination-strategy": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "response-formats": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "server-naming": {
+        "counts": {
+          "anti_patterns": 1,
+          "examples": 2,
+          "success_criteria": 1,
+          "templates": 0
+        },
+        "present": true
+      },
+      "testing-comprehensive": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "tool-annotations": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "tool-atomicity": {
+        "counts": {
+          "anti_patterns": 1,
+          "examples": 1,
+          "success_criteria": 2,
+          "templates": 0
+        },
+        "present": true
+      },
+      "tool-discovery": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "tool-naming": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "transport-https": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      },
+      "transport-selection": {
+        "counts": {
+          "anti_patterns": 0,
+          "examples": 0,
+          "success_criteria": 0,
+          "templates": 0
+        },
+        "present": true
+      }
+    },
+    "phase_advisory": {
+      "advanced": {
+        "counts": {
+          "anti_patterns": 0,
+          "conversation_starters": 0,
+          "decision_trees": 0,
+          "examples": 0,
+          "related_resources": 0,
+          "success_criteria": 0,
+          "templates": 0,
+          "tool_recommendations": 0
+        },
+        "present": true
+      },
+      "core-features": {
+        "counts": {
+          "anti_patterns": 0,
+          "conversation_starters": 0,
+          "decision_trees": 0,
+          "examples": 0,
+          "related_resources": 0,
+          "success_criteria": 0,
+          "templates": 0,
+          "tool_recommendations": 0
+        },
+        "present": true
+      },
+      "getting-started": {
+        "counts": {
+          "anti_patterns": 0,
+          "conversation_starters": 2,
+          "decision_trees": 0,
+          "examples": 1,
+          "related_resources": 1,
+          "success_criteria": 1,
+          "templates": 1,
+          "tool_recommendations": 1
+        },
+        "present": true
+      },
+      "production-ready": {
+        "counts": {
+          "anti_patterns": 0,
+          "conversation_starters": 0,
+          "decision_trees": 0,
+          "examples": 0,
+          "related_resources": 0,
+          "success_criteria": 0,
+          "templates": 0,
+          "tool_recommendations": 0
+        },
+        "present": true
+      }
+    }
+  },
+  "gates": [
+    {
+      "check_id": "gs-gate-1",
+      "condition_token": null,
+      "description": "ADR present for naming pattern decision",
+      "evidence_spec": null,
+      "gate_id": "getting-started-gate",
+      "gate_type": "phase",
+      "kind": "node-field-present",
+      "targets": [
+        "server-naming"
+      ]
+    },
+    {
+      "check_id": "gs-gate-2",
+      "condition_token": null,
+      "description": "ADR present for transport mechanism",
+      "evidence_spec": null,
+      "gate_id": "getting-started-gate",
+      "gate_type": "phase",
+      "kind": "node-field-present",
+      "targets": [
+        "transport-selection"
+      ]
+    },
+    {
+      "check_id": "gs-gate-3",
+      "condition_token": null,
+      "description": "Transport spike validates choice",
+      "evidence_spec": null,
+      "gate_id": "getting-started-gate",
+      "gate_type": "phase",
+      "kind": "evidence-meets",
+      "targets": [
+        "transport-selection"
+      ]
+    },
+    {
+      "check_id": "gs-gate-4",
+      "condition_token": "status.state == done",
+      "description": "All required nodes completed",
+      "evidence_spec": null,
+      "gate_id": "getting-started-gate",
+      "gate_type": "phase",
+      "kind": "all-of",
+      "targets": [
+        "server-naming",
+        "transport-selection",
+        "tool-naming"
+      ]
+    },
+    {
+      "check_id": "cf-gate-1",
+      "condition_token": "has_contract",
+      "description": "Contract defined for all design nodes",
+      "evidence_spec": null,
+      "gate_id": "core-features-gate",
+      "gate_type": "phase",
+      "kind": "all-of",
+      "targets": [
+        "tool-atomicity"
+      ]
+    },
+    {
+      "check_id": "cf-gate-2",
+      "condition_token": null,
+      "description": "Input validation guardrail has passing security evidence",
+      "evidence_spec": null,
+      "gate_id": "core-features-gate",
+      "gate_type": "phase",
+      "kind": "evidence-meets",
+      "targets": [
+        "input-validation"
+      ]
+    },
+    {
+      "check_id": "cf-gate-3",
+      "condition_token": "has_evidence:test_report",
+      "description": "All implementation nodes have passing tests",
+      "evidence_spec": {
+        "result": null,
+        "type": "test_report"
+      },
+      "gate_id": "core-features-gate",
+      "gate_type": "phase",
+      "kind": "all-of",
+      "targets": [
+        "tool-atomicity",
+        "input-validation",
+        "response-formats"
+      ]
+    },
+    {
+      "check_id": "cf-gate-4",
+      "condition_token": "status.state == done",
+      "description": "All required nodes completed",
+      "evidence_spec": null,
+      "gate_id": "core-features-gate",
+      "gate_type": "phase",
+      "kind": "all-of",
+      "targets": [
+        "tool-atomicity",
+        "input-validation",
+        "response-formats"
+      ]
+    },
+    {
+      "check_id": "pr-gate-1",
+      "condition_token": null,
+      "description": "ADR with rollback plan for authentication decision",
+      "evidence_spec": null,
+      "gate_id": "production-ready-gate",
+      "gate_type": "phase",
+      "kind": "adr-has-section",
+      "targets": [
+        "auth-oauth21"
+      ]
+    },
+    {
+      "check_id": "pr-gate-2",
+      "condition_token": null,
+      "description": "ADR with rollback plan for HTTPS enforcement",
+      "evidence_spec": null,
+      "gate_id": "production-ready-gate",
+      "gate_type": "phase",
+      "kind": "adr-has-section",
+      "targets": [
+        "transport-https"
+      ]
+    },
+    {
+      "check_id": "pr-gate-3",
+      "condition_token": "has_evidence:security:meets",
+      "description": "All guardrail nodes have passing security evidence",
+      "evidence_spec": {
+        "result": "meets",
+        "type": "security"
+      },
+      "gate_id": "production-ready-gate",
+      "gate_type": "phase",
+      "kind": "all-of",
+      "targets": [
+        "pagination-strategy",
+        "limits-character-cap",
+        "auth-oauth21",
+        "input-security",
+        "transport-https",
+        "testing-comprehensive"
+      ]
+    },
+    {
+      "check_id": "pr-gate-4",
+      "condition_token": null,
+      "description": "Performance validation for pagination",
+      "evidence_spec": null,
+      "gate_id": "production-ready-gate",
+      "gate_type": "phase",
+      "kind": "evidence-meets",
+      "targets": [
+        "pagination-strategy"
+      ]
+    },
+    {
+      "check_id": "pr-gate-5",
+      "condition_token": "status.state == done",
+      "description": "All required nodes completed",
+      "evidence_spec": null,
+      "gate_id": "production-ready-gate",
+      "gate_type": "phase",
+      "kind": "all-of",
+      "targets": [
+        "pagination-strategy",
+        "limits-character-cap",
+        "auth-oauth21",
+        "input-security",
+        "transport-https",
+        "testing-comprehensive"
+      ]
+    },
+    {
+      "check_id": "adv-gate-1",
+      "condition_token": "has_evidence:ops_runbook",
+      "description": "Operational runbooks exist for all recommended ops nodes",
+      "evidence_spec": {
+        "result": null,
+        "type": "ops_runbook"
+      },
+      "gate_id": "advanced-gate",
+      "gate_type": "phase",
+      "kind": "all-of",
+      "targets": [
+        "ops-rate-limiting",
+        "ops-observability",
+        "ops-timeouts"
+      ]
+    },
+    {
+      "check_id": "adv-gate-2",
+      "condition_token": null,
+      "description": "SLOs defined for monitoring and rate limiting",
+      "evidence_spec": null,
+      "gate_id": "advanced-gate",
+      "gate_type": "phase",
+      "kind": "artifact-exists",
+      "targets": [
+        "ops-rate-limiting",
+        "ops-observability"
+      ]
+    },
+    {
+      "check_id": "adv-gate-3",
+      "condition_token": "status.state == done",
+      "description": "All recommended nodes completed",
+      "evidence_spec": null,
+      "gate_id": "advanced-gate",
+      "gate_type": "phase",
+      "kind": "all-of",
+      "targets": [
+        "ops-rate-limiting",
+        "ops-observability",
+        "ops-timeouts"
+      ]
+    },
+    {
+      "applies_to": "door:one_way",
+      "check_id": "risk-1",
+      "condition_token": null,
+      "description": "ADR present with decision rationale",
+      "evidence_spec": null,
+      "gate_id": "G-Risk",
+      "gate_type": "global",
+      "kind": "node-field-present",
+      "targets": [
+        "$node"
+      ]
+    },
+    {
+      "applies_to": "door:one_way",
+      "check_id": "risk-2",
+      "condition_token": null,
+      "description": "Rollback plan documented in ADR",
+      "evidence_spec": null,
+      "gate_id": "G-Risk",
+      "gate_type": "global",
+      "kind": "adr-has-section",
+      "targets": [
+        "$node"
+      ]
+    },
+    {
+      "applies_to": "door:one_way",
+      "check_id": "risk-3",
+      "condition_token": null,
+      "description": "Spike evidence validates decision",
+      "evidence_spec": null,
+      "gate_id": "G-Risk",
+      "gate_type": "global",
+      "kind": "evidence-meets",
+      "targets": [
+        "$node"
+      ]
+    },
+    {
+      "applies_to": "door:operational",
+      "check_id": "ops-1",
+      "condition_token": null,
+      "description": "SLO/SLI defined",
+      "evidence_spec": null,
+      "gate_id": "G-Operate",
+      "gate_type": "global",
+      "kind": "artifact-exists",
+      "targets": [
+        "$node"
+      ]
+    },
+    {
+      "applies_to": "door:operational",
+      "check_id": "ops-2",
+      "condition_token": null,
+      "description": "Alert rules configured",
+      "evidence_spec": null,
+      "gate_id": "G-Operate",
+      "gate_type": "global",
+      "kind": "artifact-exists",
+      "targets": [
+        "$node"
+      ]
+    },
+    {
+      "applies_to": "door:operational",
+      "check_id": "ops-3",
+      "condition_token": null,
+      "description": "Runbook documented",
+      "evidence_spec": null,
+      "gate_id": "G-Operate",
+      "gate_type": "global",
+      "kind": "evidence-meets",
+      "targets": [
+        "$node"
+      ]
+    }
+  ],
+  "indices": {
+    "door_level_buckets": {
+      "guardrail:required": [
+        "input-validation",
+        "input-security",
+        "testing-comprehensive"
+      ],
+      "one_way:required": [
+        "server-naming",
+        "transport-selection",
+        "tool-naming",
+        "auth-oauth21",
+        "transport-https"
+      ],
+      "operational:recommended": [
+        "ops-rate-limiting",
+        "ops-observability",
+        "ops-timeouts"
+      ],
+      "two_way:optional": [
+        "tool-discovery"
+      ],
+      "two_way:recommended": [
+        "tool-annotations"
+      ],
+      "two_way:required": [
+        "tool-atomicity",
+        "response-formats",
+        "pagination-strategy",
+        "limits-character-cap"
+      ]
+    },
+    "node_to_phase": {
+      "auth-oauth21": "production-ready",
+      "input-security": "production-ready",
+      "input-validation": "core-features",
+      "limits-character-cap": "production-ready",
+      "ops-observability": "advanced",
+      "ops-rate-limiting": "advanced",
+      "ops-timeouts": "advanced",
+      "pagination-strategy": "production-ready",
+      "response-formats": "core-features",
+      "server-naming": "getting-started",
+      "testing-comprehensive": "production-ready",
+      "tool-annotations": "core-features",
+      "tool-atomicity": "core-features",
+      "tool-discovery": "advanced",
+      "tool-naming": "getting-started",
+      "transport-https": "production-ready",
+      "transport-selection": "getting-started"
+    },
+    "phase_to_nodes": {
+      "advanced": [
+        "tool-discovery",
+        "ops-rate-limiting",
+        "ops-observability",
+        "ops-timeouts"
+      ],
+      "core-features": [
+        "tool-atomicity",
+        "input-validation",
+        "response-formats",
+        "tool-annotations"
+      ],
+      "getting-started": [
+        "server-naming",
+        "transport-selection",
+        "tool-naming"
+      ],
+      "production-ready": [
+        "pagination-strategy",
+        "limits-character-cap",
+        "auth-oauth21",
+        "input-security",
+        "transport-https",
+        "testing-comprehensive"
+      ]
+    },
+    "tag_to_nodes": {
+      "architecture": [
+        "server-naming",
+        "transport-selection",
+        "tool-discovery"
+      ],
+      "formats": [
+        "response-formats"
+      ],
+      "integration": [
+        "input-validation",
+        "tool-discovery"
+      ],
+      "naming": [
+        "server-naming",
+        "tool-naming"
+      ],
+      "observability": [
+        "ops-observability"
+      ],
+      "ops": [
+        "ops-rate-limiting",
+        "ops-timeouts"
+      ],
+      "performance": [
+        "pagination-strategy",
+        "limits-character-cap",
+        "ops-rate-limiting"
+      ],
+      "security": [
+        "input-validation",
+        "auth-oauth21",
+        "input-security",
+        "transport-https"
+      ],
+      "testing": [
+        "testing-comprehensive"
+      ],
+      "tooling": [
+        "tool-naming",
+        "tool-atomicity",
+        "tool-annotations"
+      ],
+      "transport": [
+        "transport-selection",
+        "transport-https"
+      ],
+      "ux": [
+        "tool-annotations",
+        "ops-timeouts"
+      ]
+    }
+  }
+}
