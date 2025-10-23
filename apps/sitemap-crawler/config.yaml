@@ -116,6 +116,14 @@ sites:
   #   # type: auto-detected as direct_url
   #   # domain: auto-extracted as semgrep.dev
 
+  # FastMC site URLs
+  - name: fastmc-site
+    source: |
+      https://gofastmcp.com/llms-full.txt
+      https://gofastmcp.com/llms.txt
+    output_pattern: "{domain}"
+    # crawl4ai: {} # Uses default pruning - works well for these docs
+
 # Example: Storage backend configurations (for future use)
 # storage_backends:
 #   local:

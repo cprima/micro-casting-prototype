@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "file:///docs/methodology/schema/advisory.schema.json",
+  "title": "MCP Server Development Methodology - Advisory Types",
+  "description": "Phase and node-level advisory structures (v0.4.0-alpha+)",
+  "$defs": {
+    "PhaseAdvisory": {
+      "type": "object",
+      "required": [
+        "examples",
+        "templates",
+        "anti_patterns",
+        "success_criteria",
+        "decision_trees",
+        "tool_recommendations",
+        "related_resources",
+        "conversation_starters"
+      ],
+      "properties": {
+        "examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdvisoryExample"
+          }
+        },
+        "templates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdvisoryTemplate"
+          }
+        },
+        "anti_patterns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdvisoryAntiPattern"
+          }
+        },
+        "success_criteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdvisoryCriteria"
+          }
+        },
+        "decision_trees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdvisoryDecisionTree"
+          }
+        },
+        "tool_recommendations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdvisoryToolRecommendation"
+          }
+        },
+        "related_resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdvisoryResource"
+          }
+        },
+        "conversation_starters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "NodeAdvisory": {
+      "type": "object",
+      "required": [
+        "examples",
+        "templates",
+        "anti_patterns",
+        "success_criteria"
+      ],
+      "properties": {
+        "examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdvisoryExample"
+          }
+        },
+        "templates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdvisoryTemplate"
+          }
+        },
+        "anti_patterns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdvisoryAntiPattern"
+          }
+        },
+        "success_criteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdvisoryCriteria"
+          }
+        }
+      }
+    },
+    "AdvisoryExample": {
+      "type": "object",
+      "required": [
+        "title",
+        "description"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        }
+      }
+    },
+    "AdvisoryTemplate": {
+      "type": "object",
+      "required": [
+        "name",
+        "content"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "markdown",
+            "text",
+            "json"
+          ]
+        }
+      }
+    },
+    "AdvisoryAntiPattern": {
+      "type": "object",
+      "required": [
+        "title",
+        "problem",
+        "solution"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "problem": {
+          "type": "string"
+        },
+        "solution": {
+          "type": "string"
+        },
+        "example": {
+          "type": "string"
+        }
+      }
+    },
+    "AdvisoryCriteria": {
+      "type": "object",
+      "required": [
+        "criterion",
+        "verification"
+      ],
+      "properties": {
+        "criterion": {
+          "type": "string"
+        },
+        "verification": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "string"
+        }
+      }
+    },
+    "AdvisoryDecisionTree": {
+      "type": "object",
+      "required": [
+        "question",
+        "branches"
+      ],
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "condition",
+              "recommendation"
+            ],
+            "properties": {
+              "condition": {
+                "type": "string"
+              },
+              "recommendation": {
+                "type": "string"
+              },
+              "next": {
+                "$ref": "#/$defs/AdvisoryDecisionTree"
+              }
+            }
+          }
+        }
+      }
+    },
+    "AdvisoryToolRecommendation": {
+      "type": "object",
+      "required": [
+        "tool",
+        "purpose"
+      ],
+      "properties": {
+        "tool": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "AdvisoryResource": {
+      "type": "object",
+      "required": [
+        "title",
+        "url"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "documentation",
+            "article",
+            "video",
+            "example",
+            "tool"
+          ]
+        }
+      }
+    }
+  }
+}

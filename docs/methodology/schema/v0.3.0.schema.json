@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "file:///docs/methodology/schema/v0.3.0.schema.json",
+  "title": "MCP Server Development Methodology v0.3.0",
+  "description": "Schema for frozen v0.3.0 catalog (no advisory blocks)",
+  "type": "object",
+  "required": [
+    "program",
+    "phases",
+    "global_gates",
+    "levels",
+    "tags",
+    "_source"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "file:///docs/methodology/schema/v0.3.0.schema.json"
+    },
+    "program": {
+      "$ref": "#/$defs/Program"
+    },
+    "phases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Phase"
+      }
+    },
+    "global_gates": {
+      "type": "array",
+      "items": {
+        "$ref": "core.schema.json#/$defs/GlobalGate"
+      }
+    },
+    "levels": {
+      "type": "array",
+      "items": {
+        "$ref": "core.schema.json#/$defs/Level"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "_source": {
+      "$ref": "core.schema.json#/$defs/Source"
+    }
+  },
+  "$defs": {
+    "Program": {
+      "allOf": [
+        {
+          "$ref": "core.schema.json#/$defs/ProgramBase"
+        },
+        {
+          "properties": {
+            "version": {
+              "const": "0.3.0"
+            },
+            "status": {
+              "enum": [
+                "frozen",
+                "active",
+                "previous"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Phase": {
+      "allOf": [
+        {
+          "$ref": "core.schema.json#/$defs/PhaseBase"
+        },
+        {
+          "properties": {
+            "nodes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Node"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Node": {
+      "$ref": "core.schema.json#/$defs/NodeBase",
+      "description": "v0.3.0 nodes have no advisory blocks"
+    }
+  }
+}

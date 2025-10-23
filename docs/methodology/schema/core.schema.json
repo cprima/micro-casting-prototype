@@ -1,55 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "file:///docs/schema/v0.3.0.schema.json",
-  "title": "MCP Server Development Methodology v0.3.0",
-  "description": "Schema for frozen v0.3.0 catalog (no advisory blocks)",
-  "type": "object",
-  "required": [
-    "program",
-    "phases",
-    "global_gates",
-    "levels",
-    "tags",
-    "_source"
-  ],
-  "properties": {
-    "$schema": {
-      "type": "string",
-      "const": "file:///docs/schema/v0.3.0.schema.json"
-    },
-    "program": {
-      "$ref": "#/$defs/Program"
-    },
-    "phases": {
-      "type": "array",
-      "items": {
-        "$ref": "#/$defs/Phase"
-      }
-    },
-    "global_gates": {
-      "type": "array",
-      "items": {
-        "$ref": "#/$defs/GlobalGate"
-      }
-    },
-    "levels": {
-      "type": "array",
-      "items": {
-        "$ref": "#/$defs/Level"
-      }
-    },
-    "tags": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "_source": {
-      "$ref": "#/$defs/Source"
-    }
-  },
+  "$id": "file:///docs/methodology/schema/core.schema.json",
+  "title": "MCP Server Development Methodology - Core Definitions",
+  "description": "Shared type definitions used across all methodology versions",
   "$defs": {
-    "Program": {
+    "ProgramBase": {
       "type": "object",
       "required": [
         "id",
@@ -67,8 +22,7 @@
           "type": "string"
         },
         "version": {
-          "type": "string",
-          "const": "0.3.0"
+          "type": "string"
         },
         "description": {
           "type": "string"
@@ -82,7 +36,8 @@
           "enum": [
             "frozen",
             "active",
-            "previous"
+            "previous",
+            "prerelease"
           ]
         },
         "fingerprint": {
@@ -99,7 +54,7 @@
         }
       }
     },
-    "Phase": {
+    "PhaseBase": {
       "type": "object",
       "required": [
         "id",
@@ -126,7 +81,7 @@
         "nodes": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/Node"
+            "$ref": "#/$defs/NodeBase"
           }
         },
         "gate": {
@@ -134,7 +89,7 @@
         }
       }
     },
-    "Node": {
+    "NodeBase": {
       "type": "object",
       "required": [
         "id",
@@ -383,58 +338,7 @@
           "type": "string"
         },
         "predicate": {
-          "$ref": "#/$defs/Predicate"
-        }
-      }
-    },
-    "Predicate": {
-      "type": "object",
-      "required": [
-        "kind"
-      ],
-      "properties": {
-        "kind": {
-          "type": "string",
-          "enum": [
-            "node-field-present",
-            "evidence-meets",
-            "all-of",
-            "adr-has-section",
-            "artifact-exists"
-          ]
-        },
-        "target": {
-          "type": "string"
-        },
-        "targets": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "field": {
-          "type": "string"
-        },
-        "expected": {
-          "type": "string"
-        },
-        "evidence_type": {
-          "type": "string"
-        },
-        "result": {
-          "type": "string"
-        },
-        "query": {
-          "type": "object"
-        },
-        "condition": {
-          "type": "string"
-        },
-        "section": {
-          "type": "string"
-        },
-        "artifact_type": {
-          "type": "string"
+          "$ref": "predicate.schema.json#/$defs/Predicate"
         }
       }
     },

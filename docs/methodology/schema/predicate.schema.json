@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "file:///docs/methodology/schema/predicate.schema.json",
+  "title": "MCP Server Development Methodology - Predicate Grammar",
+  "description": "Locked predicate grammar for gate evaluation",
+  "$defs": {
+    "Predicate": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "node-field-present",
+            "evidence-meets",
+            "all-of",
+            "adr-has-section",
+            "artifact-exists"
+          ],
+          "description": "Locked grammar: only 5 predicate kinds allowed"
+        },
+        "target": {
+          "type": "string",
+          "description": "Single node ID target (for node-field-present, evidence-meets, adr-has-section, artifact-exists)"
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Multiple node ID targets (for all-of)"
+        },
+        "field": {
+          "type": "string",
+          "description": "Field name to check (for node-field-present)"
+        },
+        "expected": {
+          "type": "string",
+          "description": "Expected field value (for node-field-present)"
+        },
+        "evidence_type": {
+          "type": "string",
+          "description": "Evidence type to check (for evidence-meets)",
+          "enum": [
+            "spike",
+            "test_report",
+            "security",
+            "perf",
+            "ops_runbook"
+          ]
+        },
+        "result": {
+          "type": "string",
+          "description": "Required evidence result (for evidence-meets)"
+        },
+        "query": {
+          "type": "object",
+          "description": "Query parameters (for all-of, evidence-meets, artifact-exists)"
+        },
+        "condition": {
+          "type": "string",
+          "description": "Condition token: status.state == done | has_evidence:<type>[:result] | has_contract",
+          "pattern": "^(status\\.state == done|has_evidence:[a-z_]+(?::[a-z_]+)?|has_contract)$"
+        },
+        "section": {
+          "type": "string",
+          "description": "ADR section name (for adr-has-section)"
+        },
+        "artifact_type": {
+          "type": "string",
+          "description": "Artifact type to check (for artifact-exists)"
+        }
+      }
+    }
+  }
+}

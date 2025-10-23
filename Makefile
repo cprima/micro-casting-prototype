@@ -2,7 +2,37 @@
 
 help: ## Show this help message
 	@echo "Available targets:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
+	@echo ""
+	@echo "Setup & Installation:"
+	@echo "  setup                - Complete setup: sync dependencies, install packages, and set up playwright"
+	@echo "  sync                 - Sync and resolve workspace dependencies"
+	@echo "  install              - Install workspace packages in editable mode"
+	@echo "  playwright           - Install Playwright chromium browser"
+	@echo "  verify               - Verify installation"
+	@echo "  reinstall            - Clean and reinstall everything"
+	@echo ""
+	@echo "Testing:"
+	@echo "  test-crawling        - Test the crawling library with example.com"
+	@echo ""
+	@echo "Maintenance:"
+	@echo "  clean                - Remove virtual environment and cache"
+	@echo ""
+	@echo "Sitemap Crawler:"
+	@echo "  crawl-list           - List configured sitemap crawler sites"
+	@echo "  crawl-mcp            - Crawl modelcontextprotocol.io"
+	@echo "  crawl-uipath         - Crawl docs.uipath.com (English only)"
+	@echo "  crawl-all            - Crawl all configured sites"
+	@echo "  crawl-dry-run        - Preview what would be crawled"
+	@echo ""
+	@echo "Documentation:"
+	@echo "  serve                - Serve documentation on http://localhost:8001"
+	@echo ""
+	@echo "MCP Server Methodology - Data Transformation:"
+	@echo "  mcp-transform-ingest    - Stage 1: Ingest - Pick active/previous versions"
+	@echo "  mcp-transform-validate  - Stage 2: Validate - Fail-fast invariant checks"
+	@echo "  mcp-transform-compile   - Stage 3: Compile - Build indices and rules"
+	@echo "  mcp-transform-all       - Run all 3 transformation stages"
+	@echo "  mcp-transform-clean     - Remove generated var/ files"
 
 setup: sync install playwright ## Complete setup: sync dependencies, install packages, and set up playwright
 
@@ -51,5 +81,24 @@ crawl-all: ## Crawl all configured sites
 crawl-dry-run: ## Preview what would be crawled
 	cd apps/sitemap-crawler && uv run sitemap-crawler crawl-all --dry-run
 
+crawl-fastmc: ## Crawl fastmc-site
+	cd apps/sitemap-crawler && uv run sitemap-crawler crawl fastmc-site
+
 serve: ## Serve documentation on http://localhost:8001
 	cd docs && python -m http.server 8001
+
+# MCP Server Methodology - Data Transformation
+mcp-transform-ingest: ## Stage 1: Ingest - Pick active/previous versions
+	cd apps/mcp-srv-mtdlgy_mcp && uv run python transforms/ingest.py
+
+mcp-transform-validate: ## Stage 2: Validate - Fail-fast invariant checks
+	cd apps/mcp-srv-mtdlgy_mcp && uv run python transforms/validate.py
+
+mcp-transform-compile: ## Stage 3: Compile - Build indices and rules
+	cd apps/mcp-srv-mtdlgy_mcp && uv run python transforms/compile.py
+
+mcp-transform-all: ## Run all 3 transformation stages
+	cd apps/mcp-srv-mtdlgy_mcp && uv run python transforms/ingest.py && uv run python transforms/validate.py && uv run python transforms/compile.py
+
+mcp-transform-clean: ## Remove generated var/ files
+	rm -rf apps/mcp-srv-mtdlgy_mcp/var/*.json

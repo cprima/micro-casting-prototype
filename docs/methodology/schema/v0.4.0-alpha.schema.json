@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "file:///docs/methodology/schema/v0.4.0-alpha.schema.json",
+  "title": "MCP Server Development Methodology v0.4.0-alpha",
+  "description": "Schema for v0.4.0-alpha catalog with phase and node-level advisory blocks",
+  "type": "object",
+  "required": [
+    "program",
+    "phases",
+    "global_gates",
+    "levels",
+    "tags",
+    "_source"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "file:///docs/methodology/schema/v0.4.0-alpha.schema.json"
+    },
+    "program": {
+      "$ref": "#/$defs/Program"
+    },
+    "phases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Phase"
+      }
+    },
+    "global_gates": {
+      "type": "array",
+      "items": {
+        "$ref": "core.schema.json#/$defs/GlobalGate"
+      }
+    },
+    "levels": {
+      "type": "array",
+      "items": {
+        "$ref": "core.schema.json#/$defs/Level"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "_source": {
+      "$ref": "core.schema.json#/$defs/Source"
+    }
+  },
+  "$defs": {
+    "Program": {
+      "allOf": [
+        {
+          "$ref": "core.schema.json#/$defs/ProgramBase"
+        },
+        {
+          "properties": {
+            "version": {
+              "const": "0.4.0-alpha"
+            },
+            "status": {
+              "enum": [
+                "frozen",
+                "active",
+                "previous",
+                "prerelease"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Phase": {
+      "allOf": [
+        {
+          "$ref": "core.schema.json#/$defs/PhaseBase"
+        },
+        {
+          "properties": {
+            "nodes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Node"
+              }
+            },
+            "advisory": {
+              "$ref": "advisory.schema.json#/$defs/PhaseAdvisory",
+              "description": "Optional phase-level advisory (v0.4.0-alpha+)"
+            }
+          }
+        }
+      ]
+    },
+    "Node": {
+      "allOf": [
+        {
+          "$ref": "core.schema.json#/$defs/NodeBase"
+        },
+        {
+          "properties": {
+            "advisory": {
+              "$ref": "advisory.schema.json#/$defs/NodeAdvisory",
+              "description": "Optional node-level advisory (v0.4.0-alpha+)"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
