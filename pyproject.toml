@@ -2,6 +2,9 @@
 name = "repo"
 version = "0.0.1"
 requires-python = ">=3.10"
+dependencies = [
+    "nltk>=3.8",
+]
 
 [tool.uv.workspace]
 members = ["libs/*", "apps/*", "apps/uipac/*"]

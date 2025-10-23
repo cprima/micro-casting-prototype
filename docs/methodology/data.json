@@ -20,7 +20,10 @@
           "why": "Consistent discoverability across ecosystem; avoid feature/version coupling",
           "door": "one_way",
           "level": "required",
-          "tags": ["naming", "architecture"],
+          "tags": [
+            "naming",
+            "architecture"
+          ],
           "effort": {
             "min": 15,
             "max": 20,
@@ -35,7 +38,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "choos server name pattern decid on name convent python use servic _mcp node use servic mcp server consist discover across ecosystem avoid featur version coupl name architectur"
         },
         {
           "id": "transport-selection",
@@ -44,7 +48,10 @@
           "why": "Transport choice affects deployment complexity and scalability",
           "door": "one_way",
           "level": "required",
-          "tags": ["architecture", "transport"],
+          "tags": [
+            "architecture",
+            "transport"
+          ],
           "effort": {
             "min": 25,
             "max": 45,
@@ -59,7 +66,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "select transport mechan choos stdio local cli http remot multi client or sse real time updat transport choic affect deploy complex and scalabl architectur transport"
         },
         {
           "id": "tool-naming",
@@ -68,7 +76,10 @@
           "why": "Avoid cross-server collisions and provide predictable intent",
           "door": "one_way",
           "level": "required",
-          "tags": ["naming", "tooling"],
+          "tags": [
+            "naming",
+            "tooling"
+          ],
           "effort": {
             "min": 10,
             "max": 20,
@@ -89,7 +100,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "defin tool name convent use snake_cas with servic prefix start with verb get list creat avoid cross server collis and provid predict intent name tool"
         }
       ],
       "gate": {
@@ -140,8 +152,15 @@
             }
           }
         ],
-        "approvers": ["SA", "DEV"],
-        "outcomes": ["pass", "fix_forward", "rollback"]
+        "approvers": [
+          "SA",
+          "DEV"
+        ],
+        "outcomes": [
+          "pass",
+          "fix_forward",
+          "rollback"
+        ]
       }
     },
     {
@@ -157,7 +176,9 @@
           "why": "Enable safer side effects and better LLM reasoning",
           "door": "two_way",
           "level": "required",
-          "tags": ["tooling"],
+          "tags": [
+            "tooling"
+          ],
           "effort": {
             "min": 60,
             "max": 120,
@@ -186,7 +207,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "design atom tool keep tool focus on singl oper for compos enabl safer side effect and better llm reason tool"
         },
         {
           "id": "input-validation",
@@ -195,7 +217,10 @@
           "why": "Input safety and predictability",
           "door": "guardrail",
           "level": "required",
-          "tags": ["security", "integration"],
+          "tags": [
+            "security",
+            "integration"
+          ],
           "effort": {
             "min": 25,
             "max": 40,
@@ -229,7 +254,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "implement input valid with json schema use pydant python or zod typescript for type safe input input safeti and predict secur integr"
         },
         {
           "id": "response-formats",
@@ -238,7 +264,9 @@
           "why": "Balance human readability with machine parsability",
           "door": "two_way",
           "level": "required",
-          "tags": ["formats"],
+          "tags": [
+            "formats"
+          ],
           "effort": {
             "min": 45,
             "max": 75,
@@ -267,7 +295,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "support dual respons format json markdown default to markdown for human offer json for programmat use balanc human readabl with machin parsabl format"
         },
         {
           "id": "tool-annotations",
@@ -276,7 +305,10 @@
           "why": "Improve client UX and governance",
           "door": "two_way",
           "level": "recommended",
-          "tags": ["tooling", "ux"],
+          "tags": [
+            "tooling",
+            "ux"
+          ],
           "effort": {
             "min": 20,
             "max": 40,
@@ -290,7 +322,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "add tool annot hint provid readonlyhint destructivehint idempotenthint openworldhint improv client ux and govern tool ux"
         }
       ],
       "gate": {
@@ -306,7 +339,9 @@
               "query": {
                 "phase": "core-features",
                 "level": "required",
-                "tags": ["tooling"]
+                "tags": [
+                  "tooling"
+                ]
               },
               "condition": "has_contract"
             }
@@ -346,8 +381,15 @@
             }
           }
         ],
-        "approvers": ["SA", "DEV"],
-        "outcomes": ["pass", "fix_forward", "rollback"]
+        "approvers": [
+          "SA",
+          "DEV"
+        ],
+        "outcomes": [
+          "pass",
+          "fix_forward",
+          "rollback"
+        ]
       }
     },
     {
@@ -363,7 +405,9 @@
           "why": "Protect system resources and handle large datasets",
           "door": "two_way",
           "level": "required",
-          "tags": ["performance"],
+          "tags": [
+            "performance"
+          ],
           "effort": {
             "min": 120,
             "max": 180,
@@ -397,7 +441,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "implement pagin with offset cursor never load all result into memori default to 20 50 item per page protect system resourc and handl larg dataset perform"
         },
         {
           "id": "limits-character-cap",
@@ -406,7 +451,9 @@
           "why": "Manage output size and avoid context window overflow",
           "door": "two_way",
           "level": "required",
-          "tags": ["performance"],
+          "tags": [
+            "performance"
+          ],
           "effort": {
             "min": 45,
             "max": 75,
@@ -435,7 +482,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "add character_limit constant 25k truncat larg respons grace with filter guidanc manag output size and avoid context window overflow perform"
         },
         {
           "id": "auth-oauth21",
@@ -444,7 +492,9 @@
           "why": "Authentication integrity and user authorization",
           "door": "one_way",
           "level": "required",
-          "tags": ["security"],
+          "tags": [
+            "security"
+          ],
           "effort": {
             "min": 240,
             "max": 360,
@@ -478,7 +528,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "implement authent oauth 2 1 add audienc valid and token check for secur endpoint authent integr and user author secur"
         },
         {
           "id": "input-security",
@@ -487,7 +538,9 @@
           "why": "Prevent security vulnerabilities",
           "door": "guardrail",
           "level": "required",
-          "tags": ["security"],
+          "tags": [
+            "security"
+          ],
           "effort": {
             "min": 90,
             "max": 150,
@@ -513,7 +566,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "valid all input path url command prevent inject attack and path travers prevent secur vulner secur"
         },
         {
           "id": "transport-https",
@@ -522,7 +576,10 @@
           "why": "Protect data in transit",
           "door": "one_way",
           "level": "required",
-          "tags": ["security", "transport"],
+          "tags": [
+            "security",
+            "transport"
+          ],
           "effort": {
             "min": 45,
             "max": 75,
@@ -548,7 +605,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "use http and valid certif enforc transport secur for all network commun protect data in transit secur transport"
         },
         {
           "id": "testing-comprehensive",
@@ -557,7 +615,9 @@
           "why": "Comprehensive quality assurance",
           "door": "guardrail",
           "level": "required",
-          "tags": ["testing"],
+          "tags": [
+            "testing"
+          ],
           "effort": {
             "min": 480,
             "max": 720,
@@ -591,7 +651,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "implement comprehens test test function integr secur under load and for error handl comprehens qualiti assur test"
         }
       ],
       "gate": {
@@ -653,8 +714,15 @@
             }
           }
         ],
-        "approvers": ["SA", "DEV"],
-        "outcomes": ["pass", "fix_forward", "rollback"]
+        "approvers": [
+          "SA",
+          "DEV"
+        ],
+        "outcomes": [
+          "pass",
+          "fix_forward",
+          "rollback"
+        ]
       }
     },
     {
@@ -670,7 +738,10 @@
           "why": "Runtime adaptability for evolving services",
           "door": "two_way",
           "level": "optional",
-          "tags": ["architecture", "integration"],
+          "tags": [
+            "architecture",
+            "integration"
+          ],
           "effort": {
             "min": 240,
             "max": 360,
@@ -692,7 +763,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "support dynam tool discoveri enabl runtim tool registr and chang notif runtim adapt for evolv servic architectur integr"
         },
         {
           "id": "ops-rate-limiting",
@@ -701,7 +773,10 @@
           "why": "Fair use and system stability",
           "door": "operational",
           "level": "recommended",
-          "tags": ["ops", "performance"],
+          "tags": [
+            "ops",
+            "performance"
+          ],
           "effort": {
             "min": 120,
             "max": 180,
@@ -730,7 +805,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "implement rate limit rate limit resourc heavi tool at transport and tool level fair use and system stabil op perform"
         },
         {
           "id": "ops-observability",
@@ -739,7 +815,9 @@
           "why": "Operational visibility and compliance",
           "door": "operational",
           "level": "recommended",
-          "tags": ["observability"],
+          "tags": [
+            "observability"
+          ],
           "effort": {
             "min": 180,
             "max": 240,
@@ -768,7 +846,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "add log monitor and audit trail comprehens observ for product oper oper visibl and complianc observ"
         },
         {
           "id": "ops-timeouts",
@@ -777,7 +856,10 @@
           "why": "Responsiveness and user control",
           "door": "operational",
           "level": "recommended",
-          "tags": ["ops", "ux"],
+          "tags": [
+            "ops",
+            "ux"
+          ],
           "effort": {
             "min": 90,
             "max": 150,
@@ -806,7 +888,8 @@
           ],
           "status": {
             "state": "todo"
-          }
+          },
+          "_search_stemmed": "implement timeout and progress report add timeout at multipl level and report progress for long oper respons and user control op ux"
         }
       ],
       "gate": {
@@ -833,7 +916,10 @@
             "predicate": {
               "kind": "artifact-exists",
               "artifact_type": "slo",
-              "targets": ["ops-rate-limiting", "ops-observability"]
+              "targets": [
+                "ops-rate-limiting",
+                "ops-observability"
+              ]
             }
           },
           {
@@ -849,8 +935,14 @@
             }
           }
         ],
-        "approvers": ["SA", "DEV"],
-        "outcomes": ["pass", "fix_forward"]
+        "approvers": [
+          "SA",
+          "DEV"
+        ],
+        "outcomes": [
+          "pass",
+          "fix_forward"
+        ]
       }
     }
   ],
@@ -890,8 +982,13 @@
           }
         }
       ],
-      "approvers": ["SA"],
-      "outcomes": ["pass", "rollback"]
+      "approvers": [
+        "SA"
+      ],
+      "outcomes": [
+        "pass",
+        "rollback"
+      ]
     },
     {
       "id": "G-Operate",
@@ -927,8 +1024,13 @@
           }
         }
       ],
-      "approvers": ["DEV"],
-      "outcomes": ["pass", "fix_forward"]
+      "approvers": [
+        "DEV"
+      ],
+      "outcomes": [
+        "pass",
+        "fix_forward"
+      ]
     }
   ],
   "levels": [
