@@ -935,7 +935,9 @@
             }
         }
 
-        /* Version Selector Styles (v0.5.0) */
+        /* ============================================================ */
+        /* BEGIN: Multi-Version Catalog Support (v0.4.3) - Version Selector CSS */
+        /* ============================================================ */
         .version-selector-group {
             float: right;
             display: flex;
@@ -994,6 +996,9 @@
         .version-badge.frozen {
             background: #93a1a1;
         }
+        /* ============================================================ */
+        /* END: Multi-Version Catalog Support - Version Selector CSS */
+        /* ============================================================ */
     </style>
 </head>
 <body>
@@ -1019,6 +1024,7 @@
             <input type="file" id="importFileInput" accept=".json" style="display:none">
             <div class="state-badge" id="stateBadge">State: None</div>
 
+            <!-- BEGIN: Multi-Version Catalog Support (v0.4.3) - Version Selector UI -->
             <!-- Right side: Version Selector (floated) -->
             <div class="version-selector-group">
                 <span class="filter-label" style="font-size: 0.9rem; font-weight: 700; color: #073642; margin-right: 8px;">Version:</span>
@@ -1027,6 +1033,7 @@
                 </select>
                 <span id="versionBadge" class="version-badge">Loading...</span>
             </div>
+            <!-- END: Multi-Version Catalog Support - Version Selector UI -->
         </div>
 
         <div class="controls">
@@ -1196,7 +1203,8 @@
 
     <script>
         // ============================================================
-        // Semver Parsing and Comparison (v0.5.0)
+        // BEGIN: Multi-Version Catalog Support (v0.4.3)
+        // Section 1: Semantic Versioning Functions
         // ============================================================
 
         /**
@@ -1306,7 +1314,12 @@
         }
 
         // ============================================================
-        // State management (v0.5.0 - Multi-version support)
+        // END: Section 1 - Semantic Versioning Functions
+        // ============================================================
+
+        // ============================================================
+        // BEGIN: Multi-Version Catalog Support (v0.4.3)
+        // Section 2: State Structure with Catalog Registry
         // ============================================================
         const state = {
             // Multi-version catalog container
@@ -1326,6 +1339,15 @@
             levelFilter: 'all',
             doorFilter: 'all'
         };
+
+        // ============================================================
+        // END: Section 2 - State Structure with Catalog Registry
+        // ============================================================
+
+        // ============================================================
+        // BEGIN: Multi-Version Catalog Support (v0.4.3)
+        // Section 3: loadData() - Multi-Version Catalog Loading
+        // ============================================================
 
         // Load data from JSON (multi-version catalog)
         async function loadData() {
@@ -1380,6 +1402,10 @@
             }
         }
 
+        // ============================================================
+        // END: Section 3 - loadData() Multi-Version Catalog Loading
+        // ============================================================
+
         // Initialize state on page load (v0.5.0 - version-aware)
         function initializeState() {
             // Load state for the currently selected catalog version
@@ -1419,7 +1445,12 @@
             updateStateBadge('local');
         }
 
-        // Save state to localStorage (v0.5.0 - version-specific keys)
+        // ============================================================
+        // BEGIN: Multi-Version Catalog Support (v0.4.3)
+        // Section 5: Version-Specific State Persistence
+        // ============================================================
+
+        // Save state to localStorage (version-specific keys)
         function saveStateToLocalStorage() {
             const now = new Date().toISOString();
             if (!state.metadata.created_at) {
@@ -1486,6 +1517,10 @@
                 console.log(`[RESET] Progress cleared for version ${version}`);
             }
         }
+
+        // ============================================================
+        // END: Section 5 - Version-Specific State Persistence
+        // ============================================================
 
         // Helper: Check if node is completed
         function isNodeCompleted(nodeId) {
@@ -1604,7 +1639,8 @@
         }
 
         // ============================================================
-        // Version Switcher Logic (v0.5.0)
+        // BEGIN: Multi-Version Catalog Support (v0.4.3)
+        // Section 4: Version Switcher Logic
         // ============================================================
 
         /**
@@ -1761,6 +1797,10 @@
                 initializeFreshState();
             }
         }
+
+        // ============================================================
+        // END: Section 4 - Version Switcher Logic
+        // ============================================================
 
         // Update state badge
         function updateStateBadge(source, filename = null) {
@@ -2447,10 +2487,14 @@
             const catalogJSON = JSON.stringify(state.currentCatalog);
             const catalogFingerprint = await computeSHA256(catalogJSON);
 
+            // ============================================================
+            // BEGIN: Multi-Version Catalog Support (v0.4.3)
+            // Section 7: Export with Catalog Version Metadata
+            // ============================================================
             const stateObj = {
                 state_version: '0.4.0',
                 program_id: state.currentCatalog.program.id,
-                catalog_version: state.currentCatalog.program.version,
+                catalog_version: state.currentCatalog.program.version,  // Multi-version: from selected catalog
                 catalog_fingerprint: `sha256:${catalogFingerprint}`,
 
                 metadata: {
@@ -2477,6 +2521,9 @@
             stateObj.integrity.state_fingerprint = `sha256:${stateFingerprint}`;
 
             return stateObj;
+            // ============================================================
+            // END: Section 7 - Export with Catalog Version Metadata
+            // ============================================================
         }
 
         // Sparse encode nodes (omit empty/null fields)
@@ -2593,6 +2640,11 @@
                     return;
                 }
 
+                // ============================================================
+                // BEGIN: Multi-Version Catalog Support (v0.4.3)
+                // Section 6: Import with Catalog Version Validation
+                // ============================================================
+
                 // 2. Validate catalog version
                 const importedVersion = importedState.catalog_version;
                 if (!importedVersion) {
@@ -2627,6 +2679,10 @@
                     document.getElementById('catalogVersionSelector').value = importedVersion;
                     updateVersionBadge();
                 }
+
+                // ============================================================
+                // END: Section 6 - Import with Catalog Version Validation
+                // ============================================================
 
                 // 4. Check program ID match (use current catalog after potential switch)
                 if (importedState.program_id !== state.currentCatalog.program.id) {
