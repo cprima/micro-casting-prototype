@@ -1,0 +1,128 @@
+# Sitemap Crawler Configuration
+#
+# This file configures which sites to crawl and how to process them.
+# You can override the base_output_dir with the BASE_OUTPUT_DIR environment variable.
+
+settings:
+  # Base directory for all crawled content (default for all sites)
+  # Override with: BASE_OUTPUT_DIR=/path/to/output sitemap-crawler crawl-all
+  base_output_dir: ../../docs
+
+  # Storage backend type: local | smb (future)
+  storage_backend: local
+
+  # Browser configuration (crawl4ai BrowserConfig)
+  browser:
+    headless: true              # Run browser in headless mode
+    verbose: false              # Disable verbose logging
+    user_agent: "sitemap-crawler/0.2.1 (+https://github.com/cprima/micro-casting-prototype)"
+    viewport_width: 1080        # Browser viewport width
+    viewport_height: 600        # Browser viewport height
+
+  # Global crawl defaults (crawl4ai CrawlerRunConfig)
+  # Can be overridden per-site via crawl4ai: section
+  crawl_defaults:
+    cache_mode: enabled         # ENABLED | BYPASS | DISABLED | READ_ONLY | WRITE_ONLY
+    pruning:                    # Content pruning for markdown generation
+      threshold: 0.48           # Balance between content retention and noise removal
+      threshold_type: dynamic   # Adaptive scoring
+      min_word_threshold: 5     # Ignore blocks with < 5 words
+
+  # Resilience settings
+  retry:
+    max_retries: 3              # Maximum number of retries per request
+    initial_backoff: 1.0        # Initial backoff delay in seconds
+    backoff_multiplier: 2.0     # Exponential backoff multiplier
+    max_backoff: 60.0           # Maximum backoff delay in seconds
+    retry_on_status: [500, 502, 503, 504, 429]  # HTTP status codes to retry
+
+  # Rate limiting
+  rate_limit:
+    requests_per_second: 1.0    # Default: 1 request per second
+    delay_between_requests: 1.0  # Minimum delay between requests (seconds)
+    respect_429: true           # Respect HTTP 429 (Too Many Requests)
+
+  # HTTP settings
+  http:
+    user_agent: "sitemap-crawler/0.2.0 (+https://github.com/cprima/micro-casting-prototype)"
+    timeout:
+      connect: 10.0             # Connection timeout (seconds)
+      read: 30.0                # Read timeout (seconds)
+      total: 60.0               # Total request timeout (seconds)
+
+  # Resource limits
+  limits:
+    max_urls_per_site: 50000    # Maximum URLs to crawl per site (0 = unlimited)
+    max_file_size_mb: 10.0      # Skip files larger than this (MB)
+    max_total_size_mb: 5000.0   # Stop crawl if total size exceeds this (MB, 0 = unlimited)
+    max_crawl_duration: 0       # Maximum crawl duration (seconds, 0 = unlimited)
+    min_content_chars: 100      # Minimum content length to save (chars)
+
+  # robots.txt compliance
+  robots:
+    enabled: true               # Enable robots.txt compliance
+    respect_crawl_delay: true   # Respect crawl-delay directive
+    cache_duration: 3600        # Cache robots.txt for this many seconds (1 hour)
+
+sites:
+  # Model Context Protocol documentation
+  - name: modelcontextprotocol
+    domain: modelcontextprotocol.io
+    source: https://modelcontextprotocol.io/llms.txt
+    type: llms.txt
+    output_pattern: "{domain}"
+    # Optional: override base directory for this site only
+    # base_dir: ../../docs  # Uses global setting if not specified
+
+  # UIPath documentation (English only)
+  - name: uipath-docs
+    domain: docs.uipath.com
+    source: https://docs.uipath.com/sitemap.xml
+    type: xml_sitemap
+    output_pattern: "{domain}/en"
+    # Optional: store UIPath docs on external drive (large dataset)
+    # base_dir: /mnt/external-drive/docs        # Linux/Mac
+    base_dir: M:/sitemap-crawler              # Windows (forward slashes work!)
+    # base_dir: 'M:\docs.uipath.com'            # Windows (backslash, quoted)
+    # Note: Parent directories are created automatically if they don't exist
+    filters:
+      # Filter for English sitemaps only
+      # Once we only fetch /sitemaps/en/, all page URLs inside are already English
+      - type: url_pattern
+        pattern: "/sitemaps/en/"
+
+  # Direct URL examples (type and domain auto-detected)
+  - name: semgrep-guide
+    source: https://semgrep.dev/blog/2025/a-security-engineers-guide-to-mcp/
+    # type: auto-detected as direct_url
+    # domain: auto-extracted as semgrep.dev
+    output_pattern: "{domain}"
+    crawl4ai:
+      css_selector: "main"  # Extract only article content
+      cache_mode: bypass    # Force fresh crawl for testing
+
+  - name: crawl4ai-sdk-docs
+    source: |
+      https://docs.crawl4ai.com/complete-sdk-reference/
+      https://docs.crawl4ai.com/core/content-selection/
+    output_pattern: "{domain}"
+    # crawl4ai: {} # Uses default pruning - works well for these docs
+
+  # Multiple URLs from same domain
+  # - name: semgrep-articles
+  #   source: |
+  #     https://semgrep.dev/blog/2025/a-security-engineers-guide-to-mcp/
+  #     https://semgrep.dev/blog/2024/another-article/
+  #   # type: auto-detected as direct_url
+  #   # domain: auto-extracted as semgrep.dev
+
+# Example: Storage backend configurations (for future use)
+# storage_backends:
+#   local:
+#     type: local
+#
+#   smb:
+#     type: smb
+#     server: //server.local/share
+#     username: ${SMB_USERNAME}  # From environment variable
+#     password: ${SMB_PASSWORD}  # From environment variable

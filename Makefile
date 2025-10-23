@@ -1,4 +1,4 @@
-.PHONY: setup install sync playwright test clean help
+.PHONY: setup install sync playwright test clean help serve
 
 help: ## Show this help message
 	@echo "Available targets:"
@@ -12,6 +12,7 @@ sync: ## Sync and resolve workspace dependencies
 install: ## Install workspace packages in editable mode
 	uv pip install -e libs/crawling
 	uv pip install -e apps/uipac/ingestor
+	uv pip install -e apps/sitemap-crawler
 
 playwright: ## Install Playwright chromium browser
 	uv run playwright install chromium
@@ -33,3 +34,22 @@ clean: ## Remove virtual environment and cache
 	rm -rf libs/crawling/*.egg-info
 
 reinstall: clean setup ## Clean and reinstall everything
+
+# Sitemap Crawler commands
+crawl-list: ## List configured sitemap crawler sites
+	cd apps/sitemap-crawler && uv run sitemap-crawler list
+
+crawl-mcp: ## Crawl modelcontextprotocol.io
+	cd apps/sitemap-crawler && uv run sitemap-crawler crawl modelcontextprotocol
+
+crawl-uipath: ## Crawl docs.uipath.com (English only)
+	cd apps/sitemap-crawler && uv run sitemap-crawler crawl uipath-docs
+
+crawl-all: ## Crawl all configured sites
+	cd apps/sitemap-crawler && uv run sitemap-crawler crawl-all
+
+crawl-dry-run: ## Preview what would be crawled
+	cd apps/sitemap-crawler && uv run sitemap-crawler crawl-all --dry-run
+
+serve: ## Serve documentation on http://localhost:8001
+	cd docs && python -m http.server 8001

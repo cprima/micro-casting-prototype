@@ -1,0 +1,32 @@
+[project]
+name = "sitemap-crawler"
+version = "0.1.0"
+description = "Crawl sitemaps and llms.txt files to extract documentation"
+readme = "README.md"
+authors = [
+    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
+]
+license = {file = "../../LICENSE"}
+requires-python = ">=3.10"
+dependencies = [
+    "crawling",
+    "click>=8.0.0",
+    "pyyaml>=6.0",
+    "lxml>=4.9.0",
+    "requests>=2.31.0",
+    "structlog>=24.1.0",
+    "tqdm>=4.66.0",
+]
+
+[tool.uv.sources]
+crawling = { workspace = true }
+
+[project.scripts]
+sitemap-crawler = "sitemap_crawler.cli:cli"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sitemap_crawler"]

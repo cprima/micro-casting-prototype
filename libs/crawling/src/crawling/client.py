@@ -1,14 +1,69 @@
 # libs/crawling/src/crawling/client.py
+"""
+Minimal wrapper around crawl4ai for version pinning.
+
+This library's ONLY purpose is to pin crawl4ai to a specific version (0.7.6).
+All configuration should be done by the calling application, NOT hardcoded here.
+"""
 import asyncio
-from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
+import logging
+import os
+from contextlib import redirect_stderr, redirect_stdout
 
-_browser_cfg = BrowserConfig(headless=True, verbose=False)
-_run_cfg = CrawlerRunConfig(cache_mode=CacheMode.ENABLED, word_count_threshold=1)
+# Re-export crawl4ai types for applications to use
+from crawl4ai import (
+    AsyncWebCrawler,
+    BrowserConfig,
+    CrawlerRunConfig,
+    CacheMode,
+    CrawlResult
+)
 
-async def fetch_markdown(url: str) -> str:
-    async with AsyncWebCrawler(config=_browser_cfg) as crawler:
-        r = await crawler.arun(url=url, config=_run_cfg)
-        return r.markdown  # or r.markdown.fit_markdown
+# Suppress Crawl4AI's internal logger to avoid Windows encoding issues
+logging.getLogger("crawl4ai").setLevel(logging.CRITICAL)
 
-def fetch_markdown_sync(url: str) -> str:
-    return asyncio.run(fetch_markdown(url))
+
+async def fetch(
+    url: str,
+    browser_config: BrowserConfig,
+    run_config: CrawlerRunConfig
+) -> CrawlResult:
+    """
+    Fetch content from URL using Crawl4AI.
+
+    Args:
+        url: URL to fetch
+        browser_config: BrowserConfig instance (configured by application)
+        run_config: CrawlerRunConfig instance (configured by application)
+
+    Returns:
+        CrawlResult with full metadata (markdown, response_headers, status_code, etc.)
+    """
+    # Suppress all output from Crawl4AI to avoid Windows Unicode errors
+    devnull = open(os.devnull, 'w', encoding='utf-8')
+    try:
+        with redirect_stdout(devnull), redirect_stderr(devnull):
+            async with AsyncWebCrawler(config=browser_config) as crawler:
+                result = await crawler.arun(url=url, config=run_config)
+        return result
+    finally:
+        devnull.close()
+
+
+def fetch_sync(
+    url: str,
+    browser_config: BrowserConfig,
+    run_config: CrawlerRunConfig
+) -> CrawlResult:
+    """
+    Synchronous wrapper for fetch().
+
+    Args:
+        url: URL to fetch
+        browser_config: BrowserConfig instance (configured by application)
+        run_config: CrawlerRunConfig instance (configured by application)
+
+    Returns:
+        CrawlResult with full metadata (markdown, response_headers, status_code, etc.)
+    """
+    return asyncio.run(fetch(url, browser_config, run_config))
