@@ -1,0 +1,86 @@
+{
+  "state_version": "0.4.0",
+  "program_id": "mcp-server-delivery",
+  "catalog_version": "0.3.0",
+  "catalog_fingerprint": "sha256:abc123...",
+  "metadata": {
+    "created_at": "2025-10-23T14:30:00Z",
+    "updated_at": "2025-10-23T16:45:00Z",
+    "export_context": {
+      "hostname": "localhost",
+      "app_version": "0.4.0",
+      "user_agent": "Mozilla/5.0..."
+    }
+  },
+  "nodes": {
+    "server-naming": {
+      "status": "done",
+      "done_at": "2025-10-23T14:35:00Z",
+      "notes": "Chose Python convention for analytics service",
+      "decision_value": "analytics_mcp",
+      "artifacts": {
+        "adr_ref": "docs/adr/001-server-naming.md"
+      },
+      "evidence": [
+        {
+          "type": "spike",
+          "uri": "docs/spikes/naming-research.md",
+          "result": "meets",
+          "collected_at": "2025-10-23T14:30:00Z",
+          "source": "manual",
+          "confidence": 0.95
+        }
+      ]
+    },
+    "transport-selection": {
+      "status": "done",
+      "done_at": "2025-10-23T15:10:00Z",
+      "notes": "Chose stdio for simplicity - will add HTTP later if needed",
+      "decision_value": "stdio",
+      "artifacts": {
+        "adr_ref": "docs/adr/002-transport.md"
+      },
+      "evidence": [
+        {
+          "type": "spike",
+          "uri": "docs/spikes/transport-proto.md",
+          "result": "meets",
+          "collected_at": "2025-10-23T15:05:00Z",
+          "source": "manual",
+          "confidence": 0.90
+        }
+      ]
+    },
+    "tool-naming": {
+      "status": "done",
+      "done_at": "2025-10-23T15:30:00Z",
+      "notes": "Using analytics_ prefix with snake_case",
+      "decision_value": "analytics_get_metrics, analytics_list_reports",
+      "artifacts": {},
+      "evidence": []
+    },
+    "tool-atomicity": {
+      "status": "doing",
+      "notes": "Currently implementing get/list/create patterns",
+      "artifacts": {},
+      "evidence": []
+    },
+    "input-validation": {
+      "status": "blocked",
+      "cause": "waiting-tests",
+      "notes": "Pydantic schemas defined, need to write validation tests",
+      "artifacts": {},
+      "evidence": []
+    },
+    "auth-oauth21": {
+      "status": "todo",
+      "artifacts": {},
+      "evidence": []
+    }
+  },
+  "integrity": {
+    "state_fingerprint": "sha256:def456...",
+    "migrations_applied": [],
+    "warnings": []
+  }
+}

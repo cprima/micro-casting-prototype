@@ -548,6 +548,39 @@
             background: #cb4b16;
         }
 
+        .state-export-btn, .state-import-btn {
+            padding: 10px 20px;
+            background: #268bd2;
+            color: #fdf6e3;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .state-export-btn:hover, .state-import-btn:hover {
+            background: #2075b8;
+        }
+
+        .state-badge {
+            padding: 8px 16px;
+            background: #859900;
+            color: #fdf6e3;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .state-badge.file {
+            background: #268bd2;
+        }
+
+        .state-badge.none {
+            background: #93a1a1;
+        }
+
         @media (max-width: 768px) {
             .controls {
                 flex-direction: column;
@@ -666,7 +699,7 @@
 <body>
     <div class="container">
         <header>
-            <div class="framework-badge">v0.3.3 Decision-Driven Delivery</div>
+            <div class="framework-badge">v0.4.0 Decision-Driven Delivery</div>
             <h1 id="pageTitle">MCP Server Development Methodology</h1>
             <p class="subtitle" id="pageDescription">Loading...</p>
             <div class="progress-bar-container">
@@ -695,6 +728,17 @@
                 <button class="filter-btn" data-filter="operational">Ops</button>
             </div>
             <button class="reset-btn" id="resetBtn">Reset Progress</button>
+        </div>
+
+        <div class="controls" style="margin-top: 10px;">
+            <button class="state-export-btn" id="exportStateBtn">
+                <span class="icon">⬇</span> Export State
+            </button>
+            <button class="state-import-btn" id="importStateBtn">
+                <span class="icon">⬆</span> Import State
+            </button>
+            <input type="file" id="importFileInput" accept=".json" style="display:none">
+            <div class="state-badge" id="stateBadge">State: None</div>
         </div>
 
         <div class="tabs" id="tabs"></div>
@@ -809,7 +853,7 @@
 
             <div class="footer-attribution">
                 <div style="margin-bottom: 8px;">
-                    MCP Server Development Methodology v0.3.3 | Decision-Driven Delivery Framework
+                    MCP Server Development Methodology v0.4.0 | Decision-Driven Delivery Framework
                 </div>
                 <div style="font-size: 0.8rem; color: #93a1a1;">
                     Author: Christian Prior-Mamulyan
@@ -827,14 +871,16 @@
     </div>
 
     <script>
-        // State management
+        // State management (v0.4.0)
         const state = {
-            data: null,
+            data: null,  // Catalog (immutable)
+            progress: {},  // Node progress (mutable) - keyed by node ID
+            metadata: {},  // State metadata
             currentPhase: null,
-            completedNodes: new Set(),
             searchQuery: '',
             levelFilter: 'all',
-            doorFilter: 'all'
+            doorFilter: 'all',
+            migrationsApplied: []
         };
 
         // Load data from JSON
@@ -842,7 +888,7 @@
             try {
                 const response = await fetch('data.json');
                 state.data = await response.json();
-                loadCompletedNodes();
+                initializeState();
                 init();
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -851,37 +897,134 @@
             }
         }
 
-        // LocalStorage management
-        function loadCompletedNodes() {
-            const saved = localStorage.getItem('mcp-methodology-completed-v0.3.3');
-            if (saved) {
-                state.completedNodes = new Set(JSON.parse(saved));
+        // Initialize state on page load
+        function initializeState() {
+            // Try v0.4.0 state first
+            const v040State = localStorage.getItem('mcp:mcp-server-delivery:state@0.4.0');
+
+            if (v040State) {
+                console.log('[INIT] Found v0.4.0 state in localStorage');
+                restoreStateFromLocalStorage(JSON.parse(v040State));
+                return;
             }
+
+            // Try v0.3.x migration
+            const v033Completed = localStorage.getItem('mcp-methodology-completed-v0.3.3');
+            const v032Completed = localStorage.getItem('mcp-methodology-completed-v0.3.2');
+            const v03xCompleted = v033Completed || v032Completed;
+
+            if (v03xCompleted) {
+                console.log('[INIT] Found v0.3.x state, migrating to v0.4.0');
+                const migratedState = migrateFromV03x(JSON.parse(v03xCompleted));
+                restoreStateFromLocalStorage(migratedState);
+                saveStateToLocalStorage();  // Persist migrated state
+                return;
+            }
+
+            // Initialize fresh state
+            console.log('[INIT] No previous state found, initializing fresh');
+            initializeFreshState();
         }
 
-        function saveCompletedNodes() {
-            localStorage.setItem('mcp-methodology-completed-v0.3.3',
-                JSON.stringify([...state.completedNodes]));
+        // Migrate from v0.3.x (array of completed node IDs)
+        function migrateFromV03x(completedNodeIds) {
+            const now = new Date().toISOString();
+            const progress = {};
+
+            for (const nodeId of completedNodeIds) {
+                progress[nodeId] = {
+                    status: 'done',
+                    done_at: now,
+                    notes: 'Migrated from v0.3.x',
+                    artifacts: {},
+                    evidence: []
+                };
+            }
+
+            return {
+                progress,
+                metadata: {
+                    created_at: now,
+                    updated_at: now
+                },
+                migrationsApplied: ['v0.3.x -> v0.4.0']
+            };
+        }
+
+        // Restore state from localStorage
+        function restoreStateFromLocalStorage(savedState) {
+            state.progress = savedState.progress || {};
+            state.metadata = savedState.metadata || {};
+            state.migrationsApplied = savedState.migrationsApplied || [];
+            updateStateBadge('local');
+        }
+
+        // Save state to localStorage
+        function saveStateToLocalStorage() {
+            const now = new Date().toISOString();
+            if (!state.metadata.created_at) {
+                state.metadata.created_at = now;
+            }
+            state.metadata.updated_at = now;
+
+            const stateToSave = {
+                progress: state.progress,
+                metadata: state.metadata,
+                migrationsApplied: state.migrationsApplied
+            };
+
+            localStorage.setItem(
+                'mcp:mcp-server-delivery:state@0.4.0',
+                JSON.stringify(stateToSave)
+            );
+        }
+
+        // Initialize fresh state
+        function initializeFreshState() {
+            state.progress = {};
+            state.metadata = {
+                created_at: new Date().toISOString()
+            };
+            state.migrationsApplied = [];
+            updateStateBadge('none');
+        }
+
+        // Debounced auto-save
+        let autoSaveTimer = null;
+
+        function triggerAutoSave() {
+            if (autoSaveTimer) clearTimeout(autoSaveTimer);
+
+            autoSaveTimer = setTimeout(() => {
+                saveStateToLocalStorage();
+                console.log('[AUTO-SAVE] State saved to localStorage');
+            }, 1000);  // 1 second debounce
         }
 
         function resetProgress() {
             if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
-                state.completedNodes.clear();
-                saveCompletedNodes();
+                initializeFreshState();
+                saveStateToLocalStorage();
                 updateProgress();
+                renderTabs();
                 renderCurrentPhase();
             }
+        }
+
+        // Helper: Check if node is completed
+        function isNodeCompleted(nodeId) {
+            return state.progress[nodeId]?.status === 'done';
         }
 
         // Dependency checking
         function isNodeBlocked(node) {
             if (!node.blocks || node.blocks.length === 0) return false;
-            return node.blocks.some(block => !state.completedNodes.has(block.on));
+            return node.blocks.some(block => !isNodeCompleted(block.on));
         }
 
         function getBlockReasons(node) {
             if (!node.blocks || node.blocks.length === 0) return [];
-            return node.blocks.filter(block => !state.completedNodes.has(block.on));
+            return node.blocks.filter(block => !isNodeCompleted(block.on));
         }
 
         function getNodeById(nodeId) {
@@ -914,6 +1057,11 @@
             document.getElementById('searchBox').addEventListener('input', handleSearch);
             document.getElementById('searchClearBtn').addEventListener('click', clearSearch);
             document.getElementById('resetBtn').addEventListener('click', resetProgress);
+            document.getElementById('exportStateBtn').addEventListener('click', exportState);
+            document.getElementById('importStateBtn').addEventListener('click', () => {
+                document.getElementById('importFileInput').click();
+            });
+            document.getElementById('importFileInput').addEventListener('change', handleImportFile);
 
             // Filter buttons
             document.querySelectorAll('#levelFilters .filter-btn').forEach(btn => {
@@ -922,6 +1070,28 @@
             document.querySelectorAll('#doorFilters .filter-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => handleFilterClick(e, 'door'));
             });
+        }
+
+        // Update state badge
+        function updateStateBadge(source, filename = null) {
+            const badge = document.getElementById('stateBadge');
+
+            switch (source) {
+                case 'local':
+                    badge.textContent = 'State: Local';
+                    badge.className = 'state-badge';
+                    break;
+
+                case 'file':
+                    badge.textContent = filename ? `State: ${filename}` : 'State: File';
+                    badge.className = 'state-badge file';
+                    break;
+
+                case 'none':
+                    badge.textContent = 'State: None';
+                    badge.className = 'state-badge none';
+                    break;
+            }
         }
 
         // Render tabs
@@ -935,7 +1105,7 @@
 
                 // Count ALL nodes in phase (what user sees when clicking tab)
                 const allNodes = phase.nodes;
-                const completedNodes = allNodes.filter(n => state.completedNodes.has(n.id)).length;
+                const completedNodes = allNodes.filter(n => isNodeCompleted(n.id)).length;
                 const progress = `${completedNodes}/${allNodes.length}`;
 
                 tab.innerHTML = `${phase.title} <span class="tab-progress">(${progress})</span>`;
@@ -995,7 +1165,7 @@
             } else {
                 html += '<div class="nodes-list">';
                 filteredNodes.forEach(node => {
-                    const completed = state.completedNodes.has(node.id);
+                    const completed = isNodeCompleted(node.id);
                     const blocked = isNodeBlocked(node);
                     html += renderNode(node, completed, blocked);
                 });
@@ -1017,7 +1187,7 @@
                     html += `<h3 style="color: ${phase.color}; margin: 30px 0 15px 0;">${phase.title}</h3>`;
                     html += '<div class="nodes-list">';
                     filteredNodes.forEach(node => {
-                        const completed = state.completedNodes.has(node.id);
+                        const completed = isNodeCompleted(node.id);
                         const blocked = isNodeBlocked(node);
                         html += renderNode(node, completed, blocked);
                     });
@@ -1131,7 +1301,7 @@
                         <strong>Blocked by:</strong>
                         <div class="dependency-list">
                             ${node.blocks.map(block => {
-                                const met = state.completedNodes.has(block.on);
+                                const met = isNodeCompleted(block.on);
                                 return `<span class="dependency-badge ${met ? 'met' : ''}" title="${block.reason}">${block.on}: ${block.reason}</span>`;
                             }).join('')}
                         </div>
@@ -1224,12 +1394,29 @@
                 return;
             }
 
-            if (state.completedNodes.has(nodeId)) {
-                state.completedNodes.delete(nodeId);
+            const currentStatus = state.progress[nodeId]?.status || 'todo';
+
+            if (currentStatus === 'done') {
+                // Mark as todo
+                if (state.progress[nodeId]) {
+                    state.progress[nodeId].status = 'todo';
+                    delete state.progress[nodeId].done_at;
+                }
             } else {
-                state.completedNodes.add(nodeId);
+                // Mark as done
+                if (!state.progress[nodeId]) {
+                    state.progress[nodeId] = {
+                        status: 'done',
+                        artifacts: {},
+                        evidence: []
+                    };
+                } else {
+                    state.progress[nodeId].status = 'done';
+                }
+                state.progress[nodeId].done_at = new Date().toISOString();
             }
-            saveCompletedNodes();
+
+            triggerAutoSave();
             updateProgress();
             renderTabs();
             renderCurrentPhase();
@@ -1244,7 +1431,7 @@
                 phase.nodes.forEach(node => {
                     if (node.level === 'required' || node.level === 'recommended') {
                         totalImportant++;
-                        if (state.completedNodes.has(node.id)) {
+                        if (isNodeCompleted(node.id)) {
                             completedImportant++;
                         }
                     }
@@ -1305,6 +1492,314 @@
             }
 
             renderCurrentPhase();
+        }
+
+        // ============================================================
+        // Phase 2: Export Functionality
+        // ============================================================
+
+        // Export state to file
+        async function exportState() {
+            try {
+                // 1. Build state object
+                const stateObj = await buildStateObject();
+
+                // 2. Generate smart filename
+                const filename = generateStateFilename();
+
+                // 3. Download
+                downloadJSON(stateObj, filename);
+
+                // 4. Update badge
+                updateStateBadge('file', filename);
+
+                console.log(`[EXPORT] State exported to ${filename}`);
+            } catch (error) {
+                alert(`Export failed: ${error.message}`);
+                console.error('[EXPORT ERROR]', error);
+            }
+        }
+
+        // Build state object from current in-memory state
+        async function buildStateObject() {
+            const now = new Date().toISOString();
+
+            // Compute catalog fingerprint
+            const catalogJSON = JSON.stringify(state.data);
+            const catalogFingerprint = await computeSHA256(catalogJSON);
+
+            const stateObj = {
+                state_version: '0.4.0',
+                program_id: state.data.program.id,
+                catalog_version: state.data.program.version,
+                catalog_fingerprint: `sha256:${catalogFingerprint}`,
+
+                metadata: {
+                    created_at: state.metadata.created_at || now,
+                    updated_at: now,
+                    export_context: {
+                        hostname: window.location.hostname,
+                        app_version: '0.4.0',
+                        user_agent: navigator.userAgent
+                    }
+                },
+
+                nodes: sparseEncodeNodes(state.progress),
+
+                integrity: {
+                    migrations_applied: state.migrationsApplied || [],
+                    warnings: []
+                }
+            };
+
+            // Compute state fingerprint
+            const stateJSON = JSON.stringify(stateObj, null, 2);
+            const stateFingerprint = await computeSHA256(stateJSON);
+            stateObj.integrity.state_fingerprint = `sha256:${stateFingerprint}`;
+
+            return stateObj;
+        }
+
+        // Sparse encode nodes (omit empty/null fields)
+        function sparseEncodeNodes(progress) {
+            const nodes = {};
+
+            for (const [nodeId, nodeState] of Object.entries(progress)) {
+                // Skip if no meaningful state
+                if (nodeState.status === 'todo' &&
+                    !nodeState.notes &&
+                    !nodeState.decision_value &&
+                    Object.keys(nodeState.artifacts || {}).length === 0 &&
+                    (nodeState.evidence || []).length === 0) {
+                    continue;
+                }
+
+                // Build sparse representation
+                const sparse = { status: nodeState.status };
+
+                if (nodeState.cause) sparse.cause = nodeState.cause;
+                if (nodeState.done_at) sparse.done_at = nodeState.done_at;
+                if (nodeState.notes) sparse.notes = nodeState.notes;
+                if (nodeState.decision_value) sparse.decision_value = nodeState.decision_value;
+
+                // Artifacts (omit if all null/undefined)
+                const artifacts = {};
+                if (nodeState.artifacts?.adr_ref) artifacts.adr_ref = nodeState.artifacts.adr_ref;
+                if (nodeState.artifacts?.contract_ref) artifacts.contract_ref = nodeState.artifacts.contract_ref;
+                if (nodeState.artifacts?.slo) artifacts.slo = nodeState.artifacts.slo;
+                if (nodeState.artifacts?.alert_rules) artifacts.alert_rules = nodeState.artifacts.alert_rules;
+                if (Object.keys(artifacts).length > 0) sparse.artifacts = artifacts;
+
+                // Evidence (omit if empty)
+                if (nodeState.evidence && nodeState.evidence.length > 0) {
+                    sparse.evidence = nodeState.evidence;
+                }
+
+                nodes[nodeId] = sparse;
+            }
+
+            return nodes;
+        }
+
+        // Generate smart filename based on server naming decision
+        function generateStateFilename() {
+            const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+            // Check if server-naming decision has been made
+            const serverNamingNode = state.progress['server-naming'];
+
+            if (serverNamingNode?.status === 'done' && serverNamingNode.decision_value) {
+                // Use chosen server name
+                const serverName = serverNamingNode.decision_value;
+                return `${serverName}-state-${timestamp}.json`;
+            }
+
+            // Fallback: use program ID + timestamp
+            return `mcp-server-delivery-state-${timestamp}.json`;
+        }
+
+        // Compute SHA-256 hash of string
+        async function computeSHA256(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+
+        // Download JSON file
+        function downloadJSON(obj, filename) {
+            const json = JSON.stringify(obj, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+
+            URL.revokeObjectURL(url);
+        }
+
+        // ============================================================
+        // Phase 3: Import Functionality
+        // ============================================================
+
+        // Handle import file selection
+        async function handleImportFile(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                const importedState = JSON.parse(text);
+                await importState(importedState, file.name);
+            } catch (error) {
+                alert(`Import failed: ${error.message}`);
+                console.error('[IMPORT ERROR]', error);
+            }
+
+            // Reset file input
+            e.target.value = '';
+        }
+
+        // Import state from file
+        async function importState(importedState, filename) {
+            try {
+                // 1. Schema validation
+                const schemaValidation = validateStateSchema(importedState);
+                if (!schemaValidation.valid) {
+                    alert(`Invalid state file:\n${schemaValidation.errors.join('\n')}`);
+                    return;
+                }
+
+                // 2. Check program ID match
+                if (importedState.program_id !== state.data.program.id) {
+                    alert(`Program ID mismatch:\nState file is for "${importedState.program_id}" but catalog is "${state.data.program.id}"`);
+                    return;
+                }
+
+                // 3. Reconciliation (if catalog changed)
+                const reconcileResult = reconcileState(importedState);
+
+                // 4. Show import summary and confirm
+                const confirmed = confirm(
+                    `Import Summary:\n\n` +
+                    `✓ ${reconcileResult.summary.nodesUpdated} nodes will be updated\n` +
+                    `✓ ${reconcileResult.summary.nodesAdded} new nodes initialized as todo\n` +
+                    (reconcileResult.summary.orphanNodes.length > 0 ?
+                        `⚠ ${reconcileResult.summary.orphanNodes.length} orphan nodes (ignored): ${reconcileResult.summary.orphanNodes.join(', ')}\n` :
+                        '') +
+                    `\nContinue with import?`
+                );
+
+                if (!confirmed) {
+                    console.log('[IMPORT] User cancelled import');
+                    return;
+                }
+
+                // 5. Apply reconciled state
+                state.progress = reconcileResult.progress;
+                state.metadata = importedState.metadata || {};
+                state.migrationsApplied = importedState.integrity?.migrations_applied || [];
+
+                // 6. Persist to localStorage
+                saveStateToLocalStorage();
+
+                // 7. Re-render UI
+                renderTabs();
+                renderCurrentPhase();
+                updateProgress();
+
+                // 8. Update badge
+                updateStateBadge('file', filename);
+
+                console.log('[IMPORT] State imported successfully', reconcileResult.summary);
+            } catch (error) {
+                alert(`Import failed: ${error.message}`);
+                console.error('[IMPORT ERROR]', error);
+            }
+        }
+
+        // Validate state schema
+        function validateStateSchema(importedState) {
+            const errors = [];
+
+            if (!importedState.state_version) {
+                errors.push('Missing state_version field');
+            }
+
+            if (!importedState.program_id) {
+                errors.push('Missing program_id field');
+            }
+
+            if (!importedState.nodes || typeof importedState.nodes !== 'object') {
+                errors.push('Missing or invalid nodes field');
+            }
+
+            return {
+                valid: errors.length === 0,
+                errors
+            };
+        }
+
+        // Reconcile imported state with current catalog
+        function reconcileState(importedState) {
+            const summary = {
+                nodesUpdated: 0,
+                nodesAdded: 0,
+                orphanNodes: []
+            };
+
+            const progress = {};
+
+            // 1. Iterate through current catalog nodes
+            for (const phase of state.data.phases) {
+                for (const node of phase.nodes) {
+                    const nodeId = node.id;
+                    const importedNode = importedState.nodes[nodeId];
+
+                    if (importedNode) {
+                        // Node exists in both catalog and state → merge
+                        progress[nodeId] = {
+                            status: importedNode.status || 'todo',
+                            cause: importedNode.cause,
+                            done_at: importedNode.done_at,
+                            notes: importedNode.notes,
+                            decision_value: importedNode.decision_value,
+                            artifacts: importedNode.artifacts || {},
+                            evidence: importedNode.evidence || []
+                        };
+                        summary.nodesUpdated++;
+                    } else {
+                        // Node in catalog but not in state → initialize
+                        progress[nodeId] = {
+                            status: 'todo',
+                            artifacts: {},
+                            evidence: []
+                        };
+                        summary.nodesAdded++;
+                    }
+                }
+            }
+
+            // 2. Detect orphan nodes (in state but not in catalog)
+            for (const nodeId of Object.keys(importedState.nodes)) {
+                const existsInCatalog = state.data.phases.some(phase =>
+                    phase.nodes.some(node => node.id === nodeId)
+                );
+
+                if (!existsInCatalog) {
+                    summary.orphanNodes.push(nodeId);
+                    console.warn(`[RECONCILE] Orphan node: ${nodeId} (in state but not in catalog)`);
+                }
+            }
+
+            return {
+                progress,
+                summary
+            };
         }
 
         // Make toggleNode available globally

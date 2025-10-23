@@ -458,6 +458,57 @@
                     <div class="screenshot-caption">v0.3.2 - Production-Ready with Solarized Light Theme</div>
                 </div>
             </div>
+
+            <!-- Phase 5: v0.4.0 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="version-badge">v0.4.0</span>
+                    <h2>State Management Revolution</h2>
+                    <span class="phase-date">October 23, 2025</span>
+                </div>
+
+                <p class="phase-description">
+                    A fundamental architectural shift: separating immutable catalog from mutable state. This version introduces
+                    portable state management with import/export functionality, enabling team collaboration and version control.
+                </p>
+
+                <div class="key-changes">
+                    <h3>Major Features:</h3>
+                    <ul>
+                        <li><strong>State Separation:</strong> Clean split between data.json (catalog) and state.json (progress)</li>
+                        <li><strong>Smart Export:</strong> One-click export with filename based on server naming pattern decision</li>
+                        <li><strong>Import with Reconciliation:</strong> Handles catalog evolution gracefully (orphan detection, new nodes)</li>
+                        <li><strong>SHA-256 Fingerprinting:</strong> Integrity verification for both catalog and state</li>
+                        <li><strong>Backward Compatibility:</strong> Automatic migration from v0.3.x localStorage format</li>
+                        <li><strong>Sparse Encoding:</strong> Omit empty fields for smaller state files</li>
+                        <li><strong>State Badge:</strong> Visual indicator showing state source (local/file/none)</li>
+                    </ul>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">Portable</div>
+                        <div class="metric-label">Team Collaboration</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">Versioned</div>
+                        <div class="metric-label">Git-Friendly</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">Safe</div>
+                        <div class="metric-label">Reconciliation</div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    Workflow transformation: From localStorage-only → to shareable, versionable state files
+                </div>
+
+                <div class="screenshot-container">
+                    <img src="screenshots/methodology-v0.4.0-20251023.png" alt="MCP Methodology v0.4.0 - State Management with Import/Export">
+                    <div class="screenshot-caption">v0.4.0 - State Management Revolution with Import/Export Functionality</div>
+                </div>
+            </div>
         </div>
 
         <footer>
