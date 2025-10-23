@@ -768,6 +768,79 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+        .phase-diagram-section svg {
+            width: 100%;
+            height: 80px;
+            margin-top: 12px;
+        }
+
+        .phase-diagram-section .phase-box {
+            fill: #eee8d5;
+            stroke: #93a1a1;
+            stroke-width: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .phase-diagram-section .phase-box.partial {
+            fill: #fef3c7;
+            stroke: #f59e0b;
+        }
+
+        .phase-diagram-section .phase-box.complete {
+            fill: #dcf4a8;
+            stroke: #859900;
+        }
+
+        .phase-diagram-section .phase-box:hover {
+            fill: #fdf6e3;
+            stroke: #268bd2;
+        }
+
+        .phase-diagram-section .phase-box.partial:hover {
+            fill: #fef9e6;
+            stroke: #268bd2;
+        }
+
+        .phase-diagram-section .phase-box.complete:hover {
+            fill: #e8f7c0;
+            stroke: #268bd2;
+        }
+
+        .phase-diagram-section .phase-box.next {
+            fill: #fef3c7;      /* Yellow background */
+            stroke: #f59e0b;    /* Orange border */
+            animation: subtle-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes subtle-glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 2px rgba(38, 139, 210, 0.3));
+            }
+            50% {
+                filter: drop-shadow(0 0 6px rgba(38, 139, 210, 0.6));
+            }
+        }
+
+        .phase-diagram-section .gate-diamond {
+            fill: #ede9fe;
+            stroke: #268bd2;
+            stroke-width: 1.5px;
+        }
+
+        .phase-diagram-section .phase-label {
+            fill: #073642;
+            font-size: 13px;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .phase-diagram-section .flow-arrow {
+            stroke: #93a1a1;
+            stroke-width: 1.5px;
+            fill: none;
+        }
+
         .footer-section {
             margin-bottom: 25px;
             padding-bottom: 20px;
@@ -851,7 +924,8 @@
             .checkbox:checked,
             .checkbox:checked::after,
             .ephemeral-feedback,
-            .node.shake {
+            .node.shake,
+            .phase-diagram-section .phase-box.next {
                 animation: none;
                 transition: none;
             }
@@ -915,6 +989,19 @@
 
         <!-- Footer with explanations -->
         <footer class="methodology-footer">
+            <!-- Phase Flow Diagram -->
+            <div class="footer-section phase-diagram-section">
+                <h3>Methodology Flow</h3>
+                <svg id="phase-flow-diagram" viewBox="0 0 1200 80" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="flow-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                            <path d="M0,0 L8,3 L0,6 Z" fill="#93a1a1"></path>
+                        </marker>
+                    </defs>
+                    <g id="phase-lane" transform="translate(16,20)"></g>
+                </svg>
+            </div>
+
             <div class="footer-section">
                 <h3>Decision Door Types</h3>
                 <div class="footer-content">
@@ -1174,6 +1261,7 @@
                 updateProgress();
                 renderTabs();
                 renderCurrentPhase();
+                renderPhaseFlowDiagram();
             }
         }
 
@@ -1261,6 +1349,9 @@
             // Render tabs (will mark first tab as active)
             renderTabs();
             renderCurrentPhase();
+
+            // Render phase flow diagram in footer
+            renderPhaseFlowDiagram();
 
             // Update progress
             updateProgress();
@@ -1418,6 +1509,126 @@
             }
 
             content.innerHTML = html;
+        }
+
+        // Calculate phase completion percentage
+        function getPhaseCompletion(phase) {
+            const totalNodes = phase.nodes.length;
+            if (totalNodes === 0) return 0;
+
+            const completedNodes = phase.nodes.filter(node =>
+                isNodeCompleted(node.id)
+            ).length;
+
+            return (completedNodes / totalNodes) * 100;
+        }
+
+        // Render phase flow diagram in footer
+        function renderPhaseFlowDiagram() {
+            const svg = document.getElementById('phase-flow-diagram');
+            const lane = document.getElementById('phase-lane');
+            if (!svg || !lane || !state.data) return;
+
+            const phases = state.data.phases;
+            const W = 1200 - 32;
+            const colWidth = phases.length ? W / phases.length : W;
+
+            const NS = 'http://www.w3.org/2000/svg';
+
+            // Clear existing content
+            while (lane.firstChild) {
+                lane.removeChild(lane.firstChild);
+            }
+
+            // Find the next phase to work on (first incomplete phase)
+            let nextPhaseIndex = -1;
+            for (let i = 0; i < phases.length; i++) {
+                const completion = getPhaseCompletion(phases[i]);
+                if (completion < 100) {
+                    nextPhaseIndex = i;
+                    break;
+                }
+            }
+
+            phases.forEach((phase, i) => {
+                const x = i * colWidth;
+                const boxW = Math.max(140, colWidth - 80);
+
+                // Calculate completion percentage
+                const completion = getPhaseCompletion(phase);
+
+                // Build class list
+                const classes = ['phase-box'];
+                if (completion === 100) {
+                    classes.push('complete');
+                } else if (completion > 0) {
+                    classes.push('partial');
+                }
+
+                // Add 'next' class to the next phase to work on
+                if (i === nextPhaseIndex) {
+                    classes.push('next');
+                }
+
+                // Phase box
+                const rect = document.createElementNS(NS, 'rect');
+                rect.setAttribute('x', x);
+                rect.setAttribute('y', 0);
+                rect.setAttribute('width', boxW);
+                rect.setAttribute('height', 38);
+                rect.setAttribute('rx', 6);
+                rect.setAttribute('class', classes.join(' '));
+                rect.addEventListener('click', () => switchPhase(phase.id));
+
+                // Add tooltip showing completion
+                const title = document.createElementNS(NS, 'title');
+                title.textContent = `${phase.title}: ${Math.round(completion)}% complete`;
+                rect.appendChild(title);
+
+                lane.appendChild(rect);
+
+                // Phase label
+                const text = document.createElementNS(NS, 'text');
+                text.setAttribute('x', x + 10);
+                text.setAttribute('y', 24);
+                text.setAttribute('class', 'phase-label');
+                text.textContent = phase.title;
+                lane.appendChild(text);
+
+                // Arrow + Gate diamond to next phase
+                if (i < phases.length - 1) {
+                    const nextX = (i + 1) * colWidth;
+                    const midY = 19;
+                    const gx = (x + boxW + nextX) / 2; // Center gate between boxes
+                    const s = 7; // Diamond size
+
+                    // Gate diamond
+                    const diamond = document.createElementNS(NS, 'polygon');
+                    diamond.setAttribute('points', `${gx},${midY-s} ${gx+s},${midY} ${gx},${midY+s} ${gx-s},${midY}`);
+                    diamond.setAttribute('class', 'gate-diamond');
+                    lane.appendChild(diamond);
+
+                    // Arrow 1: Box → Gate
+                    const line1 = document.createElementNS(NS, 'line');
+                    line1.setAttribute('x1', x + boxW);
+                    line1.setAttribute('y1', midY);
+                    line1.setAttribute('x2', gx - s);
+                    line1.setAttribute('y2', midY);
+                    line1.setAttribute('class', 'flow-arrow');
+                    line1.setAttribute('marker-end', 'url(#flow-arrow)');
+                    lane.appendChild(line1);
+
+                    // Arrow 2: Gate → Next Box
+                    const line2 = document.createElementNS(NS, 'line');
+                    line2.setAttribute('x1', gx + s);
+                    line2.setAttribute('y1', midY);
+                    line2.setAttribute('x2', nextX);
+                    line2.setAttribute('y2', midY);
+                    line2.setAttribute('class', 'flow-arrow');
+                    line2.setAttribute('marker-end', 'url(#flow-arrow)');
+                    lane.appendChild(line2);
+                }
+            });
         }
 
         // Filter nodes based on current filters
@@ -1711,6 +1922,11 @@
             updateProgress();
             renderTabs();
             renderCurrentPhase();
+
+            // Update phase diagram after a micro-delay to ensure state is fully updated
+            requestAnimationFrame(() => {
+                renderPhaseFlowDiagram();
+            });
 
             // Show ephemeral feedback AFTER DOM update (if marking as done)
             if (currentStatus !== 'done') {
@@ -2026,6 +2242,7 @@
                 // 7. Re-render UI
                 renderTabs();
                 renderCurrentPhase();
+                renderPhaseFlowDiagram();
                 updateProgress();
 
                 // 8. Update badge
