@@ -1,6 +1,7 @@
 [project]
 name = "repo"
 version = "0.0.1"
+description = "MCP development workspace with web scraping capabilities"
 requires-python = ">=3.10"
 dependencies = [
     "nltk>=3.8",
