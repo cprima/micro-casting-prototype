@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Skill to Framework: MCP Methodology Evolution</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #657b83;
+            background: #fdf6e3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: #eee8d5;
+            padding: 40px 30px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #073642;
+        }
+
+        .subtitle {
+            color: #93a1a1;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .nav-links {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            background: #268bd2;
+            color: #fdf6e3;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .nav-link:hover {
+            background: #2075b8;
+        }
+
+        .origin-section {
+            background: #eee8d5;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            border-left: 4px solid #268bd2;
+        }
+
+        .origin-section h2 {
+            color: #073642;
+            margin-bottom: 15px;
+        }
+
+        .origin-section a {
+            color: #268bd2;
+            font-weight: 600;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #268bd2, #859900);
+        }
+
+        .phase {
+            position: relative;
+            background: #eee8d5;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .phase::before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 30px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #268bd2;
+            border: 4px solid #fdf6e3;
+            box-shadow: 0 0 0 2px #268bd2;
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .version-badge {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #6c71c4 0%, #268bd2 100%);
+            color: #fdf6e3;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .phase h2 {
+            color: #073642;
+            font-size: 1.8rem;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .phase-date {
+            color: #93a1a1;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .phase-description {
+            color: #586e75;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .key-changes {
+            margin: 20px 0;
+        }
+
+        .key-changes h3 {
+            color: #073642;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .key-changes ul {
+            list-style-position: inside;
+            color: #586e75;
+        }
+
+        .key-changes li {
+            margin-bottom: 8px;
+            padding-left: 10px;
+        }
+
+        .key-changes li::marker {
+            color: #268bd2;
+        }
+
+        .screenshot-container {
+            margin-top: 25px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 3px solid #93a1a1;
+        }
+
+        .screenshot-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .screenshot-caption {
+            background: #93a1a1;
+            color: #fdf6e3;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: #268bd2;
+            color: #fdf6e3;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .highlight-box {
+            background: #b58900;
+            color: #fdf6e3;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+
+        footer {
+            background: #eee8d5;
+            padding: 30px;
+            margin-top: 50px;
+            border-radius: 8px;
+            text-align: center;
+            color: #586e75;
+        }
+
+        footer a {
+            color: #268bd2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .timeline {
+                padding-left: 30px;
+            }
+
+            .timeline::before {
+                left: 10px;
+            }
+
+            .phase::before {
+                left: -28px;
+            }
+
+            .phase-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>From Skill to Framework</h1>
+            <p class="subtitle">The Evolution of the MCP Server Development Methodology</p>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">View Methodology</a>
+                <a href="https://github.com/anthropics/skills/blob/main/mcp-builder/SKILL.md" target="_blank" rel="noopener noreferrer" class="nav-link">Original Skill</a>
+            </div>
+        </header>
+
+        <div class="origin-section">
+            <h2>The Origin Story</h2>
+            <p>
+                This methodology began as an <strong>Anthropic Claude skill</strong> designed to guide the development of Model Context Protocol (MCP) servers.
+                The original skill can be found at:
+                <a href="https://github.com/anthropics/skills/blob/main/mcp-builder/SKILL.md" target="_blank" rel="noopener noreferrer">
+                    github.com/anthropics/skills/blob/main/mcp-builder/SKILL.md
+                </a>
+            </p>
+            <p style="margin-top: 15px;">
+                Through iterative refinement and user feedback, it evolved from a static checklist into a decision-driven delivery framework
+                with evidence gates, typed decisions, and transparent accountability.
+            </p>
+        </div>
+
+        <div class="timeline">
+            <!-- Phase 1: v0.1.0 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="version-badge">v0.1.0</span>
+                    <h2>The Seed</h2>
+                    <span class="phase-date">October 23, 2025</span>
+                </div>
+
+                <p class="phase-description">
+                    The journey began with the Anthropic Claude skill, providing a foundational checklist-based approach
+                    to MCP server development. This initial version focused on best practices and prescriptive steps.
+                </p>
+
+                <div class="key-changes">
+                    <h3>Initial Features:</h3>
+                    <ul>
+                        <li>Static best-practices checklist</li>
+                        <li>Phase-based compliance model</li>
+                        <li>Basic categorization of development tasks</li>
+                        <li>Simple progress tracking</li>
+                    </ul>
+                </div>
+
+                <div class="screenshot-container">
+                    <img src="screenshots/methodology-v0.1.0-20251023.png" alt="MCP Methodology v0.1.0 - Initial checklist-based approach">
+                    <div class="screenshot-caption">v0.1.0 - Checklist-Based Approach</div>
+                </div>
+            </div>
+
+            <!-- Phase 2: v0.2.0 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="version-badge">v0.2.0</span>
+                    <h2>The Transformation</h2>
+                    <span class="phase-date">October 23, 2025</span>
+                </div>
+
+                <p class="phase-description">
+                    A paradigm shift from checklist compliance to decision-driven delivery. Introduced the concept of
+                    decision types, evidence gates, and the distinction between reversible and irreversible choices.
+                </p>
+
+                <div class="key-changes">
+                    <h3>Major Changes:</h3>
+                    <ul>
+                        <li><strong>Decision Types:</strong> 1-way doors (irreversible), 2-way doors (reversible), guardrails, operational</li>
+                        <li><strong>Evidence Gates:</strong> Validation checkpoints (G0-G5) based on risk and reversibility</li>
+                        <li><strong>Artifacts:</strong> ADR.md, CONTRACT.yaml, EVIDENCE.json</li>
+                        <li><strong>Collaboration Model:</strong> Clear architect + developer workflow</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    Philosophy Shift: From phase compliance → to decision evidence flow
+                </div>
+
+                <div class="screenshot-container">
+                    <img src="screenshots/methodology-v0.2.0-20251023.png" alt="MCP Methodology v0.2.0 - Decision-driven transformation">
+                    <div class="screenshot-caption">v0.2.0 - Decision-Driven Framework Emerges</div>
+                </div>
+            </div>
+
+            <!-- Phase 3: v0.3.0 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="version-badge">v0.3.0</span>
+                    <h2>The Refinement</h2>
+                    <span class="phase-date">October 23, 2025</span>
+                </div>
+
+                <p class="phase-description">
+                    User feedback revealed schema noise: "good model, but noisy → UI feels heavy." This version
+                    addressed redundancy, verbosity, and premature optimization through comprehensive schema cleanup.
+                </p>
+
+                <div class="key-changes">
+                    <h3>Schema Improvements:</h3>
+                    <ul>
+                        <li><strong>Sparse Encoding:</strong> Removed null/empty fields → 38% size reduction</li>
+                        <li><strong>Semantic IDs:</strong> auth-oauth21 vs pr-3 for human readability</li>
+                        <li><strong>Evidence Policy:</strong> Requirements specification vs pre-filled stubs</li>
+                        <li><strong>Explicit Blocks:</strong> Dependencies with human-readable reasons</li>
+                        <li><strong>Effort Ranges:</strong> Honest uncertainty with confidence levels</li>
+                        <li><strong>Tag Canonicalization:</strong> 20 → 12 canonical tags</li>
+                        <li><strong>Computed Types:</strong> Derived from tags at render time</li>
+                    </ul>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">38%</div>
+                        <div class="metric-label">Smaller Payload</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">20→12</div>
+                        <div class="metric-label">Tag Reduction</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label">Semantic IDs</div>
+                    </div>
+                </div>
+
+                <div class="screenshot-container">
+                    <img src="screenshots/methodology-v0.3.0-20251023.png" alt="MCP Methodology v0.3.0 - Sparse schema and semantic IDs">
+                    <div class="screenshot-caption">v0.3.0 - Clean, Sparse Schema</div>
+                </div>
+            </div>
+
+            <!-- Phase 4: v0.3.2 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="version-badge">v0.3.2</span>
+                    <h2>Production Ready</h2>
+                    <span class="phase-date">October 23, 2025</span>
+                </div>
+
+                <p class="phase-description">
+                    Final polish for production deployment. Enhanced readability with Solarized Light theme,
+                    added comprehensive in-page documentation, and prepared for GitHub Pages deployment.
+                </p>
+
+                <div class="key-changes">
+                    <h3>Production Enhancements:</h3>
+                    <ul>
+                        <li><strong>Solarized Light Theme:</strong> Professional, readable color scheme with proper contrast</li>
+                        <li><strong>Comprehensive Footer:</strong> In-page reference for all concepts (door types, evidence, tags, ADR)</li>
+                        <li><strong>GitHub Pages Ready:</strong> .nojekyll, redirect page, deployment guide</li>
+                        <li><strong>Attribution:</strong> Author credit and source citation to Anthropic Skills</li>
+                        <li><strong>Documentation:</strong> README, setup guide, screenshots</li>
+                        <li><strong>Mobile Responsive:</strong> Works seamlessly on all screen sizes</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    Ready for deployment: Complete with documentation, styling, and deployment infrastructure
+                </div>
+
+                <div class="screenshot-container">
+                    <img src="screenshots/methodology-v0.3.2-20251023.png" alt="MCP Methodology v0.3.2 - Solarized Light and production ready">
+                    <div class="screenshot-caption">v0.3.2 - Production-Ready with Solarized Light Theme</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <h3 style="margin-bottom: 15px; color: #073642;">About This Project</h3>
+            <p style="margin-bottom: 10px;">
+                <strong>Author:</strong> Christian Prior-Mamulyan
+            </p>
+            <p style="margin-bottom: 10px;">
+                <strong>Original Skill:</strong>
+                <a href="https://github.com/anthropics/skills/blob/main/mcp-builder/SKILL.md" target="_blank" rel="noopener noreferrer">
+                    Anthropic Claude - MCP Builder Skill
+                </a>
+            </p>
+            <p style="margin-bottom: 20px;">
+                Evolved from a static skill to an interactive, decision-driven delivery framework through
+                iterative refinement and evidence-based design.
+            </p>
+            <div style="border-top: 1px solid #93a1a1; padding-top: 20px; margin-top: 20px;">
+                <a href="index.html" class="nav-link">← Back to Methodology</a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

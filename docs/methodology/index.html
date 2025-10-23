@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Server Development Methodology</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #657b83;
+            background: #fdf6e3;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: #eee8d5;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #073642;
+        }
+
+        .subtitle {
+            color: #93a1a1;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .framework-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #6c71c4 0%, #268bd2 100%);
+            color: #fdf6e3;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-container {
+            margin-top: 20px;
+            background: #93a1a1;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #268bd2, #859900);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fdf6e3;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .controls {
+            background: #eee8d5;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #268bd2;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e0e0e0;
+            background: #eee8d5;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: #268bd2;
+        }
+
+        .filter-btn.active {
+            background: #268bd2;
+            color: #fdf6e3;
+            border-color: #268bd2;
+        }
+
+        .filter-label {
+            font-size: 0.85rem;
+            color: #93a1a1;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: #eee8d5;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .tab .tab-progress {
+            font-size: 0.75rem;
+            color: #93a1a1;
+            margin-left: 8px;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #268bd2, #859900);
+            color: #fdf6e3;
+            transform: translateY(-2px);
+        }
+
+        .tab.active .tab-progress {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .tab-content {
+            background: #eee8d5;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+
+        .phase-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .phase-title {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .phase-description {
+            color: #93a1a1;
+            font-size: 1rem;
+        }
+
+        .gate-summary {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9fafb;
+            border-left: 4px solid #8B5CF6;
+            border-radius: 4px;
+        }
+
+        .gate-summary h4 {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: #8B5CF6;
+        }
+
+        .gate-checks {
+            font-size: 0.85rem;
+            color: #93a1a1;
+        }
+
+        .gate-check {
+            margin: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .gate-check::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #859900;
+        }
+
+        .nodes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .node {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .node:hover {
+            border-color: #268bd2;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .node.completed {
+            background: #f0fdf4;
+            border-color: #859900;
+        }
+
+        .node.blocked {
+            background: #fef3c7;
+            border-color: #f59e0b;
+        }
+
+        .node-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            margin-top: 2px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .node-title-group {
+            flex: 1;
+        }
+
+        .node-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .node-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .node-level {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .level-required {
+            background: #FEE2E2;
+            color: #cb4b16;
+        }
+
+        .level-recommended {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .level-optional {
+            background: #E0E7FF;
+            color: #4F46E5;
+        }
+
+        .node-type {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #E5E7EB;
+            color: #4B5563;
+        }
+
+        .node-door {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .door-one_way {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .door-two_way {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .door-guardrail {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .door-operational {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .node-summary {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .node-why {
+            padding: 12px;
+            background: #f9fafb;
+            border-left: 3px solid #268bd2;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            color: #93a1a1;
+        }
+
+        .node-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.85rem;
+        }
+
+        .meta-section {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .meta-label {
+            font-weight: 600;
+            color: #93a1a1;
+            margin-bottom: 4px;
+        }
+
+        .meta-value {
+            color: #333;
+        }
+
+        .node-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #555;
+        }
+
+        .node-dependencies {
+            font-size: 0.85rem;
+            color: #93a1a1;
+        }
+
+        .dependency-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .dependency-badge {
+            padding: 3px 8px;
+            background: #FEF3C7;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #92400E;
+        }
+
+        .dependency-badge.met {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .evidence-section {
+            margin-top: 12px;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+
+        .evidence-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #93a1a1;
+            margin-bottom: 6px;
+        }
+
+        .evidence-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .evidence-badge {
+            padding: 4px 10px;
+            background: #eee8d5;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #93a1a1;
+        }
+
+        .artifact-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .artifact-link {
+            padding: 4px 10px;
+            background: #EDE9FE;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #5B21B6;
+            text-decoration: none;
+        }
+
+        .artifact-link.missing {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .blocked-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #FEF3C7;
+            color: #92400E;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .no-nodes {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 1.1rem;
+        }
+
+        .reset-btn {
+            padding: 8px 16px;
+            background: #dc322f;
+            color: #fdf6e3;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: #cb4b16;
+        }
+
+        .legend {
+            background: #eee8d5;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .legend-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #93a1a1;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.8rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+
+            .node-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .node-meta {
+                flex-direction: column;
+            }
+        }
+
+        /* Footer styles */
+        .methodology-footer {
+            margin-top: 40px;
+            padding: 30px;
+            background: #eee8d5;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .footer-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #93a1a1;
+        }
+
+        .footer-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .footer-section h3 {
+            color: #073642;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-item {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #586e75;
+        }
+
+        .footer-item strong {
+            color: #073642;
+        }
+
+        .footer-item ul {
+            margin-top: 8px;
+            margin-left: 20px;
+        }
+
+        .footer-item li {
+            margin-bottom: 5px;
+        }
+
+        .footer-tags {
+            display: block;
+            line-height: 2;
+        }
+
+        .tag-item {
+            display: inline-block;
+            background: #268bd2;
+            color: #fdf6e3;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .footer-attribution {
+            text-align: center;
+            padding-top: 20px;
+            color: #93a1a1;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .methodology-footer {
+                padding: 20px;
+            }
+
+            .footer-section h3 {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="framework-badge">v0.3.2 Decision-Driven Delivery</div>
+            <h1 id="pageTitle">MCP Server Development Methodology</h1>
+            <p class="subtitle" id="pageDescription">Loading...</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%;">0%</div>
+            </div>
+        </header>
+
+        <div class="legend">
+            <div class="legend-title">Decision Door Types</div>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <span class="node-door door-one_way">one-way</span>
+                    <span>Irreversible / high cost to reverse</span>
+                </div>
+                <div class="legend-item">
+                    <span class="node-door door-two_way">two-way</span>
+                    <span>Easily reversible</span>
+                </div>
+                <div class="legend-item">
+                    <span class="node-door door-guardrail">guardrail</span>
+                    <span>Constraints that prevent bad outcomes</span>
+                </div>
+                <div class="legend-item">
+                    <span class="node-door door-operational">operational</span>
+                    <span>Runtime decisions</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <input type="text" class="search-box" id="searchBox" placeholder="Search by title, summary, or tags...">
+            <span class="filter-label">Level:</span>
+            <div class="filter-group" id="levelFilters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="required">Required</button>
+                <button class="filter-btn" data-filter="recommended">Recommended</button>
+                <button class="filter-btn" data-filter="optional">Optional</button>
+            </div>
+            <span class="filter-label">Door:</span>
+            <div class="filter-group" id="doorFilters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="one_way">1-Way</button>
+                <button class="filter-btn" data-filter="two_way">2-Way</button>
+                <button class="filter-btn" data-filter="guardrail">Guardrail</button>
+                <button class="filter-btn" data-filter="operational">Ops</button>
+            </div>
+            <button class="reset-btn" id="resetBtn">Reset Progress</button>
+        </div>
+
+        <div class="tabs" id="tabs"></div>
+
+        <div class="tab-content" id="tabContent">
+            <div class="no-nodes">Loading methodology...</div>
+        </div>
+
+        <!-- Footer with explanations -->
+        <footer class="methodology-footer">
+            <div class="footer-section">
+                <h3>Decision Door Types</h3>
+                <div class="footer-content">
+                    <div class="footer-item">
+                        <strong>One-Way Door:</strong> Irreversible or very costly to reverse decisions. Require ADR, spike validation, and careful consideration. Examples: database choice, API design patterns, authentication architecture.
+                    </div>
+                    <div class="footer-item">
+                        <strong>Two-Way Door:</strong> Easily reversible decisions. Can be changed with minimal cost. Examples: UI layouts, configuration values, internal utility functions.
+                    </div>
+                    <div class="footer-item">
+                        <strong>Guardrail:</strong> Constraints and boundaries that prevent bad outcomes. Examples: input validation, rate limits, security policies.
+                    </div>
+                    <div class="footer-item">
+                        <strong>Operational:</strong> Runtime tuning and operational decisions. Examples: timeout values, observability settings, performance limits.
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Evidence Types</h3>
+                <div class="footer-content">
+                    <div class="footer-item">
+                        <strong>spike (@timing):</strong> Time-boxed experimental code to validate technical decisions. Proves assumptions before commitment.
+                    </div>
+                    <div class="footer-item">
+                        <strong>test_report:</strong> Test coverage results, unit/integration test outcomes, quality assurance documentation.
+                    </div>
+                    <div class="footer-item">
+                        <strong>security:</strong> Security reviews, vulnerability scans, OWASP compliance checks, penetration test results.
+                    </div>
+                    <div class="footer-item">
+                        <strong>perf:</strong> Performance benchmarks, load test results, latency measurements, resource usage analysis.
+                    </div>
+                    <div class="footer-item">
+                        <strong>ops_runbook:</strong> Operational procedures, deployment guides, incident response documentation.
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Evidence Timing</h3>
+                <div class="footer-content">
+                    <div class="footer-item">
+                        <strong>@gate:</strong> Required before passing phase gate. Must be completed to proceed to next phase.
+                    </div>
+                    <div class="footer-item">
+                        <strong>@completion:</strong> Required when marking the decision node as done. Final validation before closing.
+                    </div>
+                    <div class="footer-item">
+                        <strong>@always:</strong> Must be maintained continuously throughout the project lifecycle.
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Decision Levels</h3>
+                <div class="footer-content">
+                    <div class="footer-item">
+                        <strong>Required:</strong> Must be completed for production readiness. Core architectural and security decisions.
+                    </div>
+                    <div class="footer-item">
+                        <strong>Recommended:</strong> Strongly suggested for quality and maintainability. Should complete unless good reason to skip.
+                    </div>
+                    <div class="footer-item">
+                        <strong>Optional:</strong> Nice-to-have enhancements. Advanced features for mature implementations.
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Canonical Tags</h3>
+                <div class="footer-content footer-tags">
+                    <span class="tag-item">naming</span> - Naming conventions and patterns
+                    <span class="tag-item">architecture</span> - Structural decisions
+                    <span class="tag-item">security</span> - Auth, validation, encryption
+                    <span class="tag-item">performance</span> - Optimization, caching, limits
+                    <span class="tag-item">testing</span> - Quality assurance strategies
+                    <span class="tag-item">observability</span> - Logging, monitoring, metrics
+                    <span class="tag-item">tooling</span> - Tool design and contracts
+                    <span class="tag-item">formats</span> - Data formats and schemas
+                    <span class="tag-item">transport</span> - Network protocols
+                    <span class="tag-item">integration</span> - APIs and interoperability
+                    <span class="tag-item">ops</span> - Deployment and operations
+                    <span class="tag-item">ux</span> - Developer experience
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>ADR (Architecture Decision Record)</h3>
+                <div class="footer-content">
+                    <div class="footer-item">
+                        An ADR documents irreversible (one-way door) decisions. Standard sections include:
+                        <ul>
+                            <li><strong>Context:</strong> What situation prompted this decision?</li>
+                            <li><strong>Decision:</strong> What did we choose and why?</li>
+                            <li><strong>Consequences:</strong> What are the trade-offs and implications?</li>
+                            <li><strong>Rollback Plan:</strong> How can we reverse this if needed? (required for high-risk decisions)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-attribution">
+                <div style="margin-bottom: 8px;">
+                    MCP Server Development Methodology v0.3.2 | Decision-Driven Delivery Framework
+                </div>
+                <div style="font-size: 0.8rem; color: #93a1a1;">
+                    Author: Christian Prior-Mamulyan
+                </div>
+                <div style="font-size: 0.8rem; color: #93a1a1; margin-top: 4px;">
+                    Inspired by <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener noreferrer" style="color: #268bd2;">Anthropic Skills</a>
+                </div>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #93a1a1;">
+                    <a href="development.html" style="color: #268bd2; text-decoration: none; font-size: 0.9rem; font-weight: 600;">
+                        📖 View Development Journey
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // State management
+        const state = {
+            data: null,
+            currentPhase: null,
+            completedNodes: new Set(),
+            searchQuery: '',
+            levelFilter: 'all',
+            doorFilter: 'all'
+        };
+
+        // Load data from JSON
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                state.data = await response.json();
+                loadCompletedNodes();
+                init();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('tabContent').innerHTML =
+                    '<div class="no-nodes">Error loading methodology data. Please check data.json file.</div>';
+            }
+        }
+
+        // LocalStorage management
+        function loadCompletedNodes() {
+            const saved = localStorage.getItem('mcp-methodology-completed-v0.3.2');
+            if (saved) {
+                state.completedNodes = new Set(JSON.parse(saved));
+            }
+        }
+
+        function saveCompletedNodes() {
+            localStorage.setItem('mcp-methodology-completed-v0.3.2',
+                JSON.stringify([...state.completedNodes]));
+        }
+
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                state.completedNodes.clear();
+                saveCompletedNodes();
+                updateProgress();
+                renderCurrentPhase();
+            }
+        }
+
+        // Dependency checking
+        function isNodeBlocked(node) {
+            if (!node.blocks || node.blocks.length === 0) return false;
+            return node.blocks.some(block => !state.completedNodes.has(block.on));
+        }
+
+        function getBlockReasons(node) {
+            if (!node.blocks || node.blocks.length === 0) return [];
+            return node.blocks.filter(block => !state.completedNodes.has(block.on));
+        }
+
+        function getNodeById(nodeId) {
+            for (const phase of state.data.phases) {
+                const node = phase.nodes.find(n => n.id === nodeId);
+                if (node) return node;
+            }
+            return null;
+        }
+
+        // Initialize app
+        function init() {
+            if (!state.data) return;
+
+            // Set page title and description
+            document.getElementById('pageTitle').textContent = state.data.program.title;
+            document.getElementById('pageDescription').textContent = state.data.program.description;
+
+            // Render tabs
+            renderTabs();
+
+            // Set initial phase
+            state.currentPhase = state.data.phases[0].id;
+            renderCurrentPhase();
+
+            // Update progress
+            updateProgress();
+
+            // Event listeners
+            document.getElementById('searchBox').addEventListener('input', handleSearch);
+            document.getElementById('resetBtn').addEventListener('click', resetProgress);
+
+            // Filter buttons
+            document.querySelectorAll('#levelFilters .filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => handleFilterClick(e, 'level'));
+            });
+            document.querySelectorAll('#doorFilters .filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => handleFilterClick(e, 'door'));
+            });
+        }
+
+        // Render tabs
+        function renderTabs() {
+            const tabsContainer = document.getElementById('tabs');
+            tabsContainer.innerHTML = '';
+
+            state.data.phases.forEach(phase => {
+                const tab = document.createElement('button');
+                tab.className = 'tab';
+
+                // Count ALL nodes in phase (what user sees when clicking tab)
+                const allNodes = phase.nodes;
+                const completedNodes = allNodes.filter(n => state.completedNodes.has(n.id)).length;
+                const progress = `${completedNodes}/${allNodes.length}`;
+
+                tab.innerHTML = `${phase.title} <span class="tab-progress">(${progress})</span>`;
+                tab.dataset.phaseId = phase.id;
+
+                if (phase.id === state.currentPhase) {
+                    tab.classList.add('active');
+                }
+
+                tab.addEventListener('click', () => switchPhase(phase.id));
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        // Switch phase
+        function switchPhase(phaseId) {
+            state.currentPhase = phaseId;
+
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.phaseId === phaseId);
+            });
+
+            renderCurrentPhase();
+        }
+
+        // Render current phase
+        function renderCurrentPhase() {
+            const phase = state.data.phases.find(p => p.id === state.currentPhase);
+            if (!phase) return;
+
+            const content = document.getElementById('tabContent');
+
+            // Apply filters
+            const filteredNodes = phase.nodes.filter(node => {
+                // Search filter
+                if (state.searchQuery) {
+                    const query = state.searchQuery.toLowerCase();
+                    const matchTitle = node.title.toLowerCase().includes(query);
+                    const matchSummary = node.summary.toLowerCase().includes(query);
+                    const matchTags = node.tags.some(tag => tag.toLowerCase().includes(query));
+                    if (!matchTitle && !matchSummary && !matchTags) return false;
+                }
+
+                // Level filter
+                if (state.levelFilter !== 'all' && node.level !== state.levelFilter) {
+                    return false;
+                }
+
+                // Door filter
+                if (state.doorFilter !== 'all' && node.door !== state.doorFilter) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            // Build HTML
+            let html = `
+                <div class="phase-header">
+                    <h2 class="phase-title">${phase.title}</h2>
+                    <p class="phase-description">${phase.description}</p>
+            `;
+
+            if (phase.gate) {
+                html += `
+                    <div class="gate-summary">
+                        <h4>📋 Phase Gate: ${phase.gate.purpose}</h4>
+                        <div class="gate-checks">
+                            ${phase.gate.checks.map(check => `
+                                <div class="gate-check">${check.description}</div>
+                            `).join('')}
+                        </div>
+                        <div style="margin-top: 8px; font-size: 0.8rem; color: #8B5CF6;">
+                            Approvers: ${phase.gate.approvers.join(', ')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+
+            if (filteredNodes.length === 0) {
+                html += '<div class="no-nodes">No nodes match your current filters.</div>';
+            } else {
+                html += '<div class="nodes-list">';
+                filteredNodes.forEach(node => {
+                    const completed = state.completedNodes.has(node.id);
+                    const blocked = isNodeBlocked(node);
+                    html += renderNode(node, completed, blocked);
+                });
+                html += '</div>';
+            }
+
+            content.innerHTML = html;
+        }
+
+        // Render a single node
+        function renderNode(node, completed, blocked) {
+            const doorLabel = {
+                'one_way': '🚪 1-way',
+                'two_way': '↔️ 2-way',
+                'guardrail': '🛡️ guardrail',
+                'operational': '⚙️ ops'
+            }[node.door] || node.door;
+
+            const blockReasons = getBlockReasons(node);
+            const statusCause = node.status?.cause || '';
+
+            let html = `
+                <div class="node ${completed ? 'completed' : ''} ${blocked ? 'blocked' : ''}" data-node-id="${node.id}">
+                    <div class="node-header">
+                        <input type="checkbox" class="checkbox"
+                            ${completed ? 'checked' : ''}
+                            ${blocked ? 'disabled' : ''}
+                            onchange="toggleNode('${node.id}')">
+                        <div class="node-title-group">
+                            <div class="node-title">
+                                ${node.title}
+                                ${blocked && blockReasons.length > 0 ?
+                                    `<span class="blocked-badge">⚠️ Blocked: ${blockReasons[0].reason}</span>` :
+                                    (blocked ? '<span class="blocked-badge">⚠️ Blocked</span>' : '')}
+                            </div>
+                            <div class="node-badges">
+                                <span class="node-level level-${node.level}">${node.level}</span>
+                                <span class="node-door door-${node.door}">${doorLabel}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="node-summary">${node.summary}</div>
+                    ${node.why ? `<div class="node-why"><strong>Why:</strong> ${node.why}</div>` : ''}
+            `;
+
+            // Blocks (with reasons)
+            if (node.blocks && node.blocks.length > 0) {
+                html += `
+                    <div class="node-dependencies">
+                        <strong>Blocked by:</strong>
+                        <div class="dependency-list">
+                            ${node.blocks.map(block => {
+                                const met = state.completedNodes.has(block.on);
+                                return `<span class="dependency-badge ${met ? 'met' : ''}" title="${block.reason}">${block.on}: ${block.reason}</span>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Evidence Policy (requirements, not stubs)
+            if (node.evidence_policy && node.evidence_policy.length > 0) {
+                html += `
+                    <div class="evidence-section">
+                        <div class="evidence-title">Evidence Requirements:</div>
+                        <div class="evidence-list">
+                            ${node.evidence_policy.map(policy => `
+                                <span class="evidence-badge" title="${policy.criteria}">
+                                    ${policy.type} (@${policy.required_at})
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Collected Evidence (if any)
+            if (node.evidence && node.evidence.length > 0) {
+                html += `
+                    <div class="evidence-section">
+                        <div class="evidence-title">Evidence Collected:</div>
+                        <div class="evidence-list">
+                            ${node.evidence.map(ev => `
+                                <span class="evidence-badge" style="background: ${ev.result === 'meets' ? '#D1FAE5' : '#FEE2E2'}">
+                                    ${ev.type}: ${ev.result}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Artifacts
+            const hasArtifacts = node.adr_ref || node.contract_ref;
+            if (hasArtifacts || node.door === 'one_way') {
+                html += `
+                    <div class="artifact-links">
+                        ${node.adr_ref
+                            ? `<a href="${node.adr_ref}" class="artifact-link">📄 ADR</a>`
+                            : (node.door === 'one_way' ? '<span class="artifact-link missing">📄 ADR needed</span>' : '')}
+                        ${node.contract_ref
+                            ? `<a href="${node.contract_ref}" class="artifact-link">📋 Contract</a>`
+                            : ''}
+                    </div>
+                `;
+            }
+
+            // Meta
+            const effortMin = Math.round(node.effort.min / 60 * 10) / 10;
+            const effortMax = Math.round(node.effort.max / 60 * 10) / 10;
+            const effortDisplay = effortMin === effortMax ?
+                `~${effortMin}h` :
+                `~${effortMin}-${effortMax}h (${node.effort.confidence} confidence)`;
+
+            html += `
+                <div class="node-meta">
+                    <div class="meta-section">
+                        <div class="meta-label">Estimated Effort</div>
+                        <div class="meta-value">${effortDisplay}</div>
+                    </div>
+                    ${node.tags && node.tags.length > 0 ? `
+                        <div class="meta-section">
+                            <div class="meta-label">Tags</div>
+                            <div class="node-tags">
+                                ${node.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            html += '</div>';
+            return html;
+        }
+
+        // Toggle node completion
+        function toggleNode(nodeId) {
+            const node = getNodeById(nodeId);
+            if (!node) return;
+
+            if (isNodeBlocked(node)) {
+                alert('This node is blocked by incomplete dependencies.');
+                return;
+            }
+
+            if (state.completedNodes.has(nodeId)) {
+                state.completedNodes.delete(nodeId);
+            } else {
+                state.completedNodes.add(nodeId);
+            }
+            saveCompletedNodes();
+            updateProgress();
+            renderTabs();
+            renderCurrentPhase();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            let totalImportant = 0;
+            let completedImportant = 0;
+
+            state.data.phases.forEach(phase => {
+                phase.nodes.forEach(node => {
+                    if (node.level === 'required' || node.level === 'recommended') {
+                        totalImportant++;
+                        if (state.completedNodes.has(node.id)) {
+                            completedImportant++;
+                        }
+                    }
+                });
+            });
+
+            const percentage = totalImportant > 0 ? Math.round((completedImportant / totalImportant) * 100) : 0;
+
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = `${percentage}% (${completedImportant}/${totalImportant} production-ready)`;
+        }
+
+        // Handle search
+        function handleSearch(e) {
+            state.searchQuery = e.target.value;
+            renderCurrentPhase();
+        }
+
+        // Handle filter click
+        function handleFilterClick(e, filterType) {
+            const container = e.target.closest('.filter-group');
+            container.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+
+            if (filterType === 'level') {
+                state.levelFilter = e.target.dataset.filter;
+            } else if (filterType === 'door') {
+                state.doorFilter = e.target.dataset.filter;
+            }
+
+            renderCurrentPhase();
+        }
+
+        // Make toggleNode available globally
+        window.toggleNode = toggleNode;
+
+        // Load data on page load
+        loadData();
+    </script>
+</body>
+</html>
