@@ -1,0 +1,48 @@
+{
+  "description": "State fixture that fails core-features-gate (cf-gate-3: missing test_report for response-formats)",
+  "nodes": {
+    "tool-atomicity": {
+      "status": {
+        "state": "done"
+      },
+      "decision_input": {
+        "value": "Each tool handles single operation: read_file, write_file (not update_file)"
+      },
+      "evidence": [
+        {
+          "type": "test_report",
+          "result": "pass",
+          "details": "Unit tests cover atomic tool behavior"
+        }
+      ]
+    },
+    "input-validation": {
+      "status": {
+        "state": "done"
+      },
+      "evidence": [
+        {
+          "type": "security",
+          "result": "meets",
+          "details": "Security review confirms Pydantic validates all inputs"
+        },
+        {
+          "type": "test_report",
+          "result": "pass",
+          "details": "Tests cover invalid input rejection"
+        }
+      ]
+    },
+    "response-formats": {
+      "status": {
+        "state": "done"
+      },
+      "evidence": []
+    }
+  },
+  "expected_failure": {
+    "gate": "core-features-gate",
+    "check": "cf-gate-3",
+    "reason": "response-formats missing test_report evidence"
+  }
+}

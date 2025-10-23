@@ -1,0 +1,49 @@
+{
+  "description": "State fixture that passes core-features-gate",
+  "nodes": {
+    "tool-atomicity": {
+      "status": {
+        "state": "done"
+      },
+      "decision_input": {
+        "value": "Each tool handles single operation: read_file, write_file (not update_file)"
+      },
+      "evidence": [
+        {
+          "type": "test_report",
+          "result": "pass",
+          "details": "Unit tests cover atomic tool behavior"
+        }
+      ]
+    },
+    "input-validation": {
+      "status": {
+        "state": "done"
+      },
+      "evidence": [
+        {
+          "type": "security",
+          "result": "meets",
+          "details": "Security review confirms Pydantic validates all inputs"
+        },
+        {
+          "type": "test_report",
+          "result": "pass",
+          "details": "Tests cover invalid input rejection"
+        }
+      ]
+    },
+    "response-formats": {
+      "status": {
+        "state": "done"
+      },
+      "evidence": [
+        {
+          "type": "test_report",
+          "result": "pass",
+          "details": "Tests cover JSON and Markdown output formats"
+        }
+      ]
+    }
+  }
+}
