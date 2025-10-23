@@ -509,6 +509,89 @@
                     <div class="screenshot-caption">v0.4.0 - State Management Revolution with Import/Export Functionality</div>
                 </div>
             </div>
+
+            <!-- Phase 6: v0.4.1 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="version-badge">v0.4.1</span>
+                    <h2>Decision Input Architecture</h2>
+                    <span class="phase-date">October 23, 2025</span>
+                </div>
+
+                <p class="phase-description">
+                    Introduction of metadata-driven decision input fields, enabling users to capture decision values
+                    directly within the UI. This scalable architecture allows any decision node to specify input fields
+                    through JSON metadata, with generic rendering and state persistence.
+                </p>
+
+                <div class="key-changes">
+                    <h3>Major Features:</h3>
+                    <ul>
+                        <li><strong>Decision Input Fields:</strong> Capture decision values (e.g., server naming pattern) directly in UI</li>
+                        <li><strong>Metadata-Driven:</strong> Input fields defined in data.json via decision_input property</li>
+                        <li><strong>Generic Rendering:</strong> Single renderDecisionInputs() function handles all input types</li>
+                        <li><strong>State Integration:</strong> Decision values saved to state.progress[nodeId].decision_value</li>
+                        <li><strong>Smart Exports:</strong> Export filenames use decision values (e.g., analytics_mcp-state-2025-10-23.json)</li>
+                        <li><strong>Placeholder System:</strong> Contextual hints guide user input</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    From static documentation → to interactive decision capture with smart filename generation
+                </div>
+            </div>
+
+            <!-- Phase 7: v0.4.2 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="version-badge">v0.4.2</span>
+                    <h2>UX Polish & Visual Flow</h2>
+                    <span class="phase-date">October 23, 2025</span>
+                </div>
+
+                <p class="phase-description">
+                    A comprehensive UX overhaul focused on user satisfaction, visual feedback, and at-a-glance progress tracking.
+                    Added interactive phase flow diagram, checkbox micro-animations, seamless tab integration, and user-friendly tooltips.
+                </p>
+
+                <div class="key-changes">
+                    <h3>Major Features:</h3>
+                    <ul>
+                        <li><strong>Checkbox Satisfaction:</strong> Scale + glow + shake animations with ephemeral "✔ Decision recorded" feedback</li>
+                        <li><strong>Tab Merging:</strong> Seamless active tab integration with panel using transparent borders (no flicker!)</li>
+                        <li><strong>Phase Flow Diagram:</strong> Interactive SVG visualization showing phase progression with completion colors</li>
+                        <li><strong>Dynamic Completion Colors:</strong> Beige (0%) → Yellow (partial) → Green (100%) with "next" phase glow</li>
+                        <li><strong>Bidirectional Updates:</strong> Diagram updates when completing or un-completing nodes</li>
+                        <li><strong>User-Friendly Tooltips:</strong> State badge explanations + rich evidence badge descriptions</li>
+                        <li><strong>Version Harmonization:</strong> 3-version strategy (Frontend v0.4.2, Catalog 0.3.0, State 0.4.0)</li>
+                        <li><strong>Accessibility:</strong> All animations respect prefers-reduced-motion</li>
+                    </ul>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">8</div>
+                        <div class="metric-label">UX Enhancements</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">Live</div>
+                        <div class="metric-label">Phase Visualization</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">Zero</div>
+                        <div class="metric-label">Layout Flicker</div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    Transformation: From functional interface → to delightful, informative user experience
+                </div>
+
+                <div class="screenshot-container">
+                    <img src="screenshots/methodology-v0.4.2-20251023.png" alt="MCP Methodology v0.4.2 - UX Polish with Phase Flow Diagram">
+                    <div class="screenshot-caption">v0.4.2 - UX Polish & Interactive Phase Flow Visualization</div>
+                </div>
+            </div>
         </div>
 
         <footer>
