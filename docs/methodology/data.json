@@ -36,6 +36,12 @@
               "criteria": "Validate naming pattern across ecosystem examples"
             }
           ],
+          "decision_input": {
+            "label": "Server Name",
+            "placeholder": "analytics_mcp",
+            "pattern": "^[a-z0-9_-]+$",
+            "help": "Python: {service}_mcp, Node: {service}-mcp-server"
+          },
           "status": {
             "state": "todo"
           },

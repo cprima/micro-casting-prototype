@@ -1,9 +1,9 @@
 # MCP Server Development Methodology
 
-**Version:** v0.3.2
-**Framework:** Decision-Driven Delivery
+**Version:** v0.4.1
+**Framework:** Decision-Driven Delivery with Portable State Management
 
-A decision-driven delivery framework for building Model Context Protocol (MCP) servers with evidence-based validation and transparent decision accountability.
+A decision-driven delivery framework for building Model Context Protocol (MCP) servers with evidence-based validation, transparent decision accountability, and team collaboration through portable state files.
 
 ## 🎯 Overview
 
@@ -15,11 +15,23 @@ This methodology shifts from static checklists to a decision-driven approach:
 
 ## 📂 Files
 
-- **`index.html`** - Interactive web interface for tracking methodology progress
-- **`data.json`** - Methodology data (phases, decision nodes, gates, evidence requirements)
+### Core Application
+- **`index.html`** - Interactive web interface (v0.4.1) with state management
+- **`data.json`** - Catalog (immutable): phases, decision nodes, gates, evidence requirements
+- **`state.json`** - State (mutable): your progress, decisions, evidence (git-ignored by default)
+- **`state.example.json`** - Example state file showing all features
+
+### Documentation
+- **`development.html`** - Visual timeline of methodology evolution (v0.1.0 → v0.4.1)
 - **`schema-v0.3.0-proposal.yaml`** - Schema documentation and transformation guide
 - **`schema-gate-predicates.yaml`** - Structured gate predicate types
 - **`tag-canonicalization.yaml`** - Canonical tag set and mapping rules
+
+### Architecture (v0.4.0+)
+The methodology now separates **immutable catalog** (data.json) from **mutable state** (state.json):
+- **Catalog** defines the structure: what decisions exist, what evidence is needed
+- **State** tracks your progress: which nodes are done, decisions made, evidence collected
+- **Portable** state files enable team collaboration and version control
 
 ## 🚪 Decision Door Types
 
@@ -103,9 +115,41 @@ Documents irreversible (one-way door) decisions with:
 Open `index.html` in a web browser to:
 
 - Track progress across all decision nodes
+- Enter decision values (e.g., server naming pattern)
 - Filter by level (required/recommended/optional) and door type
 - View evidence requirements and block dependencies
-- Mark nodes as completed (progress saved to localStorage)
+- Mark nodes as completed
+- **Export** state to shareable JSON file
+- **Import** state from teammates
+
+### State Management Workflow (v0.4.0+)
+
+```bash
+# 1. Work Locally
+# - Progress auto-saves to browser localStorage
+# - Enter decision values in input fields (e.g., "analytics_mcp" for server name)
+
+# 2. Export Your Progress
+# - Click "Export State" button
+# - Downloads: analytics_mcp-state-2025-10-23.json
+# - Filename uses your server naming decision!
+
+# 3. Share with Team
+git add docs/methodology/analytics_mcp-state-2025-10-23.json
+git commit -m "chore: update methodology progress"
+git push
+
+# 4. Import Teammate's Progress
+# - Click "Import State" button
+# - Select their state.json file
+# - Review reconciliation summary
+# - Confirm import → progress synchronized!
+
+# 5. Collaborate
+# - Both team members now have same progress
+# - Decision values (like server name) shared
+# - Evidence and notes synchronized
+```
 
 ### Local Development
 
@@ -119,9 +163,10 @@ python -m http.server 8000
 
 This methodology is designed to work seamlessly with GitHub Pages. The `.nojekyll` file in the docs directory ensures proper rendering.
 
-## 📊 Data Structure (v0.3.2)
+## 📊 Data Structure
 
-Key improvements in v0.3.2:
+### Catalog (data.json) - v0.3.0
+Immutable structure defining the methodology:
 
 - **Sparse encoding** - Omit null/empty fields (38% size reduction)
 - **Semantic IDs** - Human-readable like `auth-oauth21` vs `pr-3`
@@ -130,6 +175,45 @@ Key improvements in v0.3.2:
 - **Effort ranges** - Honest uncertainty with confidence levels
 - **Tag reduction** - 20 → 12 canonical tags
 - **Computed types** - Derived from tags at render time
+- **Decision inputs** (v0.4.1) - Metadata-driven input fields for capturing decisions
+
+### State (state.json) - v0.4.0
+Mutable progress tracking:
+
+```json
+{
+  "state_version": "0.4.0",
+  "program_id": "mcp-server-delivery",
+  "catalog_version": "0.3.0",
+  "catalog_fingerprint": "sha256:...",
+  "metadata": {
+    "created_at": "2025-10-23T14:30:00Z",
+    "updated_at": "2025-10-23T16:45:00Z"
+  },
+  "nodes": {
+    "server-naming": {
+      "status": "done",
+      "done_at": "2025-10-23T14:35:00Z",
+      "decision_value": "analytics_mcp",
+      "notes": "Chose Python convention",
+      "artifacts": {
+        "adr_ref": "docs/adr/001-server-naming.md"
+      },
+      "evidence": [...]
+    }
+  },
+  "integrity": {
+    "state_fingerprint": "sha256:...",
+    "migrations_applied": []
+  }
+}
+```
+
+**Key features:**
+- SHA-256 fingerprinting for integrity verification
+- Sparse encoding (only meaningful state saved)
+- Reconciliation support (handles catalog evolution)
+- Backward compatible (auto-migrates from v0.3.x)
 
 ## 🎨 Styling
 
@@ -143,6 +227,8 @@ Uses **Solarized Light** color scheme for comfortable reading:
 
 ## 🔄 Version History
 
+- **v0.4.1** - Decision input fields with metadata-driven architecture, scalable input system
+- **v0.4.0** - State management revolution: portable state files, export/import, reconciliation, smart filename generation
 - **v0.3.2** - Solarized Light theme, comprehensive footer with reference documentation
 - **v0.3.0** - Schema v0.3.0 with semantic IDs, sparse encoding, evidence policy
 - **v0.2.1** - Initial transformation-based schema

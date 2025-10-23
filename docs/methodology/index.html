@@ -515,6 +515,50 @@
             color: #991B1B;
         }
 
+        .decision-input-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #eee8d5;
+            border-radius: 6px;
+            border-left: 3px solid #268bd2;
+        }
+
+        .decision-label {
+            display: block;
+            font-weight: 600;
+            color: #073642;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .decision-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #93a1a1;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: 'Courier New', monospace;
+            background: #fdf6e3;
+            color: #073642;
+            transition: border-color 0.2s;
+        }
+
+        .decision-input:focus {
+            outline: none;
+            border-color: #268bd2;
+        }
+
+        .decision-input:invalid {
+            border-color: #dc322f;
+        }
+
+        .decision-help {
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: #93a1a1;
+            font-style: italic;
+        }
+
         .blocked-badge {
             display: inline-block;
             padding: 4px 10px;
@@ -1273,10 +1317,6 @@
             let html = `
                 <div class="node ${completed ? 'completed' : ''} ${blocked ? 'blocked' : ''}" data-node-id="${node.id}">
                     <div class="node-header">
-                        <input type="checkbox" class="checkbox"
-                            ${completed ? 'checked' : ''}
-                            ${blocked ? 'disabled' : ''}
-                            onchange="toggleNode('${node.id}')">
                         <div class="node-title-group">
                             <div class="node-title">
                                 ${node.title}
@@ -1289,6 +1329,10 @@
                                 <span class="node-door door-${node.door}">${doorLabel}</span>
                             </div>
                         </div>
+                        <input type="checkbox" class="checkbox"
+                            ${completed ? 'checked' : ''}
+                            ${blocked ? 'disabled' : ''}
+                            onchange="toggleNode('${node.id}')">
                     </div>
                     <div class="node-summary">${node.summary}</div>
                     ${node.why ? `<div class="node-why"><strong>Why:</strong> ${node.why}</div>` : ''}
@@ -1352,6 +1396,28 @@
                         ${node.contract_ref
                             ? `<a href="${node.contract_ref}" class="artifact-link">📋 Contract</a>`
                             : ''}
+                    </div>
+                `;
+            }
+
+            // Decision Input (metadata-driven)
+            if (node.decision_input) {
+                const nodeState = state.progress[node.id];
+                const decisionValue = nodeState?.decision_value || '';
+                html += `
+                    <div class="decision-input-section">
+                        <label class="decision-label">${node.decision_input.label}:</label>
+                        <input
+                            type="text"
+                            class="decision-input"
+                            pattern="${node.decision_input.pattern || '.*'}"
+                            placeholder="${node.decision_input.placeholder || ''}"
+                            value="${decisionValue}"
+                            onchange="updateDecisionValue('${node.id}', this.value)"
+                            title="Pattern: ${node.decision_input.pattern || 'any'}"
+                        />
+                        ${node.decision_input.help ?
+                            `<div class="decision-help">${node.decision_input.help}</div>` : ''}
                     </div>
                 `;
             }
@@ -1420,6 +1486,26 @@
             updateProgress();
             renderTabs();
             renderCurrentPhase();
+        }
+
+        // Update decision value (metadata-driven)
+        function updateDecisionValue(nodeId, value) {
+            // Ensure node state exists
+            if (!state.progress[nodeId]) {
+                state.progress[nodeId] = {
+                    status: 'todo',
+                    artifacts: {},
+                    evidence: []
+                };
+            }
+
+            // Update decision value
+            state.progress[nodeId].decision_value = value;
+
+            // Auto-save
+            triggerAutoSave();
+
+            console.log(`[DECISION] ${nodeId} = "${value}"`);
         }
 
         // Update progress bar
@@ -1802,8 +1888,9 @@
             };
         }
 
-        // Make toggleNode available globally
+        // Make functions available globally
         window.toggleNode = toggleNode;
+        window.updateDecisionValue = updateDecisionValue;
 
         // Load data on page load
         loadData();
