@@ -176,6 +176,7 @@
             align-items: center;
         }
 
+        /* 1) Tabs sit on a baseline and panel shares the edge */
         .tabs {
             display: flex;
             gap: 10px;
@@ -183,20 +184,23 @@
             margin-bottom: 0;
             padding-left: 24px;
             overflow-x: auto;
+            border-bottom: 1px solid #e0e0e0;
         }
 
+        /* 2) Inactive tabs: neutral, can lift on hover */
         .tab {
             padding: 12px 24px;
             background: #eee8d5;
-            border: none;
+            border: 1px solid transparent;
             border-radius: 8px 8px 0 0;
             cursor: pointer;
             font-size: 1rem;
             font-weight: 500;
             transition: all 0.2s;
             white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             position: relative;
+            color: #1a1a1a;
+            transform: none;
         }
 
         .tab .tab-progress {
@@ -205,25 +209,44 @@
             margin-left: 8px;
         }
 
-        .tab:hover {
+        .tab:hover:not(.active) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
 
+        /* 3) Active tab: same bg as panel, no lift, seam removed */
         .tab.active {
+            background: #eee8d5;
+            color: #073642;
+            box-shadow: none;
+            border: 1px solid #e0e0e0;
+            border-bottom-color: transparent;
+            border-radius: 8px 8px 0 0;
+            transform: none;
+            z-index: 2;
+        }
+
+        /* 4) Optional: colored accent to reinforce selection */
+        .tab.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            height: 3px;
             background: #268bd2;
-            color: #fdf6e3;
-            transform: translateY(-2px);
+            border-radius: 0 0 0 0;
         }
 
         .tab.active .tab-progress {
-            color: rgba(255,255,255,0.9);
+            color: #657b83;
         }
 
         .tab-content {
             background: #eee8d5;
             padding: 30px;
-            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 8px 8px 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             min-height: 400px;
         }
@@ -307,6 +330,7 @@
         }
 
         .node-header {
+            position: relative;
             display: flex;
             align-items: flex-start;
             gap: 15px;
@@ -319,6 +343,32 @@
             margin-top: 2px;
             cursor: pointer;
             flex-shrink: 0;
+            transition: all 0.15s ease-in-out;
+        }
+
+        .checkbox:checked {
+            transform: scale(1.25);
+            background-color: #3cb46e;
+            box-shadow: 0 0 6px rgba(60, 180, 110, 0.5);
+        }
+
+        .checkbox:checked::after {
+            animation: checkpop 0.25s ease-out;
+        }
+
+        @keyframes checkpop {
+            0% {
+                transform: scale(0.8) rotate(-10deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(3deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.0) rotate(0deg);
+                opacity: 1;
+            }
         }
 
         .node-title-group {
@@ -330,6 +380,47 @@
             font-weight: 600;
             color: #1a1a1a;
             margin-bottom: 4px;
+        }
+
+        .ephemeral-feedback {
+            position: absolute;
+            right: 32px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            color: #3cb46e;
+            font-weight: 600;
+            white-space: nowrap;
+            pointer-events: none;
+            animation: fadeout 1s ease-out forwards;
+        }
+
+        @keyframes fadeout {
+            0% {
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-3px);
+            }
+            75% {
+                transform: translateX(3px);
+            }
+        }
+
+        .node.shake {
+            animation: shake 0.3s ease-in-out;
         }
 
         .node-badges {
@@ -753,6 +844,22 @@
                 font-size: 1rem;
             }
         }
+
+        /* Accessibility: Disable animations for users who prefer reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .checkbox,
+            .checkbox:checked,
+            .checkbox:checked::after,
+            .ephemeral-feedback,
+            .node.shake {
+                animation: none;
+                transition: none;
+            }
+
+            .checkbox:checked {
+                transform: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1116,6 +1223,30 @@
             return null;
         }
 
+        // Generate user-friendly tooltip for evidence badges
+        function getEvidenceTooltip(type, required_at, criteria) {
+            // Evidence type descriptions
+            const typeDescriptions = {
+                'spike': 'Time-boxed experiment to validate technical approach',
+                'test_report': 'Test coverage and quality assurance results',
+                'security': 'Security reviews and compliance checks',
+                'perf': 'Performance benchmarks and load tests',
+                'ops_runbook': 'Operational procedures and deployment guides'
+            };
+
+            // Timing contexts
+            const timingContexts = {
+                'gate': 'Required before passing phase gate (must complete to proceed)',
+                'completion': 'Required when marking decision node done (final validation)',
+                'always': 'Must be maintained continuously throughout lifecycle'
+            };
+
+            const typeDesc = typeDescriptions[type] || type;
+            const timingDesc = timingContexts[required_at] || required_at;
+
+            return `${typeDesc} | ${timingDesc} | ${criteria}`;
+        }
+
         // Initialize app
         function init() {
             if (!state.data) return;
@@ -1161,16 +1292,21 @@
                 case 'local':
                     badge.textContent = 'State: Local';
                     badge.className = 'state-badge';
+                    badge.title = 'Loaded from browser storage. Use Export/Import to sync.';
                     break;
 
                 case 'file':
                     badge.textContent = filename ? `State: ${filename}` : 'State: File';
                     badge.className = 'state-badge file';
+                    badge.title = filename
+                        ? `Imported from ${filename}. Changes saved to browser storage.`
+                        : 'Imported from file. Changes saved to browser storage.';
                     break;
 
                 case 'none':
                     badge.textContent = 'State: None';
                     badge.className = 'state-badge none';
+                    badge.title = 'No progress saved. Start making decisions to track progress.';
                     break;
             }
         }
@@ -1413,7 +1549,7 @@
                         <div class="evidence-title">Evidence Requirements:</div>
                         <div class="evidence-list">
                             ${node.evidence_policy.map(policy => `
-                                <span class="evidence-badge" title="${policy.criteria}">
+                                <span class="evidence-badge" title="${getEvidenceTooltip(policy.type, policy.required_at, policy.criteria)}">
                                     ${policy.type} (@${policy.required_at})
                                 </span>
                             `).join('')}
@@ -1505,6 +1641,40 @@
             return html;
         }
 
+        // Show ephemeral feedback message
+        function showEphemeral(message, nodeId) {
+            // Find the node element
+            const nodeElement = document.querySelector(`[data-node-id="${nodeId}"]`);
+            if (!nodeElement) return;
+
+            // Find the node-header within this node
+            const headerElement = nodeElement.querySelector('.node-header');
+            if (!headerElement) return;
+
+            // Remove any existing ephemeral feedback
+            const existing = nodeElement.querySelector('.ephemeral-feedback');
+            if (existing) existing.remove();
+
+            // Trigger shake animation on the card
+            nodeElement.classList.add('shake');
+            setTimeout(() => {
+                nodeElement.classList.remove('shake');
+            }, 300);
+
+            // Create and insert the feedback element
+            const feedback = document.createElement('div');
+            feedback.className = 'ephemeral-feedback';
+            feedback.textContent = message;
+            headerElement.appendChild(feedback);
+
+            // Remove after animation completes (1s)
+            setTimeout(() => {
+                if (feedback.parentNode) {
+                    feedback.remove();
+                }
+            }, 1000);
+        }
+
         // Toggle node completion
         function toggleNode(nodeId) {
             const node = getNodeById(nodeId);
@@ -1541,6 +1711,11 @@
             updateProgress();
             renderTabs();
             renderCurrentPhase();
+
+            // Show ephemeral feedback AFTER DOM update (if marking as done)
+            if (currentStatus !== 'done') {
+                showEphemeral('✔ Decision recorded', nodeId);
+            }
         }
 
         // Update decision value (metadata-driven)
