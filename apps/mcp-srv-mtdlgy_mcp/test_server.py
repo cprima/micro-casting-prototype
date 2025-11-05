@@ -6,12 +6,19 @@ Tests all 4 tools with state fixtures to validate server functionality.
 
 import json
 from pathlib import Path
+import pytest
 
 # Import server functions
 import sys
 sys.path.insert(0, str(Path(__file__).parent))
 
 from server import evaluate_gate, migrate_state, diff_catalogs, suggest_advisory, load_data
+
+
+@pytest.fixture(scope="module", autouse=True)
+def setup_module():
+    """Load server data before running tests."""
+    load_data()
 
 
 def load_fixture(name: str) -> dict:
