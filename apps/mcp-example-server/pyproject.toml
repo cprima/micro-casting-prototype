@@ -1,0 +1,27 @@
+[project]
+name = "mcp-example-server"
+version = "0.1.0"
+description = "Example MCP server demonstrating mcp-core library usage"
+readme = "README.md"
+authors = [
+    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
+]
+license = {file = "../../LICENSE"}
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=0.1.0",
+    "mcp-core",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+]
+
+[tool.uv.sources]
+mcp-core = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
