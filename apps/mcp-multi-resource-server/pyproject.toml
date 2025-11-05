@@ -1,14 +1,6 @@
 [project]
 name = "mcp-multi-resource-server"
 version = "0.1.0"
-description = "Comprehensive server with multiple capabilities"
-authors = [
-    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
-]
-license = {file = "../../LICENSE"}
+description = "Multi-capability server"
 requires-python = ">=3.10"
-dependencies = ["mcp>=0.1.0", "aiofiles>=23.0.0", "httpx>=0.25.0"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+dependencies = ['mcp>=0.1.0', 'aiofiles>=23.0.0', 'httpx>=0.25.0']

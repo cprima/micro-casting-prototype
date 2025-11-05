@@ -1,14 +1,6 @@
 [project]
 name = "mcp-rag-pipeline"
 version = "0.1.0"
-description = "RAG (Retrieval-Augmented Generation) pattern"
-authors = [
-    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
-]
-license = {file = "../../LICENSE"}
+description = "RAG pattern"
 requires-python = ">=3.10"
-dependencies = ["mcp>=0.1.0"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+dependencies = ['mcp>=0.1.0']

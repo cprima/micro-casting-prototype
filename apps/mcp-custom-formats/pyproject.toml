@@ -1,14 +1,6 @@
 [project]
 name = "mcp-custom-formats"
 version = "0.1.0"
-description = "Custom serialization formats (CSV, YAML, TOML)"
-authors = [
-    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
-]
-license = {file = "../../LICENSE"}
+description = "Custom serialization formats"
 requires-python = ">=3.10"
-dependencies = ["mcp>=0.1.0", "pyyaml>=6.0", "tomli>=2.0.0"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+dependencies = ['mcp>=0.1.0', 'pyyaml>=6.0', 'toml>=0.10.2']

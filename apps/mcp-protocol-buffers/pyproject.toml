@@ -2,13 +2,5 @@
 name = "mcp-protocol-buffers"
 version = "0.1.0"
 description = "Protocol Buffers serialization"
-authors = [
-    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
-]
-license = {file = "../../LICENSE"}
 requires-python = ">=3.10"
-dependencies = ["mcp>=0.1.0", "protobuf>=4.25.0"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+dependencies = ['mcp>=0.1.0', 'protobuf>=4.24.0']

@@ -1,0 +1,8 @@
+This is a sample text file for testing the filesystem retrieval MCP server.
+
+It contains multiple lines and demonstrates:
+- Simple text reading
+- File system navigation
+- Async file I/O operations
+
+This file can be read using the mcp-filesystem-retrieval server.

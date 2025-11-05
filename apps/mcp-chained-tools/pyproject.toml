@@ -1,14 +1,6 @@
 [project]
 name = "mcp-chained-tools"
 version = "0.1.0"
-description = "Tool composition and chaining patterns"
-authors = [
-    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
-]
-license = {file = "../../LICENSE"}
+description = "Tool composition and chaining"
 requires-python = ">=3.10"
-dependencies = ["mcp>=0.1.0"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+dependencies = ['mcp>=0.1.0']

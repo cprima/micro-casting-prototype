@@ -1,0 +1,41 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "role": "developer",
+      "skills": ["Python", "JavaScript", "SQL"],
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob@example.com",
+      "role": "designer",
+      "skills": ["Figma", "Photoshop", "CSS"],
+      "active": true
+    },
+    {
+      "id": 3,
+      "name": "Carol Williams",
+      "email": "carol@example.com",
+      "role": "manager",
+      "skills": ["Leadership", "Agile", "Strategy"],
+      "active": false
+    },
+    {
+      "id": 4,
+      "name": "David Brown",
+      "email": "david@example.com",
+      "role": "developer",
+      "skills": ["Go", "Kubernetes", "Docker"],
+      "active": true
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2024-11-05",
+    "total_users": 4
+  }
+}

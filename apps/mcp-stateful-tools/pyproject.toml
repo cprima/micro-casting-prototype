@@ -2,13 +2,5 @@
 name = "mcp-stateful-tools"
 version = "0.1.0"
 description = "Tools with persistent session state"
-authors = [
-    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
-]
-license = {file = "../../LICENSE"}
 requires-python = ">=3.10"
-dependencies = ["mcp>=0.1.0"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+dependencies = ['mcp>=0.1.0']

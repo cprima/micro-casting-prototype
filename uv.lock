@@ -9,10 +9,30 @@ resolution-markers = [
 [manifest]
 members = [
     "crawling",
+    "mcp-async-tools",
+    "mcp-chained-tools",
     "mcp-core",
+    "mcp-custom-formats",
+    "mcp-echo-tool",
+    "mcp-error-handling",
     "mcp-example-server",
+    "mcp-filesystem-retrieval",
+    "mcp-hello-world",
+    "mcp-http-retrieval",
+    "mcp-json-retrieval",
+    "mcp-json-serialization",
+    "mcp-multi-resource-server",
+    "mcp-protocol-buffers",
+    "mcp-pydantic-models",
+    "mcp-rag-pipeline",
+    "mcp-simple-retrieval",
+    "mcp-sqlite-retrieval",
     "mcp-srv-mtdlgy-mcp",
+    "mcp-stateful-tools",
+    "mcp-streaming-responses",
+    "mcp-sync-tools",
     "mcp-testdata",
+    "mcp-vector-search",
     "repo",
     "sitemap-crawler",
 ]
@@ -1375,6 +1395,18 @@ wheels = [
 ]
 
 [[package]]
+name = "jsonpath-ng"
+version = "1.7.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "ply" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6d/86/08646239a313f895186ff0a4573452038eed8c86f54380b3ebac34d32fb2/jsonpath-ng-1.7.0.tar.gz", hash = "sha256:f6f5f7fd4e5ff79c785f1573b394043b39849fb2bb47bcead935d12b00beab3c", size = 37838, upload-time = "2024-10-11T15:41:42.404Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/35/5a/73ecb3d82f8615f32ccdadeb9356726d6cae3a4bbc840b437ceb95708063/jsonpath_ng-1.7.0-py3-none-any.whl", hash = "sha256:f3d7f9e848cba1b6da28c55b1c26ff915dc9e0b1ba7e752a53d6da8d5cbd00b6", size = 30105, upload-time = "2024-11-20T17:58:30.418Z" },
+]
+
+[[package]]
 name = "jsonschema"
 version = "4.25.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1701,6 +1733,32 @@ cli = [
 ]
 
 [[package]]
+name = "mcp-async-tools"
+version = "0.1.0"
+source = { virtual = "apps/mcp-async-tools" }
+dependencies = [
+    { name = "httpx" },
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "httpx", specifier = ">=0.25.0" },
+    { name = "mcp", specifier = ">=0.1.0" },
+]
+
+[[package]]
+name = "mcp-chained-tools"
+version = "0.1.0"
+source = { virtual = "apps/mcp-chained-tools" }
+dependencies = [
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mcp", specifier = ">=0.1.0" }]
+
+[[package]]
 name = "mcp-core"
 version = "0.1.0"
 source = { editable = "libs/mcp-core" }
@@ -1721,6 +1779,45 @@ requires-dist = [
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.21.0" },
 ]
 provides-extras = ["dev"]
+
+[[package]]
+name = "mcp-custom-formats"
+version = "0.1.0"
+source = { virtual = "apps/mcp-custom-formats" }
+dependencies = [
+    { name = "mcp" },
+    { name = "pyyaml" },
+    { name = "toml" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "mcp", specifier = ">=0.1.0" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "toml", specifier = ">=0.10.2" },
+]
+
+[[package]]
+name = "mcp-echo-tool"
+version = "0.1.0"
+source = { virtual = "apps/mcp-echo-tool" }
+dependencies = [
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mcp", specifier = ">=0.1.0" }]
+
+[[package]]
+name = "mcp-error-handling"
+version = "0.1.0"
+source = { virtual = "apps/mcp-error-handling" }
+dependencies = [
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mcp", specifier = ">=0.1.0" }]
 
 [[package]]
 name = "mcp-example-server"
@@ -1747,6 +1844,161 @@ requires-dist = [
 provides-extras = ["dev"]
 
 [[package]]
+name = "mcp-filesystem-retrieval"
+version = "0.1.0"
+source = { virtual = "apps/mcp-filesystem-retrieval" }
+dependencies = [
+    { name = "aiofiles" },
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "aiofiles", specifier = ">=23.0.0" },
+    { name = "mcp", specifier = ">=0.1.0" },
+]
+
+[[package]]
+name = "mcp-hello-world"
+version = "0.1.0"
+source = { virtual = "apps/mcp-hello-world" }
+dependencies = [
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mcp", specifier = ">=0.1.0" }]
+
+[[package]]
+name = "mcp-http-retrieval"
+version = "0.1.0"
+source = { virtual = "apps/mcp-http-retrieval" }
+dependencies = [
+    { name = "httpx" },
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "httpx", specifier = ">=0.25.0" },
+    { name = "mcp", specifier = ">=0.1.0" },
+]
+
+[[package]]
+name = "mcp-json-retrieval"
+version = "0.1.0"
+source = { virtual = "apps/mcp-json-retrieval" }
+dependencies = [
+    { name = "jsonpath-ng" },
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "jsonpath-ng", specifier = ">=1.6.0" },
+    { name = "mcp", specifier = ">=0.1.0" },
+]
+
+[[package]]
+name = "mcp-json-serialization"
+version = "0.1.0"
+source = { virtual = "apps/mcp-json-serialization" }
+dependencies = [
+    { name = "jsonschema" },
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "jsonschema", specifier = ">=4.0.0" },
+    { name = "mcp", specifier = ">=0.1.0" },
+]
+
+[[package]]
+name = "mcp-multi-resource-server"
+version = "0.1.0"
+source = { virtual = "apps/mcp-multi-resource-server" }
+dependencies = [
+    { name = "aiofiles" },
+    { name = "httpx" },
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "aiofiles", specifier = ">=23.0.0" },
+    { name = "httpx", specifier = ">=0.25.0" },
+    { name = "mcp", specifier = ">=0.1.0" },
+]
+
+[[package]]
+name = "mcp-protocol-buffers"
+version = "0.1.0"
+source = { virtual = "apps/mcp-protocol-buffers" }
+dependencies = [
+    { name = "mcp" },
+    { name = "protobuf" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "mcp", specifier = ">=0.1.0" },
+    { name = "protobuf", specifier = ">=4.24.0" },
+]
+
+[[package]]
+name = "mcp-pydantic-models"
+version = "0.1.0"
+source = { virtual = "apps/mcp-pydantic-models" }
+dependencies = [
+    { name = "mcp" },
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "mcp", specifier = ">=0.1.0" },
+    { name = "pydantic", specifier = ">=2.0.0" },
+]
+
+[[package]]
+name = "mcp-rag-pipeline"
+version = "0.1.0"
+source = { virtual = "apps/mcp-rag-pipeline" }
+dependencies = [
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mcp", specifier = ">=0.1.0" }]
+
+[[package]]
+name = "mcp-simple-retrieval"
+version = "0.1.0"
+source = { virtual = "apps/mcp-simple-retrieval" }
+dependencies = [
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mcp", specifier = ">=0.1.0" }]
+
+[[package]]
+name = "mcp-sqlite-retrieval"
+version = "0.1.0"
+source = { virtual = "apps/mcp-sqlite-retrieval" }
+dependencies = [
+    { name = "aiosqlite" },
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "aiosqlite", specifier = ">=0.19.0" },
+    { name = "mcp", specifier = ">=0.1.0" },
+]
+
+[[package]]
 name = "mcp-srv-mtdlgy-mcp"
 version = "0.1.0"
 source = { editable = "apps/mcp-srv-mtdlgy_mcp" }
@@ -1769,6 +2021,39 @@ requires-dist = [
 provides-extras = ["dev"]
 
 [[package]]
+name = "mcp-stateful-tools"
+version = "0.1.0"
+source = { virtual = "apps/mcp-stateful-tools" }
+dependencies = [
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mcp", specifier = ">=0.1.0" }]
+
+[[package]]
+name = "mcp-streaming-responses"
+version = "0.1.0"
+source = { virtual = "apps/mcp-streaming-responses" }
+dependencies = [
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mcp", specifier = ">=0.1.0" }]
+
+[[package]]
+name = "mcp-sync-tools"
+version = "0.1.0"
+source = { virtual = "apps/mcp-sync-tools" }
+dependencies = [
+    { name = "mcp" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mcp", specifier = ">=0.1.0" }]
+
+[[package]]
 name = "mcp-testdata"
 version = "0.1.0"
 source = { editable = "libs/mcp-testdata" }
@@ -1789,6 +2074,22 @@ requires-dist = [
     { name = "python-dateutil", specifier = ">=2.8.2" },
 ]
 provides-extras = ["dev"]
+
+[[package]]
+name = "mcp-vector-search"
+version = "0.1.0"
+source = { virtual = "apps/mcp-vector-search" }
+dependencies = [
+    { name = "mcp" },
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.3.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "mcp", specifier = ">=0.1.0" },
+    { name = "numpy", specifier = ">=1.24.0" },
+]
 
 [[package]]
 name = "mdurl"
@@ -2387,6 +2688,15 @@ wheels = [
 ]
 
 [[package]]
+name = "ply"
+version = "3.11"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e5/69/882ee5c9d017149285cab114ebeab373308ef0f874fcdac9beb90e0ac4da/ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3", size = 159130, upload-time = "2018-02-15T19:01:31.097Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a3/58/35da89ee790598a0700ea49b2a66594140f44dec458c07e8e3d4979137fc/ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce", size = 49567, upload-time = "2018-02-15T19:01:27.172Z" },
+]
+
+[[package]]
 name = "propcache"
 version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2498,6 +2808,21 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/cb/ef/3c6ecf8b317aa982f309835e8f96987466123c6e596646d4e6a1dfcd080f/propcache-0.4.1-cp314-cp314t-win_amd64.whl", hash = "sha256:990f6b3e2a27d683cb7602ed6c86f15ee6b43b1194736f9baaeb93d0016633b1", size = 46259, upload-time = "2025-10-08T19:48:34.226Z" },
     { url = "https://files.pythonhosted.org/packages/c4/2d/346e946d4951f37eca1e4f55be0f0174c52cd70720f84029b02f296f4a38/propcache-0.4.1-cp314-cp314t-win_arm64.whl", hash = "sha256:ecef2343af4cc68e05131e45024ba34f6095821988a9d0a02aa7c73fcc448aa9", size = 40428, upload-time = "2025-10-08T19:48:35.441Z" },
     { url = "https://files.pythonhosted.org/packages/5b/5a/bc7b4a4ef808fa59a816c17b20c4bef6884daebbdf627ff2a161da67da19/propcache-0.4.1-py3-none-any.whl", hash = "sha256:af2a6052aeb6cf17d3e46ee169099044fd8224cbaf75c76a2ef596e8163e2237", size = 13305, upload-time = "2025-10-08T19:49:00.792Z" },
+]
+
+[[package]]
+name = "protobuf"
+version = "6.33.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/19/ff/64a6c8f420818bb873713988ca5492cba3a7946be57e027ac63495157d97/protobuf-6.33.0.tar.gz", hash = "sha256:140303d5c8d2037730c548f8c7b93b20bb1dc301be280c378b82b8894589c954", size = 443463, upload-time = "2025-10-15T20:39:52.159Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7e/ee/52b3fa8feb6db4a833dfea4943e175ce645144532e8a90f72571ad85df4e/protobuf-6.33.0-cp310-abi3-win32.whl", hash = "sha256:d6101ded078042a8f17959eccd9236fb7a9ca20d3b0098bbcb91533a5680d035", size = 425593, upload-time = "2025-10-15T20:39:40.29Z" },
+    { url = "https://files.pythonhosted.org/packages/7b/c6/7a465f1825872c55e0341ff4a80198743f73b69ce5d43ab18043699d1d81/protobuf-6.33.0-cp310-abi3-win_amd64.whl", hash = "sha256:9a031d10f703f03768f2743a1c403af050b6ae1f3480e9c140f39c45f81b13ee", size = 436882, upload-time = "2025-10-15T20:39:42.841Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/a9/b6eee662a6951b9c3640e8e452ab3e09f117d99fc10baa32d1581a0d4099/protobuf-6.33.0-cp39-abi3-macosx_10_9_universal2.whl", hash = "sha256:905b07a65f1a4b72412314082c7dbfae91a9e8b68a0cc1577515f8df58ecf455", size = 427521, upload-time = "2025-10-15T20:39:43.803Z" },
+    { url = "https://files.pythonhosted.org/packages/10/35/16d31e0f92c6d2f0e77c2a3ba93185130ea13053dd16200a57434c882f2b/protobuf-6.33.0-cp39-abi3-manylinux2014_aarch64.whl", hash = "sha256:e0697ece353e6239b90ee43a9231318302ad8353c70e6e45499fa52396debf90", size = 324445, upload-time = "2025-10-15T20:39:44.932Z" },
+    { url = "https://files.pythonhosted.org/packages/e6/eb/2a981a13e35cda8b75b5585aaffae2eb904f8f351bdd3870769692acbd8a/protobuf-6.33.0-cp39-abi3-manylinux2014_s390x.whl", hash = "sha256:e0a1715e4f27355afd9570f3ea369735afc853a6c3951a6afe1f80d8569ad298", size = 339159, upload-time = "2025-10-15T20:39:46.186Z" },
+    { url = "https://files.pythonhosted.org/packages/21/51/0b1cbad62074439b867b4e04cc09b93f6699d78fd191bed2bbb44562e077/protobuf-6.33.0-cp39-abi3-manylinux2014_x86_64.whl", hash = "sha256:35be49fd3f4fefa4e6e2aacc35e8b837d6703c37a2168a55ac21e9b1bc7559ef", size = 323172, upload-time = "2025-10-15T20:39:47.465Z" },
+    { url = "https://files.pythonhosted.org/packages/07/d1/0a28c21707807c6aacd5dc9c3704b2aa1effbf37adebd8caeaf68b17a636/protobuf-6.33.0-py3-none-any.whl", hash = "sha256:25c9e1963c6734448ea2d308cfa610e692b801304ba0908d7bfa564ac5132995", size = 170477, upload-time = "2025-10-15T20:39:51.311Z" },
 ]
 
 [[package]]
@@ -3618,6 +3943,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/36/65/7e75caea90bc73c1dd8d40438adf1a7bc26af3b8d0a6705ea190462506e1/tokenizers-0.22.1-cp39-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:a0f307d490295717726598ef6fa4f24af9d484809223bbc253b201c740a06390", size = 9681250, upload-time = "2025-09-19T09:49:21.501Z" },
     { url = "https://files.pythonhosted.org/packages/30/2c/959dddef581b46e6209da82df3b78471e96260e2bc463f89d23b1bf0e52a/tokenizers-0.22.1-cp39-abi3-win32.whl", hash = "sha256:b5120eed1442765cd90b903bb6cfef781fd8fe64e34ccaecbae4c619b7b12a82", size = 2472003, upload-time = "2025-09-19T09:49:27.089Z" },
     { url = "https://files.pythonhosted.org/packages/b3/46/e33a8c93907b631a99377ef4c5f817ab453d0b34f93529421f42ff559671/tokenizers-0.22.1-cp39-abi3-win_amd64.whl", hash = "sha256:65fd6e3fb11ca1e78a6a93602490f134d1fdeb13bcef99389d5102ea318ed138", size = 2674684, upload-time = "2025-09-19T09:49:24.953Z" },
+]
+
+[[package]]
+name = "toml"
+version = "0.10.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f", size = 22253, upload-time = "2020-11-01T01:40:22.204Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b", size = 16588, upload-time = "2020-11-01T01:40:20.672Z" },
 ]
 
 [[package]]

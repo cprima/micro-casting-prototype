@@ -1,14 +1,6 @@
 [project]
 name = "mcp-sync-tools"
 version = "0.1.0"
-description = "Synchronous tool execution patterns"
-authors = [
-    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
-]
-license = {file = "../../LICENSE"}
+description = "Synchronous tool execution"
 requires-python = ">=3.10"
-dependencies = ["mcp>=0.1.0"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+dependencies = ['mcp>=0.1.0']
