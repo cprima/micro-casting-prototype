@@ -37,8 +37,11 @@ async def list_tools():
 async def call_tool(name: str, arguments: dict):
     if name == "fetch_url":
         url = arguments["url"]
+        headers = {
+            "User-Agent": "Mozilla/5.0 (compatible; MCP-HTTP-Retrieval/1.0)"
+        }
         async with httpx.AsyncClient() as client:
-            response = await client.get(url, timeout=10.0)
+            response = await client.get(url, headers=headers, timeout=10.0, follow_redirects=True)
             response.raise_for_status()
             content = response.text[:1000]  # First 1000 chars
         return [TextContent(type="text", text=content)]

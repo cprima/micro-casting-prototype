@@ -254,9 +254,10 @@ class TestCallTool:
             {"path": str(mock_base_dir)}
         )
 
-        files = result[0].text.split("\n")
         files_text = result[0].text
-        assert "subdir" in files
+        assert "file1.txt" in files_text
+        assert "file2.txt" in files_text
+        assert "subdir" in files_text
 
     @pytest.mark.asyncio
     async def test_list_directory_limit_20(self, mock_base_dir):

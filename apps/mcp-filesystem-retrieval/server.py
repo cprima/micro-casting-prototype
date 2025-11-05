@@ -53,7 +53,7 @@ async def call_tool(name: str, arguments: dict):
         if not path.exists() or not path.is_dir():
             raise ValueError(f"Invalid directory: {path}")
         files = [str(f.name) for f in path.iterdir()][:20]
-        return [TextContent(type="text", text="\\n".join(files))]
+        return [TextContent(type="text", text="\n".join(files))]
     raise ValueError(f"Unknown tool: {name}")
 
 async def main():

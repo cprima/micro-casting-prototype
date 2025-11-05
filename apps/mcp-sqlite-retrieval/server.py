@@ -33,6 +33,7 @@ async def list_tools():
             inputSchema={
                 "type": "object",
                 "properties": {
+                    "database": {"type": "string", "description": "Path to database (optional, uses default if not provided)"},
                     "query": {"type": "string", "description": "SQL query"}
                 },
                 "required": ["query"],
@@ -44,7 +45,8 @@ async def list_tools():
 async def call_tool(name: str, arguments: dict):
     if name == "query_database":
         query = arguments["query"]
-        async with aiosqlite.connect(DB_PATH) as db:
+        db_path = arguments.get("database", DB_PATH)
+        async with aiosqlite.connect(db_path) as db:
             async with db.execute(query) as cursor:
                 rows = await cursor.fetchall()
                 result = "\\n".join([str(row) for row in rows[:10]])
