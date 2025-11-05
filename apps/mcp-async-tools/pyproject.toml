@@ -1,0 +1,14 @@
+[project]
+name = "mcp-async-tools"
+version = "0.1.0"
+description = "Asynchronous tool patterns with concurrency"
+authors = [
+    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
+]
+license = {file = "../../LICENSE"}
+requires-python = ">=3.10"
+dependencies = ["mcp>=0.1.0", "httpx>=0.25.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

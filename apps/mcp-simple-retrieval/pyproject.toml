@@ -1,0 +1,16 @@
+[project]
+name = "mcp-simple-retrieval"
+version = "0.1.0"
+description = "Basic resource retrieval (read-only)"
+authors = [
+    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
+]
+license = {file = "../../LICENSE"}
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=0.1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

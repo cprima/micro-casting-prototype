@@ -1,0 +1,14 @@
+[project]
+name = "mcp-json-retrieval"
+version = "0.1.0"
+description = "JSON document querying with JSONPath"
+authors = [
+    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
+]
+license = {file = "../../LICENSE"}
+requires-python = ">=3.10"
+dependencies = ["mcp>=0.1.0", "jsonpath-ng>=1.6.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

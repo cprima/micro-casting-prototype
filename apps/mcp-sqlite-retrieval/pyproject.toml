@@ -1,0 +1,14 @@
+[project]
+name = "mcp-sqlite-retrieval"
+version = "0.1.0"
+description = "Database query and retrieval"
+authors = [
+    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
+]
+license = {file = "../../LICENSE"}
+requires-python = ">=3.10"
+dependencies = ["mcp>=0.1.0", "aiosqlite>=0.19.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

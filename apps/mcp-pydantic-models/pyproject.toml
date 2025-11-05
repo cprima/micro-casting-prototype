@@ -1,0 +1,14 @@
+[project]
+name = "mcp-pydantic-models"
+version = "0.1.0"
+description = "Type-safe serialization with Pydantic"
+authors = [
+    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
+]
+license = {file = "../../LICENSE"}
+requires-python = ">=3.10"
+dependencies = ["mcp>=0.1.0", "pydantic>=2.0.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,0 +1,14 @@
+[project]
+name = "mcp-vector-search"
+version = "0.1.0"
+description = "Vector database integration (simplified)"
+authors = [
+    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
+]
+license = {file = "../../LICENSE"}
+requires-python = ">=3.10"
+dependencies = ["mcp>=0.1.0", "numpy>=1.24.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
