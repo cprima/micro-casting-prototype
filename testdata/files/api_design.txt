@@ -1,0 +1,1 @@
+REST APIs (Representational State Transfer) are architectural styles for designing networked applications. RESTful APIs use HTTP methods and follow principles like statelessness and resource-based URLs.

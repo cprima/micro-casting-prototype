@@ -1,0 +1,18 @@
+{
+  "server": {
+    "host": "localhost",
+    "port": 8080,
+    "ssl": true
+  },
+  "database": {
+    "host": "db.example.com",
+    "port": 5432,
+    "name": "mydb",
+    "pool_size": 10
+  },
+  "features": {
+    "caching": true,
+    "logging": "info",
+    "max_connections": 100
+  }
+}

@@ -3,4 +3,11 @@ name = "mcp-custom-formats"
 version = "0.1.0"
 description = "Custom serialization formats"
 requires-python = ">=3.10"
-dependencies = ['mcp>=0.1.0', 'pyyaml>=6.0', 'toml>=0.10.2']
+dependencies = ['mcp>=0.1.0', 'pyyaml>=6.0', 'tomli>=2.0.0']
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+]

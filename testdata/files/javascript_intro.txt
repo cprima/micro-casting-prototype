@@ -1,0 +1,1 @@
+JavaScript is a programming language that enables interactive web pages. Originally developed by Brendan Eich at Netscape, JavaScript is now an essential part of web development alongside HTML and CSS.

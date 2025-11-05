@@ -1,0 +1,519 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Product 1",
+      "category": "Electronics",
+      "price": 463.82,
+      "in_stock": true,
+      "tags": [
+        "new",
+        "sale",
+        "bestseller"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Product 2",
+      "category": "Home",
+      "price": 379.58,
+      "in_stock": false,
+      "tags": [
+        "featured"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Product 3",
+      "category": "Electronics",
+      "price": 212.22,
+      "in_stock": true,
+      "tags": [
+        "new",
+        "sale"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Product 4",
+      "category": "Books",
+      "price": 294.52,
+      "in_stock": true,
+      "tags": []
+    },
+    {
+      "id": 5,
+      "name": "Product 5",
+      "category": "Books",
+      "price": 159.49,
+      "in_stock": false,
+      "tags": [
+        "sale",
+        "featured"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Product 6",
+      "category": "Electronics",
+      "price": 436.73,
+      "in_stock": true,
+      "tags": [
+        "bestseller"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Product 7",
+      "category": "Home",
+      "price": 200.3,
+      "in_stock": true,
+      "tags": [
+        "sale"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Product 8",
+      "category": "Electronics",
+      "price": 330.89,
+      "in_stock": true,
+      "tags": []
+    },
+    {
+      "id": 9,
+      "name": "Product 9",
+      "category": "Books",
+      "price": 445.28,
+      "in_stock": false,
+      "tags": [
+        "sale"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Product 10",
+      "category": "Home",
+      "price": 291.98,
+      "in_stock": true,
+      "tags": []
+    },
+    {
+      "id": 11,
+      "name": "Product 11",
+      "category": "Books",
+      "price": 452.96,
+      "in_stock": false,
+      "tags": [
+        "featured"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Product 12",
+      "category": "Electronics",
+      "price": 457.64,
+      "in_stock": false,
+      "tags": [
+        "sale"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Product 13",
+      "category": "Electronics",
+      "price": 329.91,
+      "in_stock": false,
+      "tags": [
+        "bestseller",
+        "sale"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Product 14",
+      "category": "Books",
+      "price": 406.74,
+      "in_stock": true,
+      "tags": [
+        "featured"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Product 15",
+      "category": "Books",
+      "price": 366.59,
+      "in_stock": false,
+      "tags": [
+        "featured"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Product 16",
+      "category": "Electronics",
+      "price": 14.35,
+      "in_stock": true,
+      "tags": []
+    },
+    {
+      "id": 17,
+      "name": "Product 17",
+      "category": "Electronics",
+      "price": 246.44,
+      "in_stock": false,
+      "tags": []
+    },
+    {
+      "id": 18,
+      "name": "Product 18",
+      "category": "Home",
+      "price": 432.64,
+      "in_stock": false,
+      "tags": [
+        "featured",
+        "sale",
+        "new"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Product 19",
+      "category": "Books",
+      "price": 434.52,
+      "in_stock": false,
+      "tags": [
+        "featured",
+        "new",
+        "sale"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Product 20",
+      "category": "Electronics",
+      "price": 457.26,
+      "in_stock": true,
+      "tags": [
+        "new",
+        "bestseller"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Product 21",
+      "category": "Books",
+      "price": 158.65,
+      "in_stock": true,
+      "tags": [
+        "new"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Product 22",
+      "category": "Clothing",
+      "price": 319.95,
+      "in_stock": true,
+      "tags": [
+        "new"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Product 23",
+      "category": "Home",
+      "price": 27.5,
+      "in_stock": false,
+      "tags": [
+        "bestseller"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Product 24",
+      "category": "Books",
+      "price": 427.18,
+      "in_stock": true,
+      "tags": [
+        "sale",
+        "bestseller",
+        "featured"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Product 25",
+      "category": "Electronics",
+      "price": 430.91,
+      "in_stock": true,
+      "tags": [
+        "new",
+        "sale",
+        "bestseller"
+      ]
+    },
+    {
+      "id": 26,
+      "name": "Product 26",
+      "category": "Clothing",
+      "price": 284.59,
+      "in_stock": true,
+      "tags": [
+        "new"
+      ]
+    },
+    {
+      "id": 27,
+      "name": "Product 27",
+      "category": "Books",
+      "price": 466.17,
+      "in_stock": false,
+      "tags": [
+        "sale",
+        "new"
+      ]
+    },
+    {
+      "id": 28,
+      "name": "Product 28",
+      "category": "Electronics",
+      "price": 24.24,
+      "in_stock": true,
+      "tags": [
+        "sale",
+        "new"
+      ]
+    },
+    {
+      "id": 29,
+      "name": "Product 29",
+      "category": "Clothing",
+      "price": 124.23,
+      "in_stock": true,
+      "tags": [
+        "sale"
+      ]
+    },
+    {
+      "id": 30,
+      "name": "Product 30",
+      "category": "Electronics",
+      "price": 202.24,
+      "in_stock": false,
+      "tags": [
+        "featured",
+        "bestseller",
+        "new"
+      ]
+    },
+    {
+      "id": 31,
+      "name": "Product 31",
+      "category": "Electronics",
+      "price": 332.67,
+      "in_stock": true,
+      "tags": [
+        "new",
+        "featured"
+      ]
+    },
+    {
+      "id": 32,
+      "name": "Product 32",
+      "category": "Books",
+      "price": 423.95,
+      "in_stock": false,
+      "tags": [
+        "new",
+        "featured",
+        "bestseller"
+      ]
+    },
+    {
+      "id": 33,
+      "name": "Product 33",
+      "category": "Home",
+      "price": 170.44,
+      "in_stock": true,
+      "tags": [
+        "new",
+        "bestseller"
+      ]
+    },
+    {
+      "id": 34,
+      "name": "Product 34",
+      "category": "Home",
+      "price": 421.79,
+      "in_stock": true,
+      "tags": []
+    },
+    {
+      "id": 35,
+      "name": "Product 35",
+      "category": "Home",
+      "price": 360.06,
+      "in_stock": true,
+      "tags": [
+        "bestseller",
+        "new"
+      ]
+    },
+    {
+      "id": 36,
+      "name": "Product 36",
+      "category": "Electronics",
+      "price": 96.38,
+      "in_stock": true,
+      "tags": []
+    },
+    {
+      "id": 37,
+      "name": "Product 37",
+      "category": "Books",
+      "price": 20.19,
+      "in_stock": false,
+      "tags": []
+    },
+    {
+      "id": 38,
+      "name": "Product 38",
+      "category": "Electronics",
+      "price": 113.66,
+      "in_stock": false,
+      "tags": []
+    },
+    {
+      "id": 39,
+      "name": "Product 39",
+      "category": "Books",
+      "price": 49.57,
+      "in_stock": false,
+      "tags": [
+        "bestseller",
+        "featured",
+        "new"
+      ]
+    },
+    {
+      "id": 40,
+      "name": "Product 40",
+      "category": "Electronics",
+      "price": 289.89,
+      "in_stock": false,
+      "tags": [
+        "bestseller",
+        "new",
+        "sale"
+      ]
+    },
+    {
+      "id": 41,
+      "name": "Product 41",
+      "category": "Clothing",
+      "price": 426.46,
+      "in_stock": false,
+      "tags": [
+        "sale",
+        "new"
+      ]
+    },
+    {
+      "id": 42,
+      "name": "Product 42",
+      "category": "Books",
+      "price": 321.15,
+      "in_stock": true,
+      "tags": [
+        "bestseller",
+        "new"
+      ]
+    },
+    {
+      "id": 43,
+      "name": "Product 43",
+      "category": "Home",
+      "price": 232.92,
+      "in_stock": false,
+      "tags": [
+        "featured",
+        "new"
+      ]
+    },
+    {
+      "id": 44,
+      "name": "Product 44",
+      "category": "Books",
+      "price": 191.68,
+      "in_stock": true,
+      "tags": [
+        "new"
+      ]
+    },
+    {
+      "id": 45,
+      "name": "Product 45",
+      "category": "Clothing",
+      "price": 381.48,
+      "in_stock": true,
+      "tags": [
+        "bestseller",
+        "featured"
+      ]
+    },
+    {
+      "id": 46,
+      "name": "Product 46",
+      "category": "Electronics",
+      "price": 380.21,
+      "in_stock": true,
+      "tags": []
+    },
+    {
+      "id": 47,
+      "name": "Product 47",
+      "category": "Home",
+      "price": 116.01,
+      "in_stock": false,
+      "tags": [
+        "new"
+      ]
+    },
+    {
+      "id": 48,
+      "name": "Product 48",
+      "category": "Books",
+      "price": 486.89,
+      "in_stock": false,
+      "tags": []
+    },
+    {
+      "id": 49,
+      "name": "Product 49",
+      "category": "Home",
+      "price": 20.45,
+      "in_stock": true,
+      "tags": [
+        "bestseller"
+      ]
+    },
+    {
+      "id": 50,
+      "name": "Product 50",
+      "category": "Clothing",
+      "price": 358.17,
+      "in_stock": false,
+      "tags": [
+        "bestseller",
+        "new",
+        "sale"
+      ]
+    }
+  ],
+  "metadata": {
+    "generated_at": "2025-11-05T07:48:16.560539",
+    "total": 50
+  }
+}

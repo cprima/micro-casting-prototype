@@ -1,0 +1,1 @@
+Databases are organized collections of data that can be easily accessed, managed, and updated. SQL databases like PostgreSQL and MySQL use structured query language for data manipulation.

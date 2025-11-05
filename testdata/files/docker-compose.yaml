@@ -1,0 +1,20 @@
+services:
+  api:
+    build: .
+    depends_on:
+    - db
+    environment:
+    - NODE_ENV=production
+    ports:
+    - 3000:3000
+  db:
+    environment:
+    - POSTGRES_PASSWORD=secret
+    image: postgres:14
+  web:
+    image: nginx:latest
+    ports:
+    - 80:80
+    volumes:
+    - ./html:/usr/share/nginx/html
+version: '3.8'

@@ -1,0 +1,14 @@
+application:
+  environment: production
+  name: MyApp
+  version: 1.0.0
+logging:
+  format: json
+  level: info
+  outputs:
+  - stdout
+  - file
+server:
+  host: 0.0.0.0
+  port: 3000
+  workers: 4

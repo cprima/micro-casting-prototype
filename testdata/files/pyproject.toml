@@ -1,0 +1,14 @@
+[project]
+name = "my-project"
+version = "0.1.0"
+description = "A sample project"
+authors = [ "John Doe <john@example.com>",]
+
+[dependencies]
+requests = "^2.28.0"
+pydantic = "^2.0.0"
+fastapi = "^0.100.0"
+
+[dev-dependencies]
+pytest = "^7.0.0"
+black = "^23.0.0"
