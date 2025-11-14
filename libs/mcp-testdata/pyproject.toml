@@ -1,0 +1,29 @@
+[project]
+name = "mcp-testdata"
+version = "0.1.0"
+description = "Test data corpus for MCP servers - realistic SQLite databases for development and testing"
+readme = "README.md"
+authors = [
+    {name = "Christian Prior-Mamulyan", email = "cprior@gmail.com"}
+]
+license = {file = "../../LICENSE"}
+requires-python = ">=3.10"
+dependencies = [
+    "faker>=22.0.0",
+    "python-dateutil>=2.8.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+]
+
+[project.scripts]
+generate-testdata = "mcp_testdata.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_testdata"]
